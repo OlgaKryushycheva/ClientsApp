@@ -1,0 +1,12 @@
+﻿@model ClientsApp.Models.Entities.ClientTask
+
+<h2>Видалити завдання</h2>
+
+<h4>@Model.Description</h4>
+<p>Ви впевнені?</p>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="ClientTaskId" />
+    <button type="submit" class="btn btn-danger">Видалити</button>
+    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+</form>

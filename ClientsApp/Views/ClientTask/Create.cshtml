@@ -1,0 +1,81 @@
+﻿@model ClientsApp.Models.Entities.ClientTask
+
+@{
+    ViewData["Title"] = "Додати завдання";
+    Layout = "_Layout";
+}
+
+<h2>Додати завдання</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="TaskTitle"></label>
+        <input asp-for="TaskTitle" class="form-control" />
+        <span asp-validation-for="TaskTitle" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartDate"></label>
+        <input asp-for="StartDate" type="date" class="form-control" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EndDate"></label>
+        <input asp-for="EndDate" type="date" class="form-control" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+    <!-- Статус завдання -->
+    <div class="form-group">
+        <label asp-for="TaskStatus"></label>
+        <select asp-for="TaskStatus" class="form-control" asp-items="ViewBag.Statuses">
+            <option value="">-- Виберіть статус --</option>
+        </select>
+        <span asp-validation-for="TaskStatus" class="text-danger"></span>
+    </div>
+    <!-- Клієнт -->
+    @* <div class="form-group">
+        <label asp-for="ClientId"></label>
+        <select asp-for="ClientId" class="form-control" asp-items="ViewBag.Clients">
+            <option value="">-- Виберіть клієнта --</option>
+        </select>
+        <span asp-validation-for="ClientId" class="text-danger"></span>
+    </div> *@
+
+    <!-- Виконавець -->
+    <div class="form-group">
+        <label asp-for="ExecutorId"></label>
+        <select asp-for="ExecutorId" class="form-control" asp-items="ViewBag.Executors">
+            <option value="">-- Виберіть виконавця --</option>
+        </select>
+        <span asp-validation-for="ExecutorId" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        @* <label>Клієнт</label> *@
+        <label asp-for="ClientId"></label>
+        <select asp-for="ClientId" class="form-control" asp-items="ViewBag.Clients">
+            <option value="">Виберіть клієнта</option>
+        </select>
+        <span asp-validation-for="ClientId" class="text-danger"></span>
+    </div>
+
+    
+    <!-- Статус завдання -->
+    <div class="form-group">
+        <label asp-for="TaskStatus"></label>
+        <select asp-for="TaskStatus" class="form-control" asp-items="ViewBag.Statuses">
+            <option value="">-- Виберіть статус --</option>
+        </select>
+        <span asp-validation-for="TaskStatus" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Зберегти</button>
+    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+</form>

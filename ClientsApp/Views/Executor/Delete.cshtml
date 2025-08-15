@@ -1,0 +1,26 @@
+﻿@model ClientsApp.Models.Entities.Executor
+
+@{
+    ViewData["Title"] = "Видалити Виконавця";
+    Layout = "_Layout";
+}
+}
+
+<h2>Видалити Виконавця</h2>
+
+<h4>Ви дійсно хочете видалити цього виконавця?</h4>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">ПІБ</dt>
+        <dd class="col-sm-10">@Model.FullName</dd>
+
+        <dt class="col-sm-2">Ставка за годину</dt>
+        <dd class="col-sm-10">@Model.HourlyRate</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="ExecutorId" />
+    <button type="submit" class="btn btn-danger">Видалити</button>
+    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+</form>

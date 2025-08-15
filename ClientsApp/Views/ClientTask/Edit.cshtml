@@ -1,0 +1,58 @@
+﻿@model ClientsApp.Models.Entities.ClientTask
+
+@{
+    ViewData["Title"] = "Редагувати завдання";
+    Layout = "_Layout";
+}
+
+<h2>Редагувати завдання</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="ClientTaskId" />
+
+    <div class="form-group">
+        <label asp-for="TaskTitle"></label>
+        <input asp-for="TaskTitle" class="form-control" />
+        <span asp-validation-for="TaskTitle" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartDate"></label>
+        <input asp-for="StartDate" type="date" class="form-control" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="EndDate"></label>
+        <input asp-for="EndDate" type="date" class="form-control" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Клієнт</label>
+        <select asp-for="ClientId" class="form-control" asp-items="ViewBag.Clients">
+            <option value="">Виберіть клієнта</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Виконавець</label>
+        <select asp-for="ExecutorId" class="form-control" asp-items="ViewBag.Executors">
+            <option value="">Виберіть виконавця</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TaskStatus"></label>
+        <select asp-for="TaskStatus" class="form-control" asp-items="ViewBag.Statuses"></select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Зберегти</button>
+    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+</form>

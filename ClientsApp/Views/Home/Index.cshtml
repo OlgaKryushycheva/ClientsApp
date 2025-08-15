@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Головна сторінка";
+   
+}
+
+<h1>Вітаємо в системі обліку клієнтів!</h1>
+
+<p>
+    Перейдіть до керування:
+</p>
+<ul>
+    <li><a href="@Url.Action("Index", "Client")">Клієнти</a></li>
+    <li><a href="@Url.Action("Index", "Executor")">Виконавці</a></li>
+    <li><a href="@Url.Action("Index", "ClientTask")">Завдання</a></li>
+    <li><a href="@Url.Action("Index", "ExecutorTask")">Облік робочого часу</a></li>
+    <li><a href="@Url.Action("Index", "Payment")">Оплати</a></li>
+</ul>

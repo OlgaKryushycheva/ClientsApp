@@ -1,0 +1,29 @@
+﻿@model ClientsApp.Models.Entities.Client
+
+@{
+    ViewData["Title"] = "Видалити клієнта";
+}
+
+<h1>Видалити клієнта</h1>
+
+<h3>Ви дійсно хочете видалити цього клієнта?</h3>
+
+<div>
+    <h4>@Model.Name</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Адреса</dt>
+        <dd class="col-sm-10">@Model.Address</dd>
+
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
+
+        <dt class="col-sm-2">Телефон</dt>
+        <dd class="col-sm-10">@Model.Phone</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="ClientId" />
+    <button type="submit" class="btn btn-danger">Видалити</button>
+    <a asp-action="Index" class="btn btn-secondary">Назад</a>
+</form>
