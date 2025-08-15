@@ -1,0 +1,27 @@
+@model ClientsApp.Models.Entities.Payment
+@{
+    ViewData["Title"] = "Редагувати платіж";
+}
+
+<h2>Редагувати платіж</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="PaymentId" />
+    <div class="form-group">
+        <label asp-for="ClientTaskId"></label>
+        <select asp-for="ClientTaskId" class="form-control" asp-items="ViewBag.Tasks"></select>
+        <span asp-validation-for="ClientTaskId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Amount"></label>
+        <input asp-for="Amount" class="form-control" />
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PaymentDate"></label>
+        <input asp-for="PaymentDate" class="form-control" type="date" />
+        <span asp-validation-for="PaymentDate" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Зберегти</button>
+    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+</form>
