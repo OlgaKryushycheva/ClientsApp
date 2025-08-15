@@ -1,0 +1,24 @@
+@model ClientsApp.Models.Entities.ExecutorTask
+@{
+    ViewData["Title"] = "Видалити запис";
+}
+
+<h2>Видалити запис</h2>
+
+<div>
+    <p>Ви впевнені, що хочете видалити цей запис?</p>
+    <dl class="row">
+        <dt class="col-sm-3">Виконавець</dt>
+        <dd class="col-sm-9">@Model.Executor?.FullName</dd>
+        <dt class="col-sm-3">Клієнт</dt>
+        <dd class="col-sm-9">@Model.ClientTask?.Client?.Name</dd>
+        <dt class="col-sm-3">Завдання</dt>
+        <dd class="col-sm-9">@Model.ClientTask?.TaskTitle</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="ExecutorTaskId" />
+    <button type="submit" class="btn btn-danger">Видалити</button>
+    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+</form>

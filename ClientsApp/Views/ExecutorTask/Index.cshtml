@@ -1,0 +1,39 @@
+@model IEnumerable<ClientsApp.Models.Entities.ExecutorTask>
+@{
+    ViewData["Title"] = "Завдання виконавців";
+}
+
+<h2>Завдання виконавців</h2>
+
+<a asp-action="Create" class="btn btn-success mb-2">Додати запис</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Виконавець</th>
+            <th>Клієнт</th>
+            <th>Завдання</th>
+            <th>Фактичний час</th>
+            <th>Скоригований час</th>
+            <th>Вартість</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Executor?.FullName</td>
+            <td>@item.ClientTask?.Client?.Name</td>
+            <td>@item.ClientTask?.TaskTitle</td>
+            <td>@item.ActualTime</td>
+            <td>@item.AdjustedTime</td>
+            <td>@item.TaskCost.ToString("F2")</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ExecutorTaskId" class="btn btn-primary btn-sm">Редагувати</a>
+                <a asp-action="Delete" asp-route-id="@item.ExecutorTaskId" class="btn btn-danger btn-sm">Видалити</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

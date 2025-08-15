@@ -1,0 +1,102 @@
+@model ClientsApp.Models.Entities.ExecutorTask
+@{
+    ViewData["Title"] = "Додати запис";
+    var executors = ViewBag.Executors as IEnumerable<ClientsApp.Models.Entities.Executor>;
+}
+
+<h2>Додати запис</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="ExecutorId">Виконавець</label>
+        <select id="ExecutorId" name="ExecutorId" class="form-control">
+            <option value="">-- Виберіть виконавця --</option>
+            @foreach (var ex in executors)
+            {
+                <option value="@ex.ExecutorId" data-rate="@ex.HourlyRate">@ex.FullName</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="ClientId">Клієнт</label>
+        <select id="ClientId" class="form-control">
+            <option value="">-- Виберіть клієнта --</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="ClientTaskId">Завдання</label>
+        <select id="ClientTaskId" name="ClientTaskId" class="form-control">
+            <option value="">-- Виберіть завдання --</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="ActualTime"></label>
+        <input asp-for="ActualTime" class="form-control" />
+        <span asp-validation-for="ActualTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="AdjustedTime"></label>
+        <input asp-for="AdjustedTime" class="form-control" id="AdjustedTime" />
+        <span asp-validation-for="AdjustedTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Вартість</label>
+        <input id="TaskCost" class="form-control" readonly />
+    </div>
+    <button type="submit" class="btn btn-success">Зберегти</button>
+    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+</form>
+
+@section Scripts{
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const executorSelect = document.getElementById('ExecutorId');
+        const clientSelect = document.getElementById('ClientId');
+        const taskSelect = document.getElementById('ClientTaskId');
+        const adjustedInput = document.getElementById('AdjustedTime');
+        const costInput = document.getElementById('TaskCost');
+
+        executorSelect.addEventListener('change', async function(){
+            const executorId = this.value;
+            clientSelect.innerHTML = '<option value="">-- Виберіть клієнта --</option>';
+            taskSelect.innerHTML = '<option value="">-- Виберіть завдання --</option>';
+            if(executorId){
+                const resp = await fetch(`/ExecutorTask/GetClientsByExecutor?executorId=${executorId}`);
+                const data = await resp.json();
+                data.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.clientId;
+                    opt.textContent = c.name;
+                    clientSelect.appendChild(opt);
+                });
+            }
+            updateCost();
+        });
+
+        clientSelect.addEventListener('change', async function(){
+            const executorId = executorSelect.value;
+            const clientId = this.value;
+            taskSelect.innerHTML = '<option value="">-- Виберіть завдання --</option>';
+            if(executorId && clientId){
+                const resp = await fetch(`/ExecutorTask/GetTasksByExecutorClient?executorId=${executorId}&clientId=${clientId}`);
+                const data = await resp.json();
+                data.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.clientTaskId;
+                    opt.textContent = t.taskTitle;
+                    taskSelect.appendChild(opt);
+                });
+            }
+        });
+
+        function updateCost(){
+            const rate = parseFloat(executorSelect.selectedOptions[0]?.getAttribute('data-rate')) || 0;
+            const time = parseFloat(adjustedInput.value) || 0;
+            costInput.value = (rate * time).toFixed(2);
+        }
+
+        adjustedInput.addEventListener('input', updateCost);
+        executorSelect.addEventListener('change', updateCost);
+    });
+</script>
+}
