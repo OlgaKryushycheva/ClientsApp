@@ -8,30 +8,31 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label for="ExecutorId">Виконавець</label>
-        <select id="ExecutorId" name="ExecutorId" class="form-control">
+        <label asp-for="ExecutorId"></label>
+        <select asp-for="ExecutorId" class="form-control" id="ExecutorId">
             <option value="">-- Виберіть виконавця --</option>
             @foreach (var ex in executors)
             {
-                <option value="@ex.ExecutorId"
-                        data-rate="@ex.HourlyRate"
-                        selected="@(ex.ExecutorId == Model?.ExecutorId)">
+                <option value="@ex.ExecutorId" data-rate="@ex.HourlyRate">
                     @ex.FullName
                 </option>
             }
         </select>
+        <span asp-validation-for="ExecutorId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label for="ClientId">Клієнт</label>
-        <select id="ClientId" class="form-control">
+        <label asp-for="ClientId"></label>
+        <select asp-for="ClientId" class="form-control" asp-items="ViewBag.Clients" id="ClientId">
             <option value="">-- Виберіть клієнта --</option>
         </select>
+        <span asp-validation-for="ClientId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label for="ClientTaskId">Завдання</label>
-        <select id="ClientTaskId" name="ClientTaskId" class="form-control">
+        <label asp-for="ClientTaskId"></label>
+        <select asp-for="ClientTaskId" class="form-control" asp-items="ViewBag.Tasks" id="ClientTaskId">
             <option value="">-- Виберіть завдання --</option>
         </select>
+        <span asp-validation-for="ClientTaskId" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="ActualTime"></label>
@@ -60,26 +61,19 @@
         const adjustedInput = document.getElementById('AdjustedTime');
         const costInput = document.getElementById('TaskCost');
 
-        executorSelect.addEventListener('change', async function(){
-            const executorId = this.value;
-            clientSelect.innerHTML = '<option value="">-- Виберіть клієнта --</option>';
+        executorSelect.addEventListener('change', function(){
             taskSelect.innerHTML = '<option value="">-- Виберіть завдання --</option>';
-            if(executorId){
-                const resp = await fetch(`/ExecutorTask/GetClientsByExecutor?executorId=${executorId}`);
-                const data = await resp.json();
-                data.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.clientId;
-                    opt.textContent = c.name;
-                    clientSelect.appendChild(opt);
-                });
-            }
+            loadTasks();
             updateCost();
         });
 
-        clientSelect.addEventListener('change', async function(){
+        clientSelect.addEventListener('change', function(){
+            loadTasks();
+        });
+
+        async function loadTasks(){
             const executorId = executorSelect.value;
-            const clientId = this.value;
+            const clientId = clientSelect.value;
             taskSelect.innerHTML = '<option value="">-- Виберіть завдання --</option>';
             if(executorId && clientId){
                 const resp = await fetch(`/ExecutorTask/GetTasksByExecutorClient?executorId=${executorId}&clientId=${clientId}`);
@@ -91,7 +85,7 @@
                     taskSelect.appendChild(opt);
                 });
             }
-        });
+        }
 
         function updateCost(){
             const rate = parseFloat(executorSelect.selectedOptions[0]?.getAttribute('data-rate')) || 0;
@@ -101,6 +95,7 @@
 
         adjustedInput.addEventListener('input', updateCost);
         executorSelect.addEventListener('change', updateCost);
+        updateCost();
     });
 </script>
 }
