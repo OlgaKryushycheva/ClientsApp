@@ -24,7 +24,7 @@ namespace ClientsApp.Controllers
             _taskService = taskService;
         }
 
-        public async Task<IActionResult> Index(int? clientId, bool? isPaid)
+        public async Task<IActionResult> Index(int? selectedClientId, bool? isPaid)
         {
             var tasks = await _taskService.GetAllAsync();
             var payments = await _paymentService.GetAllAsync();
@@ -45,8 +45,8 @@ namespace ClientsApp.Controllers
                 };
             });
 
-            if (clientId.HasValue)
-                summaries = summaries.Where(s => s.ClientId == clientId.Value);
+            if (selectedClientId.HasValue)
+                summaries = summaries.Where(s => s.ClientId == selectedClientId.Value);
 
             if (isPaid.HasValue)
                 summaries = isPaid.Value
@@ -62,7 +62,7 @@ namespace ClientsApp.Controllers
                     Value = c.ClientId.ToString(),
                     Text = c.Name
                 }).ToList(),
-                SelectedClientId = clientId,
+                SelectedClientId = selectedClientId,
                 IsPaid = isPaid
             };
 

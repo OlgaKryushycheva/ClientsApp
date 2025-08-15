@@ -9,7 +9,7 @@ namespace ClientsApp.Models.Entities
 
         [Required]
         public int ClientTaskId { get; set; }
-        public ClientTask ClientTask { get; set; }
+        public ClientTask? ClientTask { get; set; }
 
         [Required]
         [Range(0, double.MaxValue)]
