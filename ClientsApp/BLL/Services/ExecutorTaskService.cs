@@ -59,18 +59,21 @@ namespace ClientsApp.BLL.Services
 
         public async Task<IEnumerable<Client>> GetClientsByExecutorAsync(int executorId)
         {
-            return await _context.ClientTasks
-                .Where(ct => ct.ExecutorId == executorId)
-                .Include(ct => ct.Client)
-                .Select(ct => ct.Client!)
+            return await _context.ExecutorTasks
+                .Where(et => et.ExecutorId == executorId)
+                .Include(et => et.ClientTask)
+                    .ThenInclude(ct => ct.Client)
+                .Select(et => et.ClientTask!.Client!)
                 .Distinct()
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<ClientTask>> GetTasksByExecutorAndClientAsync(int executorId, int clientId)
         {
-            return await _context.ClientTasks
-                .Where(ct => ct.ExecutorId == executorId && ct.ClientId == clientId)
+            return await _context.ExecutorTasks
+                .Where(et => et.ExecutorId == executorId && et.ClientTask!.ClientId == clientId)
+                .Select(et => et.ClientTask!)
+                .Distinct()
                 .ToListAsync();
         }
     }

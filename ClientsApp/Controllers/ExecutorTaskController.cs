@@ -65,6 +65,7 @@ namespace ClientsApp.Controllers
             ViewBag.Executors = await _executorService.GetAllAsync();
             ViewBag.Clients = await _executorTaskService.GetClientsByExecutorAsync(executorTask.ExecutorId ?? 0);
             var clientId = executorTask.ClientTask?.ClientId ?? 0;
+            executorTask.ClientId = clientId;
             ViewBag.Tasks = await _executorTaskService.GetTasksByExecutorAndClientAsync(executorTask.ExecutorId ?? 0, clientId);
             ViewBag.CurrentClientId = clientId;
             return View(executorTask);
@@ -81,7 +82,7 @@ namespace ClientsApp.Controllers
             }
             ViewBag.Executors = await _executorService.GetAllAsync();
             ViewBag.Clients = await _executorTaskService.GetClientsByExecutorAsync(executorTask.ExecutorId ?? 0);
-            var clientId = (await _executorTaskService.GetByIdAsync(executorTask.ExecutorTaskId))?.ClientTask?.ClientId ?? 0;
+            var clientId = executorTask.ClientId ?? (await _executorTaskService.GetByIdAsync(executorTask.ExecutorTaskId))?.ClientTask?.ClientId ?? 0;
             ViewBag.Tasks = await _executorTaskService.GetTasksByExecutorAndClientAsync(executorTask.ExecutorId ?? 0, clientId);
             ViewBag.CurrentClientId = clientId;
             return View(executorTask);
