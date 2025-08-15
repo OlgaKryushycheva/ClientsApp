@@ -10,7 +10,7 @@
             <option value="">Всі виконавці</option>
             @foreach (var e in (SelectList)ViewBag.Executors)
             {
-                <option value="@e.Value" @(e.Selected ? "selected" : null)>@e.Text</option>
+                <option value="@e.Value" selected="@(e.Selected ? "selected" : null)">@e.Text</option>
             }
         </select>
     </div>
@@ -19,7 +19,7 @@
             <option value="">Всі клієнти</option>
             @foreach (var c in (SelectList)ViewBag.Clients)
             {
-                <option value="@c.Value" @(c.Selected ? "selected" : null)>@c.Text</option>
+                <option value="@c.Value" selected="@(c.Selected ? "selected" : null)">@c.Text</option>
             }
         </select>
     </div>
@@ -28,7 +28,7 @@
             <option value="">Всі завдання</option>
             @foreach (var t in (SelectList)ViewBag.Tasks)
             {
-                <option value="@t.Value" @(t.Selected ? "selected" : null)>@t.Text</option>
+                <option value="@t.Value" selected="@(t.Selected ? "selected" : null)">@t.Text</option>
             }
         </select>
     </div>
