@@ -6,7 +6,7 @@ namespace ClientsApp.BLL.Interfaces
 {
     public interface IExecutorTaskService
     {
-        Task<IEnumerable<ExecutorTask>> GetAllAsync();
+        Task<IEnumerable<ExecutorTask>> GetAllAsync(int? executorId = null, int? clientId = null, int? taskId = null);
         Task<ExecutorTask> GetByIdAsync(int id);
         Task AddAsync(ExecutorTask executorTask);
         Task UpdateAsync(ExecutorTask executorTask);

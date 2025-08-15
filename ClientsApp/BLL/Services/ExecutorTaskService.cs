@@ -17,13 +17,30 @@ namespace ClientsApp.BLL.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<ExecutorTask>> GetAllAsync()
+        public async Task<IEnumerable<ExecutorTask>> GetAllAsync(int? executorId = null, int? clientId = null, int? taskId = null)
         {
-            return await _context.ExecutorTasks
+            var query = _context.ExecutorTasks
                 .Include(et => et.Executor)
                 .Include(et => et.ClientTask)
                     .ThenInclude(ct => ct.Client)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (executorId.HasValue)
+            {
+                query = query.Where(et => et.ExecutorId == executorId.Value);
+            }
+
+            if (clientId.HasValue)
+            {
+                query = query.Where(et => et.ClientTask!.ClientId == clientId.Value);
+            }
+
+            if (taskId.HasValue)
+            {
+                query = query.Where(et => et.ClientTaskId == taskId.Value);
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<ExecutorTask> GetByIdAsync(int id)

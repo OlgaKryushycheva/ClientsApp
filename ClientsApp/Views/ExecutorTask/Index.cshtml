@@ -4,6 +4,39 @@
 }
 
 <h2>Завдання виконавців</h2>
+<form method="get" class="row g-3 mb-3">
+    <div class="col-md-3">
+        <select name="executorId" class="form-select">
+            <option value="">Всі виконавці</option>
+            @foreach (var e in (SelectList)ViewBag.Executors)
+            {
+                <option value="@e.Value" @(e.Selected ? "selected" : null)>@e.Text</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="clientId" class="form-select">
+            <option value="">Всі клієнти</option>
+            @foreach (var c in (SelectList)ViewBag.Clients)
+            {
+                <option value="@c.Value" @(c.Selected ? "selected" : null)>@c.Text</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="taskId" class="form-select">
+            <option value="">Всі завдання</option>
+            @foreach (var t in (SelectList)ViewBag.Tasks)
+            {
+                <option value="@t.Value" @(t.Selected ? "selected" : null)>@t.Text</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary me-2">Фільтрувати</button>
+        <a asp-action="Index" class="btn btn-secondary" id="resetFilters">Скинути усі фільтри</a>
+    </div>
+</form>
 
 <a asp-action="Create" class="btn btn-success mb-2">Додати запис</a>
 
@@ -37,3 +70,12 @@
     }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        const nav = window.performance && window.performance.getEntriesByType('navigation')[0];
+        if (nav && nav.type === 'reload' && window.location.search) {
+            window.location.replace(window.location.pathname);
+        }
+    </script>
+}
