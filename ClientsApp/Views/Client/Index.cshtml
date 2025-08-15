@@ -10,13 +10,16 @@
 <p>Ви можете здійснювати пошук клієнтів за їх назвою, у тому числі частковою. </p>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Додати клієнта</a>
+    <a asp-action="Create" class="btn btn-success mb-2">Додати клієнта</a>
 </p>
 
-<form method="get" class="mb-3">
-    <div class="input-group">
+<form method="get" class="row g-3 mb-3">
+    <div class="col-md-4">
         <input type="text" name="searchString" value="@ViewData["SearchString"]" class="form-control" placeholder="Пошук за ім'ям" minlength="3" />
-        <button type="submit" class="btn btn-secondary">Пошук</button>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary me-2">Пошук</button>
+        <a asp-action="Index" class="btn btn-secondary" id="resetFilters">Скинути</a>
     </div>
 </form>
 
@@ -39,8 +42,8 @@
                 <td>@client.Email</td>
                 <td>@client.Phone</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@client.ClientId" class="btn btn-sm btn-warning">Редагувати</a>
-                    <a asp-action="Delete" asp-route-id="@client.ClientId" class="btn btn-sm btn-danger">Видалити</a>
+                    <a asp-action="Edit" asp-route-id="@client.ClientId" class="btn btn-primary btn-sm">Редагувати</a>
+                    <a asp-action="Delete" asp-route-id="@client.ClientId" class="btn btn-danger btn-sm">Видалити</a>
                 </td>
             </tr>
         }
@@ -49,9 +52,9 @@
 
 @section Scripts {
     <script>
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('searchString')) {
-            window.history.replaceState({}, '', window.location.pathname);
+        const nav = window.performance && window.performance.getEntriesByType('navigation')[0];
+        if (nav && nav.type === 'reload' && window.location.search) {
+            window.location.replace(window.location.pathname);
         }
     </script>
 }

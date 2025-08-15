@@ -9,32 +9,28 @@
 <p>На цій сторінці Завдання Ви можете отримати усю інформацію по усіх завданнях фірми,  а також додавати інформацію, редагувати та видаляти її. </p>
 <p>Ви можете здійснювати фільтрацію у зручному для Вас форматі відповідно до обраних фільтрів. </p>
 
- <a asp-action="Create" class="btn btn-success">Додати завдання</a>
+ <a asp-action="Create" class="btn btn-success mb-2">Додати завдання</a>
 
-<form asp-action="Index" method="get" class="form-inline mb-3">
-    <div class="form-group mr-2">
-        <label asp-for="SelectedClientId" class="mr-1">Клієнт:</label>
-        <select asp-for="SelectedClientId" class="form-control" asp-items="Model.Clients">
+<form asp-action="Index" method="get" class="row g-3 mb-3">
+    <div class="col-md-3">
+        <select asp-for="SelectedClientId" class="form-select" asp-items="Model.Clients">
             <option value="">Всі</option>
         </select>
     </div>
-
-    <div class="form-group mr-2">
-        <label asp-for="SelectedExecutorId" class="mr-1">Виконавець:</label>
-        <select asp-for="SelectedExecutorId" class="form-control" asp-items="Model.Executors">
+    <div class="col-md-3">
+        <select asp-for="SelectedExecutorId" class="form-select" asp-items="Model.Executors">
             <option value="">Всі</option>
         </select>
     </div>
-
-    <div class="form-group mr-2">
-        <label asp-for="SelectedStatus" class="mr-1">Статус:</label>
-        <select asp-for="SelectedStatus" class="form-control" asp-items="Model.Statuses">
+    <div class="col-md-3">
+        <select asp-for="SelectedStatus" class="form-select" asp-items="Model.Statuses">
             <option value="">Всі</option>
         </select>
     </div>
-
-    <button type="submit" class="btn btn-primary">Фільтрувати</button>
-    <a asp-action="Index" class="btn btn-secondary ms-2" id="resetFilters">Скинути усі фільтри</a>
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary me-2">Фільтрувати</button>
+        <a asp-action="Index" class="btn btn-secondary" id="resetFilters">Скинути усі фільтри</a>
+    </div>
 </form>
 
 <table class="table table-striped">
