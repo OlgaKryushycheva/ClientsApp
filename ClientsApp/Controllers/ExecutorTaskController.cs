@@ -26,7 +26,7 @@ namespace ClientsApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.Executors = await _executorService.GetAllAsync();
-            return View();
+            return View(new ExecutorTask());
         }
 
         [HttpPost]
