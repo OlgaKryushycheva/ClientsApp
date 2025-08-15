@@ -129,10 +129,10 @@ namespace ClientsApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", model.ClientId);
-                model.Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", model.SelectedExecutors);
-                model.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), model.TaskStatus);
-                return View(model);
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage);
+                return Content("ModelState invalid: " + string.Join(", ", errors));
             }
 
             var task = new ClientTask

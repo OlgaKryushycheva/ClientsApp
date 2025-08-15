@@ -32,8 +32,8 @@ namespace ClientsApp.Models.ViewModels
 
         public List<int> SelectedExecutors { get; set; } = new();
 
-        public SelectList Clients { get; set; }
-        public MultiSelectList Executors { get; set; }
-        public SelectList Statuses { get; set; }
+        public SelectList? Clients { get; set; }
+        public MultiSelectList? Executors { get; set; }
+        public SelectList? Statuses { get; set; }
     }
 }
