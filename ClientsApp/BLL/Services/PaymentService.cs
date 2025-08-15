@@ -18,12 +18,18 @@ namespace ClientsApp.BLL.Services
 
         public async Task<IEnumerable<Payment>> GetAllAsync()
         {
-            return await _context.Payments.ToListAsync();
+            return await _context.Payments
+                .Include(p => p.ClientTask)
+                    .ThenInclude(ct => ct.Client)
+                .ToListAsync();
         }
 
         public async Task<Payment> GetByIdAsync(int id)
         {
-            return await _context.Payments.FindAsync(id);
+            return await _context.Payments
+                .Include(p => p.ClientTask)
+                    .ThenInclude(ct => ct.Client)
+                .FirstOrDefaultAsync(p => p.PaymentId == id);
         }
 
         public async Task AddAsync(Payment payment)

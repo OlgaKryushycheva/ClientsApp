@@ -1,0 +1,48 @@
+@model ClientsApp.Models.ViewModels.PaymentIndexViewModel
+@{
+    ViewData["Title"] = "Платежі";
+}
+
+<h2>Платежі</h2>
+
+<form method="get" class="form-inline mb-3">
+    <div class="form-group mr-2">
+        <select asp-for="SelectedClientId" asp-items="Model.Clients" class="form-control">
+            <option value="">Всі клієнти</option>
+        </select>
+    </div>
+    <div class="form-group mr-2">
+        <select asp-for="IsPaid" class="form-control">
+            <option value="">Всі</option>
+            <option value="true">Оплачені</option>
+            <option value="false">Неоплачені</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Фільтрувати</button>
+</form>
+
+<a asp-action="Create" class="btn btn-success mb-2">Додати платіж</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Клієнт</th>
+            <th>Завдання</th>
+            <th>Вартість послуг</th>
+            <th>Оплачено</th>
+            <th>Заборгованість</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var p in Model.Payments)
+    {
+        <tr>
+            <td>@p.ClientName</td>
+            <td>@p.TaskTitle</td>
+            <td>@p.ServiceCost.ToString("F2")</td>
+            <td>@p.AmountReceived.ToString("F2")</td>
+            <td>@p.BalanceDue.ToString("F2")</td>
+        </tr>
+    }
+    </tbody>
+</table>

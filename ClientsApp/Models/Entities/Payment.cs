@@ -1,14 +1,21 @@
-﻿namespace ClientsApp.Models.Entities
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace ClientsApp.Models.Entities
 {
     public class Payment
     {
-        public int PaymentId { get; set; }  // Первичный ключ для платежа
+        public int PaymentId { get; set; }
 
-        public int ClientTaskId { get; set; }  // Идентификатор задачи, за которую сделан платеж
-        public ClientTask ClientTask { get; set; }  // Навигационное свойство для задачи
+        [Required]
+        public int ClientTaskId { get; set; }
+        public ClientTask ClientTask { get; set; }
 
-        public decimal Amount { get; set; }  // Сумма платежа
-        public DateTime PaymentDate { get; set; }  // Дата платежа
-        public decimal BalanceDue { get; set; }  // Потенциальная задолженность по задаче
+        [Required]
+        [Range(0, double.MaxValue)]
+        public decimal Amount { get; set; }
+
+        public DateTime PaymentDate { get; set; }
+        public decimal BalanceDue { get; set; }
     }
 }
