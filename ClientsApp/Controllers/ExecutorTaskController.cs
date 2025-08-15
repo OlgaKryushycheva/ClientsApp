@@ -26,9 +26,13 @@ namespace ClientsApp.Controllers
             _clientTaskService = clientTaskService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? executorId, int? clientId, int? taskId)
         {
-            var items = await _executorTaskService.GetAllAsync();
+            ViewBag.Executors = new SelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", executorId);
+            ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", clientId);
+            ViewBag.Tasks = new SelectList(await _clientTaskService.GetAllAsync(), "ClientTaskId", "TaskTitle", taskId);
+
+            var items = await _executorTaskService.GetAllAsync(executorId, clientId, taskId);
             return View(items);
         }
 
