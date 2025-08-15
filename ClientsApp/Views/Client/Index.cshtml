@@ -43,3 +43,12 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('searchString')) {
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+    </script>
+}
