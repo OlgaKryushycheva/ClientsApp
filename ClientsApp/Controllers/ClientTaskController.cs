@@ -111,7 +111,10 @@ namespace ClientsApp.Controllers
                 EndDate = task.EndDate,
                 ClientId = task.ClientId,
                 TaskStatus = task.TaskStatus,
-                SelectedExecutors = task.ExecutorTasks.Select(et => et.ExecutorId).ToList(),
+                SelectedExecutors = task.ExecutorTasks
+                    .Where(et => et.ExecutorId.HasValue)
+                    .Select(et => et.ExecutorId!.Value)
+                    .ToList(),
                 Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task.ClientId),
                 Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", task.ExecutorTasks.Select(et => et.ExecutorId)),
                 Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), task.TaskStatus)
