@@ -13,7 +13,11 @@
             <option value="">-- Виберіть виконавця --</option>
             @foreach (var ex in executors)
             {
-                <option value="@ex.ExecutorId" data-rate="@ex.HourlyRate">@ex.FullName</option>
+                <option value="@ex.ExecutorId"
+                        data-rate="@ex.HourlyRate"
+                        selected="@(ex.ExecutorId == Model.ExecutorId)">
+                    @ex.FullName
+                </option>
             }
         </select>
     </div>
