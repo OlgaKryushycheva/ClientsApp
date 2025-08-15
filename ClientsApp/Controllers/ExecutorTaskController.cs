@@ -1,6 +1,7 @@
 using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,11 +11,19 @@ namespace ClientsApp.Controllers
     {
         private readonly IExecutorTaskService _executorTaskService;
         private readonly IExecutorService _executorService;
+        private readonly IClientService _clientService;
+        private readonly IClientTaskService _clientTaskService;
 
-        public ExecutorTaskController(IExecutorTaskService executorTaskService, IExecutorService executorService)
+        public ExecutorTaskController(
+            IExecutorTaskService executorTaskService,
+            IExecutorService executorService,
+            IClientService clientService,
+            IClientTaskService clientTaskService)
         {
             _executorTaskService = executorTaskService;
             _executorService = executorService;
+            _clientService = clientService;
+            _clientTaskService = clientTaskService;
         }
 
         public async Task<IActionResult> Index()
@@ -26,6 +35,8 @@ namespace ClientsApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.Executors = await _executorService.GetAllAsync();
+            ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name");
+            ViewBag.Tasks = new SelectList(Enumerable.Empty<ClientTask>(), "ClientTaskId", "TaskTitle");
             return View(new ExecutorTask());
         }
 
@@ -33,18 +44,16 @@ namespace ClientsApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ExecutorTask executorTask)
         {
-            if (!ModelState.IsValid)
-            {
-                // Повертаємо повідомлення про помилки 
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage); return Content("ModelState invalid: " + string.Join(", ", errors));
-            }
-            
             if (ModelState.IsValid)
             {
                 await _executorTaskService.AddAsync(executorTask);
                 return RedirectToAction(nameof(Index));
             }
+
             ViewBag.Executors = await _executorService.GetAllAsync();
+            ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", executorTask.ClientId);
+            var tasks = await _clientTaskService.GetAllAsync();
+            ViewBag.Tasks = new SelectList(tasks.Where(t => t.ClientId == executorTask.ClientId), "ClientTaskId", "TaskTitle", executorTask.ClientTaskId);
             return View(executorTask);
         }
 
@@ -54,9 +63,9 @@ namespace ClientsApp.Controllers
             if (executorTask == null) return NotFound();
 
             ViewBag.Executors = await _executorService.GetAllAsync();
-            ViewBag.Clients = await _executorTaskService.GetClientsByExecutorAsync(executorTask.ExecutorId);
+            ViewBag.Clients = await _executorTaskService.GetClientsByExecutorAsync(executorTask.ExecutorId ?? 0);
             var clientId = executorTask.ClientTask?.ClientId ?? 0;
-            ViewBag.Tasks = await _executorTaskService.GetTasksByExecutorAndClientAsync(executorTask.ExecutorId, clientId);
+            ViewBag.Tasks = await _executorTaskService.GetTasksByExecutorAndClientAsync(executorTask.ExecutorId ?? 0, clientId);
             ViewBag.CurrentClientId = clientId;
             return View(executorTask);
         }
@@ -71,9 +80,9 @@ namespace ClientsApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Executors = await _executorService.GetAllAsync();
-            ViewBag.Clients = await _executorTaskService.GetClientsByExecutorAsync(executorTask.ExecutorId);
+            ViewBag.Clients = await _executorTaskService.GetClientsByExecutorAsync(executorTask.ExecutorId ?? 0);
             var clientId = (await _executorTaskService.GetByIdAsync(executorTask.ExecutorTaskId))?.ClientTask?.ClientId ?? 0;
-            ViewBag.Tasks = await _executorTaskService.GetTasksByExecutorAndClientAsync(executorTask.ExecutorId, clientId);
+            ViewBag.Tasks = await _executorTaskService.GetTasksByExecutorAndClientAsync(executorTask.ExecutorId ?? 0, clientId);
             ViewBag.CurrentClientId = clientId;
             return View(executorTask);
         }
