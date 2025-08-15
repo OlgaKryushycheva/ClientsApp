@@ -43,7 +43,20 @@ namespace ClientsApp.BLL
 
         public async Task UpdateAsync(ClientTask task)
         {
-            _context.ClientTasks.Update(task);
+            var existingTask = await _context.ClientTasks
+                .Include(ct => ct.ExecutorTasks)
+                .FirstOrDefaultAsync(ct => ct.ClientTaskId == task.ClientTaskId);
+
+            if (existingTask == null) return;
+
+            _context.Entry(existingTask).CurrentValues.SetValues(task);
+
+            existingTask.ExecutorTasks.Clear();
+            foreach (var et in task.ExecutorTasks)
+            {
+                existingTask.ExecutorTasks.Add(new ExecutorTask { ExecutorId = et.ExecutorId });
+            }
+
             await _context.SaveChangesAsync();
         }
 

@@ -26,13 +26,9 @@ namespace ClientsApp.Controllers
         }
 
         // ================= Index =================
-        public async Task<IActionResult> Index(int? clientId, int? executorId, int? status)
+        public async Task<IActionResult> Index(int? selectedClientId, int? selectedExecutorId, ClientTaskStatusEnum? selectedStatus)
         {
-            ClientTaskStatusEnum? taskStatus = status.HasValue
-                ? (ClientTaskStatusEnum?)Enum.ToObject(typeof(ClientTaskStatusEnum), status.Value)
-                : null;
-
-            var tasks = await _taskService.SearchAsync(clientId, executorId, taskStatus);
+            var tasks = await _taskService.SearchAsync(selectedClientId, selectedExecutorId, selectedStatus);
 
             var clients = await _clientService.GetAllAsync();
             var executors = await _executorService.GetAllAsync();
@@ -57,9 +53,9 @@ namespace ClientsApp.Controllers
                         Value = ((int)s).ToString(),
                         Text = s.ToString()
                     }).ToList(),
-                SelectedClientId = clientId,
-                SelectedExecutorId = executorId,
-                SelectedStatus = taskStatus
+                SelectedClientId = selectedClientId,
+                SelectedExecutorId = selectedExecutorId,
+                SelectedStatus = selectedStatus
             };
 
             return View(model);
@@ -83,21 +79,12 @@ namespace ClientsApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Повертаємо повідомлення про помилки 
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage); return Content("ModelState invalid: " + string.Join(", ", errors));
-            }
-
-            // Захист від втрати ViewBag при поверненні форми
-            if (!ModelState.IsValid)
-            {
                 ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task.ClientId);
                 ViewBag.Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", selectedExecutors);
                 ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), task.TaskStatus);
-
                 return View(task);
             }
 
-            // Прив'язка виконавців до задачі
             task.ExecutorTasks = selectedExecutors.Select(eid => new ExecutorTask
             {
                 ExecutorId = eid
@@ -116,7 +103,7 @@ namespace ClientsApp.Controllers
             if (task == null) return NotFound();
 
             ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task.ClientId);
-            ViewBag.Executors = new SelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", task.ExecutorId);
+            ViewBag.Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", task.ExecutorTasks.Select(et => et.ExecutorId));
             ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), task.TaskStatus);
 
             return View(task);
@@ -124,16 +111,17 @@ namespace ClientsApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ClientTask task)
+        public async Task<IActionResult> Edit(ClientTask task, int[] selectedExecutors)
         {
             if (ModelState.IsValid)
             {
+                task.ExecutorTasks = selectedExecutors.Select(eid => new ExecutorTask { ExecutorId = eid }).ToList();
                 await _taskService.UpdateAsync(task);
                 return RedirectToAction(nameof(Index));
             }
 
             ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task.ClientId);
-            ViewBag.Executors = new SelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", task.ExecutorId);
+            ViewBag.Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", selectedExecutors);
             ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), task.TaskStatus);
 
             return View(task);
