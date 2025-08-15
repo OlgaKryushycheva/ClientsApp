@@ -1,4 +1,6 @@
-﻿namespace ClientsApp.Models.Entities
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ClientsApp.Models.Entities
 {
     public class ExecutorTask
     {
@@ -13,6 +15,8 @@
         public decimal ActualTime { get; set; }  // Время, затраченное исполнителем
         public decimal AdjustedTime { get; set; }  // Скорректированное время
 
-        public decimal TaskCost => AdjustedTime * Executor.HourlyRate;  // Стоимость задачи
+        [NotMapped]
+        public decimal TaskCost => AdjustedTime * (Executor?.HourlyRate ?? 0);  // Стоимость задачи
     }
 }
+

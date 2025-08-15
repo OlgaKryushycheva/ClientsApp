@@ -15,7 +15,7 @@
             {
                 <option value="@ex.ExecutorId"
                         data-rate="@ex.HourlyRate"
-                        selected="@(ex.ExecutorId == Model.ExecutorId)">
+                        selected="@(ex.ExecutorId == Model?.ExecutorId)">
                     @ex.FullName
                 </option>
             }
