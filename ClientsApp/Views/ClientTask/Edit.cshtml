@@ -1,4 +1,4 @@
-@model ClientsApp.Models.Entities.ClientTask
+@model ClientsApp.Models.ViewModels.ClientTaskEditViewModel
 
 @{
     ViewData["Title"] = "Редагувати завдання";
@@ -35,20 +35,21 @@
     </div>
 
     <div class="form-group">
-        <label>Клієнт</label>
-        <select asp-for="ClientId" class="form-control" asp-items="ViewBag.Clients">
+        <label asp-for="ClientId"></label>
+        <select asp-for="ClientId" class="form-control" asp-items="Model.Clients">
             <option value="">Виберіть клієнта</option>
         </select>
+        <span asp-validation-for="ClientId" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label>Виконавці</label>
-        <select name="selectedExecutors" class="form-control" multiple asp-items="ViewBag.Executors"></select>
+        <label asp-for="SelectedExecutors">Виконавці</label>
+        <select asp-for="SelectedExecutors" class="form-control" multiple asp-items="Model.Executors"></select>
     </div>
 
     <div class="form-group">
         <label asp-for="TaskStatus"></label>
-        <select asp-for="TaskStatus" class="form-control" asp-items="ViewBag.Statuses"></select>
+        <select asp-for="TaskStatus" class="form-control" asp-items="Model.Statuses"></select>
     </div>
 
     <button type="submit" class="btn btn-success">Зберегти</button>

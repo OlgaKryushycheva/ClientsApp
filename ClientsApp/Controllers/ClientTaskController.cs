@@ -102,29 +102,50 @@ namespace ClientsApp.Controllers
             var task = await _taskService.GetByIdAsync(id);
             if (task == null) return NotFound();
 
-            ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task.ClientId);
-            ViewBag.Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", task.ExecutorTasks.Select(et => et.ExecutorId));
-            ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), task.TaskStatus);
+            var model = new ClientTaskEditViewModel
+            {
+                ClientTaskId = task.ClientTaskId,
+                TaskTitle = task.TaskTitle,
+                Description = task.Description,
+                StartDate = task.StartDate,
+                EndDate = task.EndDate,
+                ClientId = task.ClientId,
+                TaskStatus = task.TaskStatus,
+                SelectedExecutors = task.ExecutorTasks.Select(et => et.ExecutorId).ToList(),
+                Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task.ClientId),
+                Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", task.ExecutorTasks.Select(et => et.ExecutorId)),
+                Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), task.TaskStatus)
+            };
 
-            return View(task);
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ClientTask task, int[] selectedExecutors)
+        public async Task<IActionResult> Edit(ClientTaskEditViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                task.ExecutorTasks = selectedExecutors.Select(eid => new ExecutorTask { ExecutorId = eid }).ToList();
-                await _taskService.UpdateAsync(task);
-                return RedirectToAction(nameof(Index));
+                model.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", model.ClientId);
+                model.Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", model.SelectedExecutors);
+                model.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), model.TaskStatus);
+                return View(model);
             }
 
-            ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task.ClientId);
-            ViewBag.Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", selectedExecutors);
-            ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), task.TaskStatus);
+            var task = new ClientTask
+            {
+                ClientTaskId = model.ClientTaskId,
+                TaskTitle = model.TaskTitle,
+                Description = model.Description,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
+                ClientId = model.ClientId,
+                TaskStatus = model.TaskStatus,
+                ExecutorTasks = model.SelectedExecutors.Select(eid => new ExecutorTask { ExecutorId = eid }).ToList()
+            };
 
-            return View(task);
+            await _taskService.UpdateAsync(task);
+            return RedirectToAction(nameof(Index));
         }
 
         // ================= Delete =================
