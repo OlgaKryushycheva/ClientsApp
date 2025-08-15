@@ -1,6 +1,7 @@
 ﻿using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ClientsApp.Controllers
@@ -14,9 +15,19 @@ namespace ClientsApp.Controllers
             _clientService = clientService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var clients = await _clientService.GetAllAsync();
+            IEnumerable<Client> clients;
+            if (!string.IsNullOrWhiteSpace(searchString) && searchString.Length >= 3)
+            {
+                clients = await _clientService.SearchByNameAsync(searchString);
+            }
+            else
+            {
+                clients = await _clientService.GetAllAsync();
+            }
+
+            ViewData["SearchString"] = searchString;
             return View(clients);
         }
 
