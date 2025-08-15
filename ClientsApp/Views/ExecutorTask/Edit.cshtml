@@ -17,7 +17,11 @@
             <option value="">-- Виберіть виконавця --</option>
             @foreach (var ex in executors)
             {
-                <option value="@ex.ExecutorId" data-rate="@ex.HourlyRate" @(ex.ExecutorId == Model.ExecutorId ? "selected" : "")>@ex.FullName</option>
+                <option value="@ex.ExecutorId"
+                        data-rate="@ex.HourlyRate"
+                        selected="@(ex.ExecutorId == Model.ExecutorId)">
+                    @ex.FullName
+                </option>
             }
         </select>
     </div>
@@ -27,7 +31,9 @@
             <option value="">-- Виберіть клієнта --</option>
             @foreach (var cl in clients)
             {
-                <option value="@cl.ClientId" @(cl.ClientId == currentClientId ? "selected" : "")>@cl.Name</option>
+                <option value="@cl.ClientId" selected="@(cl.ClientId == currentClientId)">
+                    @cl.Name
+                </option>
             }
         </select>
     </div>
@@ -37,7 +43,9 @@
             <option value="">-- Виберіть завдання --</option>
             @foreach (var t in tasks)
             {
-                <option value="@t.ClientTaskId" @(t.ClientTaskId == Model.ClientTaskId ? "selected" : "")>@t.TaskTitle</option>
+                <option value="@t.ClientTaskId" selected="@(t.ClientTaskId == Model.ClientTaskId)">
+                    @t.TaskTitle
+                </option>
             }
         </select>
     </div>
