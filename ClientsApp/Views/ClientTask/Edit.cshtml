@@ -1,4 +1,4 @@
-﻿@model ClientsApp.Models.Entities.ClientTask
+@model ClientsApp.Models.Entities.ClientTask
 
 @{
     ViewData["Title"] = "Редагувати завдання";
@@ -42,10 +42,8 @@
     </div>
 
     <div class="form-group">
-        <label>Виконавець</label>
-        <select asp-for="ExecutorId" class="form-control" asp-items="ViewBag.Executors">
-            <option value="">Виберіть виконавця</option>
-        </select>
+        <label>Виконавці</label>
+        <select name="selectedExecutors" class="form-control" multiple asp-items="ViewBag.Executors"></select>
     </div>
 
     <div class="form-group">
