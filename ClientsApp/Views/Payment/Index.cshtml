@@ -8,21 +8,23 @@
 <p>Ви можете здійснювати фільтрацію у зручному для Вас форматі відповідно до обраних фільтрів. </p>
 
 
-<form method="get" class="form-inline mb-3">
-    <div class="form-group mr-2">
-        <select asp-for="SelectedClientId" asp-items="Model.Clients" class="form-control">
+<form method="get" class="row g-3 mb-3">
+    <div class="col-md-4">
+        <select asp-for="SelectedClientId" asp-items="Model.Clients" class="form-select">
             <option value="">Всі клієнти</option>
         </select>
     </div>
-    <div class="form-group mr-2">
-        <select asp-for="IsPaid" class="form-control">
+    <div class="col-md-4">
+        <select asp-for="IsPaid" class="form-select">
             <option value="">Всі</option>
             <option value="true">Оплачені</option>
             <option value="false">Неоплачені</option>
         </select>
     </div>
-    <button type="submit" class="btn btn-primary">Фільтрувати</button>
-    <a asp-action="Index" class="btn btn-secondary ms-2" id="resetFilters">Скинути усі фільтри</a>
+    <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary me-2">Фільтрувати</button>
+        <a asp-action="Index" class="btn btn-secondary" id="resetFilters">Скинути усі фільтри</a>
+    </div>
 </form>
 
 <a asp-action="Create" class="btn btn-success mb-2">Додати платіж</a>
