@@ -33,6 +33,12 @@ namespace ClientsApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ExecutorTask executorTask)
         {
+            if (!ModelState.IsValid)
+            {
+                // Повертаємо повідомлення про помилки 
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage); return Content("ModelState invalid: " + string.Join(", ", errors));
+            }
+            
             if (ModelState.IsValid)
             {
                 await _executorTaskService.AddAsync(executorTask);
