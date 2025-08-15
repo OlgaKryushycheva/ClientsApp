@@ -19,6 +19,7 @@
         </select>
     </div>
     <button type="submit" class="btn btn-primary">Фільтрувати</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2" id="resetFilters">Скинути усі фільтри</a>
 </form>
 
 <a asp-action="Create" class="btn btn-success mb-2">Додати платіж</a>
@@ -46,3 +47,12 @@
     }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        const nav = window.performance && window.performance.getEntriesByType('navigation')[0];
+        if (nav && nav.type === 'reload' && window.location.search) {
+            window.location.replace(window.location.pathname);
+        }
+    </script>
+}
