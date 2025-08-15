@@ -3,6 +3,7 @@ using ClientsApp.Models;
 using ClientsApp.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ClientsApp.BLL.Services
@@ -46,6 +47,13 @@ namespace ClientsApp.BLL.Services
                 _context.Clients.Remove(client);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<Client>> SearchByNameAsync(string namePart)
+        {
+            return await _context.Clients
+                .Where(c => c.Name.ToLower().Contains(namePart.ToLower()))
+                .ToListAsync();
         }
     }
 }

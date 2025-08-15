@@ -12,5 +12,6 @@ namespace ClientsApp.BLL.Interfaces
         Task AddAsync(Client client);
         Task UpdateAsync(Client client);
         Task DeleteAsync(int id);
+        Task<IEnumerable<Client>> SearchByNameAsync(string namePart);
     }
 }
