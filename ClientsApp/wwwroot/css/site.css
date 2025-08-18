@@ -47,6 +47,13 @@ body {
     text-decoration: underline;
 }
 
+/* Navbar brand link styles */
+.navbar-brand:hover,
+.navbar-brand:focus {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
 /* Home page links */
 .home-links a {
     display: block;
