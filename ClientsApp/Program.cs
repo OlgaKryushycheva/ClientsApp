@@ -7,26 +7,26 @@ using ClientsApp.BLL;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- Підключення бази даних ---
+// --- Database connection ---
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// --- Підключення AutoMapper ---
+// --- AutoMapper setup ---
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// --- Реєстрація сервісів ---
+// --- Service registration ---
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IExecutorService, ExecutorService>();
 builder.Services.AddScoped<IClientTaskService, ClientTaskService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IExecutorTaskService, ExecutorTaskService>();
 
-// --- Додаткові налаштування для MVC ---
+// --- Additional MVC settings ---
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// --- Налаштування pipeline ---
+// --- Pipeline configuration ---
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -40,7 +40,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-// --- Налаштування маршрутів ---
+// --- Route configuration ---
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

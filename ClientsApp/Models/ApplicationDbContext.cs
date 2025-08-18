@@ -15,19 +15,19 @@ namespace ClientsApp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Статус як int
+            // Store status as int
             modelBuilder.Entity<ClientTask>()
                 .Property(t => t.TaskStatus)
                 .HasConversion<int>();
 
-            // Відношення з Executor (головний виконавець)
+            // Relationship with Executor (primary executor)
             modelBuilder.Entity<ClientTask>()
                 .HasOne(t => t.Executor)
-                .WithMany(e => e.ClientTasks)  // тут ICollection<ClientTask> в Executor
+                .WithMany(e => e.ClientTasks)  // here ICollection<ClientTask> in Executor
                 .HasForeignKey(t => t.ExecutorId)
                 .OnDelete(DeleteBehavior.SetNull);  // nullable FK
 
-            // Decimal поля
+            // Decimal fields
             modelBuilder.Entity<Executor>()
                 .Property(e => e.HourlyRate)
                 .HasColumnType("decimal(18,2)");
