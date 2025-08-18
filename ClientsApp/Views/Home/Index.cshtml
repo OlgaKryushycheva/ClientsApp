@@ -7,50 +7,10 @@
     <p class="lead">Цей застосунок допомагає керувати клієнтами, завданнями, робочим часом та оплатами.</p>
 </div>
 
-<div class="row">
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Клієнти</h5>
-                <p class="card-text">Керуйте інформацією про клієнтів.</p>
-                <a href="@Url.Action("Index", "Client")" class="btn btn-primary">Перейти</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Виконавці</h5>
-                <p class="card-text">Додавайте та редагуйте виконавців.</p>
-                <a href="@Url.Action("Index", "Executor")" class="btn btn-primary">Перейти</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Завдання</h5>
-                <p class="card-text">Створюйте та відстежуйте завдання клієнтів.</p>
-                <a href="@Url.Action("Index", "ClientTask")" class="btn btn-primary">Перейти</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Облік робочого часу</h5>
-                <p class="card-text">Фіксуйте витрати часу виконавців.</p>
-                <a href="@Url.Action("Index", "ExecutorTask")" class="btn btn-primary">Перейти</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Оплати</h5>
-                <p class="card-text">Переглядайте та додавайте платежі.</p>
-                <a href="@Url.Action("Index", "Payment")" class="btn btn-primary">Перейти</a>
-            </div>
-        </div>
-    </div>
+<div class="home-links">
+    <p><a href="@Url.Action("Index", "Client")">Клієнти</a>. Керуйте інформацією про клієнтів.</p>
+    <p><a href="@Url.Action("Index", "Executor")">Виконавці</a>. Додавайте та редагуйте виконавців.</p>
+    <p><a href="@Url.Action("Index", "ClientTask")">Завдання</a>. Створюйте та відстежуйте завдання клієнтів.</p>
+    <p><a href="@Url.Action("Index", "ExecutorTask")">Облік робочого часу</a>. Фіксуйте витрати часу виконавців.</p>
+    <p><a href="@Url.Action("Index", "Payment")">Оплати</a>. Переглядайте та додавайте платежі.</p>
 </div>
