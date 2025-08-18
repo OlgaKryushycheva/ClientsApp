@@ -8,7 +8,7 @@ namespace ClientsApp.Models.MappingProfiles
     {
         public ClientProfile()
         {
-            CreateMap<Client, ClientDto>().ReverseMap();  // Маппинг Client -> ClientDto и наоборот
+            CreateMap<Client, ClientDto>().ReverseMap();  // Mapping between Client and ClientDto (bidirectional)
         }
     }
 }

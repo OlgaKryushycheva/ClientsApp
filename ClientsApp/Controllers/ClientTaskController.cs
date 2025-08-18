@@ -132,7 +132,7 @@ namespace ClientsApp.Controllers
                 var errors = ModelState.Values
                     .SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage);
-                return Content("ModelState invalid: " + string.Join(", ", errors));
+                return Content("Некоректні дані моделі: " + string.Join(", ", errors));
             }
 
             var task = new ClientTask

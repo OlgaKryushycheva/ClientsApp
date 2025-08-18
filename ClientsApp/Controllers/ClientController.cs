@@ -70,17 +70,17 @@ namespace ClientsApp.Controllers
         //}
 
 
-        // GET: показати сторінку підтвердження видалення
+        // GET: display deletion confirmation page
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var client = await _clientService.GetByIdAsync(id);
             if (client == null) return NotFound();
 
-            return View(client); // повертає Delete.cshtml
+            return View(client); // returns Delete.cshtml view
         }
 
-        // POST: власне видалення після підтвердження
+        // POST: delete item after confirmation
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
