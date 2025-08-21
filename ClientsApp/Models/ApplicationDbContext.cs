@@ -15,19 +15,15 @@ namespace ClientsApp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Store status as int
             modelBuilder.Entity<ClientTask>()
                 .Property(t => t.TaskStatus)
                 .HasConversion<int>();
-
-            // Relationship with Executor (primary executor)
             modelBuilder.Entity<ClientTask>()
                 .HasOne(t => t.Executor)
-                .WithMany(e => e.ClientTasks)  // here ICollection<ClientTask> in Executor
+                .WithMany(e => e.ClientTasks)
                 .HasForeignKey(t => t.ExecutorId)
-                .OnDelete(DeleteBehavior.SetNull);  // nullable FK
+                .OnDelete(DeleteBehavior.SetNull);
 
-            // Decimal fields
             modelBuilder.Entity<Executor>()
                 .Property(e => e.HourlyRate)
                 .HasColumnType("decimal(18,2)");
@@ -48,13 +44,10 @@ namespace ClientsApp.Models
                 .Property(p => p.BalanceDue)
                 .HasColumnType("decimal(18,2)");
 
-            // ExecutorTask -> Executor
             modelBuilder.Entity<ExecutorTask>()
                 .HasOne(et => et.Executor)
                 .WithMany(e => e.ExecutorTasks)
                 .HasForeignKey(et => et.ExecutorId);
-
-            // ExecutorTask -> ClientTask
             modelBuilder.Entity<ExecutorTask>()
                 .HasOne(et => et.ClientTask)
                 .WithMany(ct => ct.ExecutorTasks)

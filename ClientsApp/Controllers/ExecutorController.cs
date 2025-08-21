@@ -48,26 +48,14 @@ namespace ClientsApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var executor = await _executorService.GetByIdAsync(id);
-        //    if (executor == null) return NotFound();
-
-        //    await _executorService.DeleteAsync(id);
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        // GET: display deletion confirmation page
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var executor = await _executorService.GetByIdAsync(id);
             if (executor == null) return NotFound();
-
-            return View(executor); // returns Delete.cshtml view
+            return View(executor);
         }
 
-        // POST: delete item after confirmation
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
