@@ -27,7 +27,7 @@ namespace ClientsApp.Models.Entities
 
         [DataType(DataType.Date)]
         [Display(Name = "Дата завершення")]
-        public DateTime? EndDate { get; set; }  // optional
+        public DateTime? EndDate { get; set; }
 
         [Required(ErrorMessage = "Вкажіть клієнта")]
         [Display(Name = "Клієнт")]
@@ -40,7 +40,7 @@ namespace ClientsApp.Models.Entities
         public int? ExecutorId { get; set; }
 
         [ForeignKey(nameof(ExecutorId))]
-        public Executor? Executor { get; set; }  // primary executor
+        public Executor? Executor { get; set; }
 
         public ICollection<ExecutorTask> ExecutorTasks { get; set; } = new List<ExecutorTask>();
 

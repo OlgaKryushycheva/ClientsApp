@@ -60,27 +60,14 @@ namespace ClientsApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var client = await _clientService.GetByIdAsync(id);
-        //    if (client == null) return NotFound();
-
-        //    await _clientService.DeleteAsync(id);
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-
-        // GET: display deletion confirmation page
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var client = await _clientService.GetByIdAsync(id);
             if (client == null) return NotFound();
-
-            return View(client); // returns Delete.cshtml view
+            return View(client);
         }
 
-        // POST: delete item after confirmation
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -88,8 +75,5 @@ namespace ClientsApp.Controllers
             await _clientService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
-
-
     }
 }

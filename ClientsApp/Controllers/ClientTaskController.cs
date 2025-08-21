@@ -25,7 +25,6 @@ namespace ClientsApp.Controllers
             _executorService = executorService;
         }
 
-        // ================= Index =================
         public async Task<IActionResult> Index(int? selectedClientId, int? selectedExecutorId, ClientTaskStatusEnum? selectedStatus)
         {
             var tasks = await _taskService.SearchAsync(selectedClientId, selectedExecutorId, selectedStatus);
@@ -61,9 +60,6 @@ namespace ClientsApp.Controllers
             return View(model);
         }
 
-        // ================= Create =================
-
-        // GET: Create
         public async Task<IActionResult> Create()
         {
             ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name");
@@ -72,7 +68,6 @@ namespace ClientsApp.Controllers
             return View();
         }
 
-        // POST: Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ClientTask task, int[] selectedExecutors)
@@ -96,7 +91,6 @@ namespace ClientsApp.Controllers
         }
 
 
-        // ================= Edit =================
         public async Task<IActionResult> Edit(int id)
         {
             var task = await _taskService.GetByIdAsync(id);
@@ -151,7 +145,6 @@ namespace ClientsApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ================= Delete =================
         public async Task<IActionResult> Delete(int id)
         {
             var task = await _taskService.GetByIdAsync(id);

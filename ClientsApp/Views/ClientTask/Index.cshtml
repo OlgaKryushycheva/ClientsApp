@@ -14,17 +14,17 @@
 <form asp-action="Index" method="get" class="row g-3 mb-3">
     <div class="col-md-3">
         <select asp-for="SelectedClientId" class="form-select" asp-items="Model.Clients">
-            <option value="">Всі</option>
+            <option value="">Всі клієнти</option>
         </select>
     </div>
     <div class="col-md-3">
         <select asp-for="SelectedExecutorId" class="form-select" asp-items="Model.Executors">
-            <option value="">Всі</option>
+            <option value="">Всі виконавці</option>
         </select>
     </div>
     <div class="col-md-3">
         <select asp-for="SelectedStatus" class="form-select" asp-items="Model.Statuses">
-            <option value="">Всі</option>
+            <option value="">Всі статуси</option>
         </select>
     </div>
     <div class="col-md-3 d-flex align-items-end">
