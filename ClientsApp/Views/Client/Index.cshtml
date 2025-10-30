@@ -25,7 +25,10 @@
         <a asp-action="Index"
            asp-route-searchString="@ViewData["SearchString"]"
            asp-route-sortOrder="@ViewData["NextSortOrder"]"
-           class="btn btn-outline-primary flex-fill flex-md-grow-0 ms-md-auto">Сортувати за датою додавання</a>
+           class="btn btn-outline-primary flex-fill flex-md-grow-0 ms-md-auto">
+            Сортувати за датою додавання
+            <span class="ms-1">@((ViewData["SortOrder"] as string) == "asc" ? "↑" : "↓")</span>
+        </a>
     </div>
 </form>
 
