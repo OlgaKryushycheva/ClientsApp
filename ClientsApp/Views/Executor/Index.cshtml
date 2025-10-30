@@ -8,6 +8,19 @@
 
 <p>На цій сторінці Виконавці Ви можете отримати усю інформацію по усіх виконавцях фірми,  а також додавати інформацію, редагувати та видаляти її. </p>
 
+<form method="get" class="row g-3 mb-3">
+    <div class="col-md-4">
+        <input type="text" name="fullName" value="@ViewData["FullName"]" class="form-control" placeholder="Пошук за ПІБ" />
+    </div>
+    <div class="col-md-3">
+        <input type="number" step="0.01" name="hourlyRate" value="@ViewData["HourlyRate"]" class="form-control" placeholder="Пошук за ставкою" />
+    </div>
+    <div class="col-md-5 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary me-2">Пошук</button>
+        <a asp-action="Index" class="btn btn-secondary">Скинути</a>
+    </div>
+</form>
+
 <a asp-action="Create" class="btn btn-success mb-2">Додати Виконавця</a>
 
 <table class="table table-striped">

@@ -70,7 +70,7 @@ namespace ClientsApp.BLL
             }
         }
 
-        public async Task<IEnumerable<ClientTask>> SearchAsync(int? clientId, int? executorId, ClientTaskStatusEnum? status)
+        public async Task<IEnumerable<ClientTask>> SearchAsync(int? clientId, int? executorId, ClientTaskStatusEnum? status, bool sortByStartDateDescending = false)
         {
             var query = _context.ClientTasks
                 .Include(ct => ct.Client)
@@ -86,6 +86,10 @@ namespace ClientsApp.BLL
 
             if (status.HasValue)
                 query = query.Where(ct => ct.TaskStatus == status.Value);
+
+            query = sortByStartDateDescending
+                ? query.OrderByDescending(ct => ct.StartDate)
+                : query.OrderBy(ct => ct.StartDate);
 
             return await query.ToListAsync();
         }

@@ -12,7 +12,7 @@ namespace ClientsApp.BLL.Interfaces
         Task UpdateAsync(ClientTask task);
         Task DeleteAsync(int id);
 
-        Task<IEnumerable<ClientTask>> SearchAsync(int? clientId, int? executorId, ClientTaskStatusEnum? status); 
-       
+        Task<IEnumerable<ClientTask>> SearchAsync(int? clientId, int? executorId, ClientTaskStatusEnum? status, bool sortByStartDateDescending = false);
+
     }
 }

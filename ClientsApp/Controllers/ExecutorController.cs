@@ -1,6 +1,7 @@
 ﻿using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace ClientsApp.Controllers
@@ -14,9 +15,18 @@ namespace ClientsApp.Controllers
             _executorService = executorService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string fullName, decimal? hourlyRate)
         {
-            var executors = await _executorService.GetAllAsync();
+            var hasFilters = !string.IsNullOrWhiteSpace(fullName) || hourlyRate.HasValue;
+            var executors = hasFilters
+                ? await _executorService.SearchAsync(fullName, hourlyRate)
+                : await _executorService.GetAllAsync();
+
+            ViewData["FullName"] = fullName;
+            ViewData["HourlyRate"] = hourlyRate.HasValue
+                ? hourlyRate.Value.ToString(CultureInfo.InvariantCulture)
+                : null;
+
             return View(executors);
         }
 

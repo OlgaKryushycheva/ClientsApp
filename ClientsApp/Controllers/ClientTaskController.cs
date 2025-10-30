@@ -25,9 +25,11 @@ namespace ClientsApp.Controllers
             _executorService = executorService;
         }
 
-        public async Task<IActionResult> Index(int? selectedClientId, int? selectedExecutorId, ClientTaskStatusEnum? selectedStatus)
+        public async Task<IActionResult> Index(int? selectedClientId, int? selectedExecutorId, ClientTaskStatusEnum? selectedStatus, string sortOrder)
         {
-            var tasks = await _taskService.SearchAsync(selectedClientId, selectedExecutorId, selectedStatus);
+            var normalizedSortOrder = sortOrder == "desc" ? "desc" : "asc";
+            var sortDescending = normalizedSortOrder == "desc";
+            var tasks = await _taskService.SearchAsync(selectedClientId, selectedExecutorId, selectedStatus, sortDescending);
 
             var clients = await _clientService.GetAllAsync();
             var executors = await _executorService.GetAllAsync();
@@ -54,7 +56,8 @@ namespace ClientsApp.Controllers
                     }).ToList(),
                 SelectedClientId = selectedClientId,
                 SelectedExecutorId = selectedExecutorId,
-                SelectedStatus = selectedStatus
+                SelectedStatus = selectedStatus,
+                SortOrder = normalizedSortOrder
             };
 
             return View(model);

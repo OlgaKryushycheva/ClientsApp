@@ -2,6 +2,7 @@
 using ClientsApp.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ClientsApp.Controllers
@@ -15,19 +16,22 @@ namespace ClientsApp.Controllers
             _clientService = clientService;
         }
 
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
             IEnumerable<Client> clients;
-            if (!string.IsNullOrWhiteSpace(searchString) && searchString.Length >= 3)
-            {
-                clients = await _clientService.SearchByNameAsync(searchString);
-            }
-            else
-            {
-                clients = await _clientService.GetAllAsync();
-            }
+            var hasSearch = !string.IsNullOrWhiteSpace(searchString) && searchString.Length >= 3;
+            clients = hasSearch
+                ? await _clientService.SearchByNameAsync(searchString)
+                : await _clientService.GetAllAsync();
+
+            var normalizedSortOrder = sortOrder == "desc" ? "desc" : "asc";
+            clients = normalizedSortOrder == "desc"
+                ? clients.OrderByDescending(c => c.ClientId)
+                : clients.OrderBy(c => c.ClientId);
 
             ViewData["SearchString"] = searchString;
+            ViewData["SortOrder"] = normalizedSortOrder;
+            ViewData["NextSortOrder"] = normalizedSortOrder == "asc" ? "desc" : "asc";
             return View(clients);
         }
 
