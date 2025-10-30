@@ -14,5 +14,6 @@ namespace ClientsApp.Models.ViewModels
         public int? SelectedClientId { get; set; }
         public int? SelectedExecutorId { get; set; }
         public ClientTaskStatusEnum? SelectedStatus { get; set; }
+        public string SortOrder { get; set; } = "asc";
     }
 }

@@ -11,5 +11,6 @@ namespace ClientsApp.BLL.Interfaces
         Task AddAsync(Executor executor);
         Task UpdateAsync(Executor executor);
         Task DeleteAsync(int id);
+        Task<IEnumerable<Executor>> SearchAsync(string fullName, decimal? hourlyRate);
     }
 }

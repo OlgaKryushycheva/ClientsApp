@@ -3,6 +3,7 @@ using ClientsApp.Models;
 using ClientsApp.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ClientsApp.BLL.Services
@@ -46,6 +47,24 @@ namespace ClientsApp.BLL.Services
                 _context.Executors.Remove(executor);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<Executor>> SearchAsync(string fullName, decimal? hourlyRate)
+        {
+            var query = _context.Executors.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(fullName))
+            {
+                var normalized = fullName.ToLower();
+                query = query.Where(e => e.FullName.ToLower().Contains(normalized));
+            }
+
+            if (hourlyRate.HasValue)
+            {
+                query = query.Where(e => e.HourlyRate == hourlyRate.Value);
+            }
+
+            return await query.ToListAsync();
         }
     }
 }

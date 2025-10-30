@@ -33,6 +33,18 @@
     </div>
 </form>
 
+<div class="mb-3 d-flex justify-content-md-end">
+    <a asp-action="Index"
+       asp-route-selectedClientId="@Model.SelectedClientId"
+       asp-route-selectedExecutorId="@Model.SelectedExecutorId"
+       asp-route-selectedStatus="@(Model.SelectedStatus.HasValue ? ((int)Model.SelectedStatus.Value).ToString() : null)"
+       asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")"
+       class="btn btn-outline-primary">
+        Сортувати за датою початку
+        <span class="ms-1">@((Model.SortOrder == "asc") ? "↑" : "↓")</span>
+    </a>
+</div>
+
 <table class="table table-striped">
     <thead>
         <tr>

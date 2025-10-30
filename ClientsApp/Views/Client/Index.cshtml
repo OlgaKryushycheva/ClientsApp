@@ -21,6 +21,12 @@
         <button type="submit" class="btn btn-primary me-2">Пошук</button>
         <a asp-action="Index" class="btn btn-secondary" id="resetFilters">Скинути</a>
     </div>
+    <div class="col-md-4 d-flex align-items-end justify-content-md-end">
+        <a asp-action="Index"
+           asp-route-searchString="@ViewData["SearchString"]"
+           asp-route-sortOrder="@ViewData["NextSortOrder"]"
+           class="btn btn-outline-primary flex-fill flex-md-grow-0 ms-md-auto">Сортувати за датою додавання</a>
+    </div>
 </form>
 
 <table class="table table-striped">
