@@ -272,7 +272,7 @@ namespace ClientsApp.Controllers
             }
 
             return performance
-                .OrderBy(p => p.Ratio ?? decimal.MaxValue)
+                .OrderByDescending(p => p.Ratio ?? decimal.MinValue)
                 .ThenBy(p => p.ExecutorName)
                 .ToList();
         }
