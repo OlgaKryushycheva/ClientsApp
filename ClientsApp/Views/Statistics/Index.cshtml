@@ -1,0 +1,223 @@
+@model ClientsApp.Models.ViewModels.Statistics.StatisticsIndexViewModel
+@using System.Linq
+@{
+    ViewData["Title"] = "Статистики та Звіти";
+}
+
+<h1 class="mb-4">Статистики та Звіти</h1>
+
+<div class="card mb-4">
+    <div class="card-header fw-semibold">Статистика 1: Завдання по обраному клієнту</div>
+    <div class="card-body">
+        <form method="get" asp-action="Index" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label asp-for="SelectedClientIdForTask" class="form-label">Клієнт</label>
+                <select asp-for="SelectedClientIdForTask" asp-items="Model.ClientOptionsForTaskStats" class="form-select"></select>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="SelectedTaskId" class="form-label">Завдання</label>
+                <select asp-for="SelectedTaskId" asp-items="Model.TaskOptions" class="form-select"></select>
+            </div>
+            <div class="col-md-4">
+                <input type="hidden" name="selectedClientIdForClient" value="@Model.SelectedClientIdForClient" />
+                <button type="submit" class="btn btn-primary">Показати статистику</button>
+            </div>
+        </form>
+
+        @if (Model.TaskStatistics != null)
+        {
+            <div class="mt-4">
+                <dl class="row">
+                    <dt class="col-sm-3">Назва клієнта</dt>
+                    <dd class="col-sm-9">@Model.TaskStatistics.ClientName</dd>
+                    <dt class="col-sm-3">Назва завдання</dt>
+                    <dd class="col-sm-9">@Model.TaskStatistics.TaskTitle</dd>
+                    <dt class="col-sm-3">Опис завдання</dt>
+                    <dd class="col-sm-9">@Model.TaskStatistics.TaskDescription</dd>
+                    <dt class="col-sm-3">Вартість завдання</dt>
+                    <dd class="col-sm-9">@Model.TaskStatistics.TaskCost.ToString("F2") грн</dd>
+                    <dt class="col-sm-3">Сума оплати</dt>
+                    <dd class="col-sm-9">@Model.TaskStatistics.TotalPayments.ToString("F2") грн</dd>
+                    <dt class="col-sm-3">Сума заборгованості</dt>
+                    <dd class="col-sm-9">@Model.TaskStatistics.BalanceDue.ToString("F2") грн</dd>
+                </dl>
+
+                <form method="post" asp-action="GenerateTaskReport" class="mt-3">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="clientId" value="@Model.SelectedClientIdForTask" />
+                    <input type="hidden" name="taskId" value="@Model.SelectedTaskId" />
+                    <button type="submit" class="btn btn-outline-secondary">Завантажити звіт про виконання завдання</button>
+                </form>
+            </div>
+        }
+        else if (Model.SelectedClientIdForTask.HasValue && Model.SelectedTaskId.HasValue)
+        {
+            <p class="text-muted mt-3">Для вказаних параметрів дані відсутні.</p>
+        }
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header fw-semibold">Статистика 2: Інформація про клієнта</div>
+    <div class="card-body">
+        <form method="get" asp-action="Index" class="row g-3 align-items-end">
+            <div class="col-md-6">
+                <label asp-for="SelectedClientIdForClient" class="form-label">Клієнт</label>
+                <select asp-for="SelectedClientIdForClient" asp-items="Model.ClientOptionsForClientStats" class="form-select"></select>
+            </div>
+            <div class="col-md-6">
+                <input type="hidden" name="selectedClientIdForTask" value="@Model.SelectedClientIdForTask" />
+                <input type="hidden" name="selectedTaskId" value="@Model.SelectedTaskId" />
+                <button type="submit" class="btn btn-primary">Показати статистику</button>
+            </div>
+        </form>
+
+        @if (Model.ClientStatistics != null)
+        {
+            <div class="mt-4">
+                <h5 class="fw-semibold">@Model.ClientStatistics.ClientName</h5>
+                @if (Model.ClientStatistics.Tasks.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Назва завдання</th>
+                                    <th class="text-end">Вартість</th>
+                                    <th class="text-end">Сума оплат</th>
+                                    <th class="text-end">Заборгованість</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var task in Model.ClientStatistics.Tasks)
+                                {
+                                    <tr>
+                                        <td>@task.TaskTitle</td>
+                                        <td class="text-end">@task.TaskCost.ToString("F2") грн</td>
+                                        <td class="text-end">@task.Payments.ToString("F2") грн</td>
+                                        <td class="text-end">@task.BalanceDue.ToString("F2") грн</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-semibold">
+                                    <td>Разом</td>
+                                    <td class="text-end">@Model.ClientStatistics.TotalCost.ToString("F2") грн</td>
+                                    <td class="text-end">@Model.ClientStatistics.TotalPayments.ToString("F2") грн</td>
+                                    <td class="text-end">@Model.ClientStatistics.TotalDebt.ToString("F2") грн</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">Для цього клієнта поки що немає завдань.</p>
+                }
+
+                @if (Model.ClientStatistics.TasksWithoutInvoice.Any())
+                {
+                    <div class="alert alert-warning mt-3" role="alert">
+                        <strong>Зверніть увагу!</strong> Для наступних завдань ще не виставлено рахунок:
+                        <ul class="mb-0">
+                            @foreach (var title in Model.ClientStatistics.TasksWithoutInvoice)
+                            {
+                                <li>@title</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        }
+        else if (Model.SelectedClientIdForClient.HasValue)
+        {
+            <p class="text-muted mt-3">Дані для обраного клієнта не знайдені.</p>
+        }
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header fw-semibold">Статистика 3: Рейтинг виконавців</div>
+    <div class="card-body">
+        @if (Model.ExecutorPerformances.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-sm table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>ПІБ виконавця</th>
+                            <th class="text-end">Фактичний час (год)</th>
+                            <th class="text-end">Скоригований час (год)</th>
+                            <th class="text-end">Співвідношення</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var (performance, index) in Model.ExecutorPerformances.Select((p, i) => (p, i)))
+                        {
+                            var ratioText = performance.Ratio.HasValue ? performance.Ratio.Value.ToString("F2") : "—";
+                            <tr class="@(index == 0 ? "table-success" : string.Empty)">
+                                <td>@performance.ExecutorName</td>
+                                <td class="text-end">@performance.TotalActualTime.ToString("F2")</td>
+                                <td class="text-end">@performance.TotalAdjustedTime.ToString("F2")</td>
+                                <td class="text-end">@ratioText</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted mb-0">Немає даних для розрахунку рейтингу виконавців.</p>
+        }
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center fw-semibold">
+        <span>Статистика 4: Заборгованість по завданнях</span>
+        @if (Model.DebtStatistics.Any())
+        {
+            <form method="post" asp-action="GenerateDebtReport" class="m-0">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-outline-secondary btn-sm">Завантажити звіт про заборгованість</button>
+            </form>
+        }
+    </div>
+    <div class="card-body">
+        @if (Model.DebtStatistics.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-sm table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>Клієнт</th>
+                            <th>Завдання</th>
+                            <th class="text-end">Сума заборгованості</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var debt in Model.DebtStatistics)
+                        {
+                            <tr>
+                                <td>@debt.ClientName</td>
+                                <td>@debt.TaskTitle</td>
+                                <td class="text-end">@debt.BalanceDue.ToString("F2") грн</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class="fw-semibold">
+                            <td colspan="2">Загальна сума заборгованості</td>
+                            <td class="text-end">@Model.TotalDebt.ToString("F2") грн</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted mb-0">Усі заборгованості погашені.</p>
+        }
+    </div>
+</div>
