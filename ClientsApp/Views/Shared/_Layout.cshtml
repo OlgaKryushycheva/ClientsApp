@@ -37,6 +37,10 @@
                             <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Statistics" ? "active" : "")" asp-controller="Statistics" asp-action="Index">Статистики та звіти</a>
                         </li>
                     </ul>
+                    <div class="app-header-actions d-none d-lg-flex" aria-hidden="true">
+                        <span class="app-action-chip">◔</span>
+                        <span class="app-action-chip">⚡</span>
+                    </div>
                 </div>
             </div>
         </nav>
