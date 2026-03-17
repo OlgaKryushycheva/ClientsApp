@@ -2,15 +2,45 @@
     ViewData["Title"] = "Головна сторінка";
 }
 
-<div class="text-center my-5">
-    <h1 class="display-4">Вітаємо в системі обліку клієнтів ClientsApp!</h1>
-    <p class="lead">Цей застосунок допомагає керувати клієнтами, завданнями, робочим часом та оплатами.</p>
-</div>
+<section class="hero">
+    <h1>Вітаємо в системі обліку клієнтів ClientsApp!</h1>
+    <p>Цей застосунок допомагає керувати клієнтами, завданнями, робочим часом та оплатами.</p>
+</section>
 
-<div class="home-links">
-    <p><a href="@Url.Action("Index", "Client")">Клієнти</a>Керуйте інформацією про клієнтів.</p>
-    <p><a href="@Url.Action("Index", "Executor")">Виконавці</a>Додавайте та редагуйте виконавців.</p>
-    <p><a href="@Url.Action("Index", "ClientTask")">Завдання</a>Створюйте та відстежуйте завдання клієнтів.</p>
-    <p><a href="@Url.Action("Index", "ExecutorTask")">Облік робочого часу</a>Фіксуйте витрати часу виконавців.</p>
-    <p><a href="@Url.Action("Index", "Payment")">Оплати</a>Переглядайте та додавайте платежі.</p>
+<div class="grid">
+    <a class="card" asp-controller="Client" asp-action="Index">
+        <div class="card-icon">👥</div>
+        <h3>Клієнти</h3>
+        <p>Керуйте інформацією про клієнтів</p>
+    </a>
+
+    <a class="card" asp-controller="Executor" asp-action="Index">
+        <div class="card-icon">⚙️</div>
+        <h3>Виконавці</h3>
+        <p>Додавайте та редагуйте виконавців</p>
+    </a>
+
+    <a class="card" asp-controller="ClientTask" asp-action="Index">
+        <div class="card-icon">📋</div>
+        <h3>Завдання</h3>
+        <p>Створюйте та відстежуйте завдання клієнтів</p>
+    </a>
+
+    <a class="card" asp-controller="ExecutorTask" asp-action="Index">
+        <div class="card-icon">🕒</div>
+        <h3>Облік робочого часу</h3>
+        <p>Фіксуйте витрати часу виконавців</p>
+    </a>
+
+    <a class="card" asp-controller="Payment" asp-action="Index">
+        <div class="card-icon">💰</div>
+        <h3>Оплати</h3>
+        <p>Переглядайте та додавайте платежі</p>
+    </a>
+
+    <a class="card" asp-controller="Statistics" asp-action="Index">
+        <div class="card-icon">📊</div>
+        <h3>Статистики та звіти</h3>
+        <p>Отримуйте зведену інформацію</p>
+    </a>
 </div>
