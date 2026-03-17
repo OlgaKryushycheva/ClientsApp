@@ -2,53 +2,45 @@
     ViewData["Title"] = "Головна сторінка";
 }
 
-<section class="home-page py-4 py-md-5">
-    <div class="text-center mb-4 mb-md-5">
-        <h1 class="display-4 home-title">Вітаємо в системі обліку клієнтів ClientsApp!</h1>
-        <p class="lead home-subtitle">Цей застосунок допомагає керувати клієнтами, завданнями, робочим часом та оплатами.</p>
-    </div>
-
-    <div class="home-cards-grid">
-        <a class="feature-card" asp-controller="Client" asp-action="Index">
-            <span class="card-icon" aria-hidden="true">👥</span>
-            <span class="feature-decor feature-decor-right" aria-hidden="true">· · ·</span>
-            <h2>Клієнти</h2>
-            <p>Керуйте інформацією про клієнтів</p>
-        </a>
-
-        <a class="feature-card" asp-controller="Executor" asp-action="Index">
-            <span class="card-icon" aria-hidden="true">🛠</span>
-            <span class="feature-decor feature-decor-right" aria-hidden="true">✧ ✧</span>
-            <h2>Виконавці</h2>
-            <p>Додавайте та редагуйте виконавців</p>
-        </a>
-
-        <a class="feature-card" asp-controller="ClientTask" asp-action="Index">
-            <span class="card-icon" aria-hidden="true">🗒</span>
-            <span class="feature-decor feature-decor-right" aria-hidden="true">⋮</span>
-            <h2>Завдання</h2>
-            <p>Створюйте та відстежуйте завдання клієнтів</p>
-        </a>
-
-        <a class="feature-card" asp-controller="ExecutorTask" asp-action="Index">
-            <span class="card-icon" aria-hidden="true">🕒</span>
-            <span class="feature-decor feature-decor-right" aria-hidden="true">◌</span>
-            <h2>Облік робочого часу</h2>
-            <p>Фіксуйте витрати часу виконавців</p>
-        </a>
-
-        <a class="feature-card" asp-controller="Payment" asp-action="Index">
-            <span class="card-icon" aria-hidden="true">💵</span>
-            <span class="feature-decor feature-decor-right" aria-hidden="true">◈</span>
-            <h2>Оплати</h2>
-            <p>Переглядайте та додавайте платежі</p>
-        </a>
-
-        <a class="feature-card" asp-controller="Statistics" asp-action="Index">
-            <span class="card-icon" aria-hidden="true">📈</span>
-            <span class="feature-decor feature-decor-right" aria-hidden="true">◌ ◌</span>
-            <h2>Статистики та звіти</h2>
-            <p>Отримуйте зведену інформацію</p>
-        </a>
-    </div>
+<section class="hero">
+    <h1>Вітаємо в системі обліку клієнтів ClientsApp!</h1>
+    <p>Цей застосунок допомагає керувати клієнтами, завданнями, робочим часом та оплатами.</p>
 </section>
+
+<div class="grid">
+    <a class="card" asp-controller="Client" asp-action="Index">
+        <div class="card-icon">👥</div>
+        <h3>Клієнти</h3>
+        <p>Керуйте інформацією про клієнтів</p>
+    </a>
+
+    <a class="card" asp-controller="Executor" asp-action="Index">
+        <div class="card-icon">⚙️</div>
+        <h3>Виконавці</h3>
+        <p>Додавайте та редагуйте виконавців</p>
+    </a>
+
+    <a class="card" asp-controller="ClientTask" asp-action="Index">
+        <div class="card-icon">📋</div>
+        <h3>Завдання</h3>
+        <p>Створюйте та відстежуйте завдання клієнтів</p>
+    </a>
+
+    <a class="card" asp-controller="ExecutorTask" asp-action="Index">
+        <div class="card-icon">🕒</div>
+        <h3>Облік робочого часу</h3>
+        <p>Фіксуйте витрати часу виконавців</p>
+    </a>
+
+    <a class="card" asp-controller="Payment" asp-action="Index">
+        <div class="card-icon">💰</div>
+        <h3>Оплати</h3>
+        <p>Переглядайте та додавайте платежі</p>
+    </a>
+
+    <a class="card" asp-controller="Statistics" asp-action="Index">
+        <div class="card-icon">📊</div>
+        <h3>Статистики та звіти</h3>
+        <p>Отримуйте зведену інформацію</p>
+    </a>
+</div>
