@@ -31,12 +31,12 @@
     <div class="row">
         <div class="mb-3 col-md-6">
             <label asp-for="UnavailableFrom" class="form-label"></label>
-            <input asp-for="UnavailableFrom" type="date" class="form-control" min="@today" />
+            <input asp-for="UnavailableFrom" type="date" class="form-control" />
             <span asp-validation-for="UnavailableFrom" class="text-danger"></span>
         </div>
         <div class="mb-3 col-md-6">
             <label asp-for="UnavailableTo" class="form-label"></label>
-            <input asp-for="UnavailableTo" type="date" class="form-control" min="@today" />
+            <input asp-for="UnavailableTo" type="date" class="form-control" />
             <span asp-validation-for="UnavailableTo" class="text-danger"></span>
         </div>
     </div>
