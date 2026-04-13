@@ -24,7 +24,7 @@ namespace ClientsApp.BLL.Services
             return await _context.Executors.ToListAsync();
         }
 
-        public async Task<Executor> GetByIdAsync(int id)
+        public async Task<Executor?> GetByIdAsync(int id)
         {
             await ClearExpiredUnavailablePeriodAsync();
             return await _context.Executors.FindAsync(id);
@@ -52,7 +52,7 @@ namespace ClientsApp.BLL.Services
             }
         }
 
-        public async Task<IEnumerable<Executor>> SearchAsync(string fullName, decimal? hourlyRate)
+        public async Task<IEnumerable<Executor>> SearchAsync(string? fullName, decimal? hourlyRate)
         {
             await ClearExpiredUnavailablePeriodAsync();
             var query = _context.Executors.AsQueryable();

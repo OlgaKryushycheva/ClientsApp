@@ -16,7 +16,7 @@ namespace ClientsApp.Controllers
             _executorService = executorService;
         }
 
-        public async Task<IActionResult> Index(string fullName, decimal? hourlyRate)
+        public async Task<IActionResult> Index(string? fullName, decimal? hourlyRate)
         {
             var hasFilters = !string.IsNullOrWhiteSpace(fullName) || hourlyRate.HasValue;
             var executors = hasFilters

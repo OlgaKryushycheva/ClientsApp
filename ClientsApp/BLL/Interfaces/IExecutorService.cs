@@ -7,10 +7,10 @@ namespace ClientsApp.BLL.Interfaces
     public interface IExecutorService
     {
         Task<IEnumerable<Executor>> GetAllAsync();
-        Task<Executor> GetByIdAsync(int id);
+        Task<Executor?> GetByIdAsync(int id);
         Task AddAsync(Executor executor);
         Task UpdateAsync(Executor executor);
         Task DeleteAsync(int id);
-        Task<IEnumerable<Executor>> SearchAsync(string fullName, decimal? hourlyRate);
+        Task<IEnumerable<Executor>> SearchAsync(string? fullName, decimal? hourlyRate);
     }
 }
