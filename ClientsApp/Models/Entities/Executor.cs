@@ -32,25 +32,6 @@ namespace ClientsApp.Models.Entities
         [Display(Name = "Недоступний до")]
         public DateTime? UnavailableTo { get; set; }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var today = DateTime.Today;
-
-            if (UnavailableFrom.HasValue && UnavailableFrom.Value.Date < today)
-            {
-                yield return new ValidationResult(
-                    "Дата \"Недоступний з\" не може бути раніше поточної дати.",
-                    new[] { nameof(UnavailableFrom) });
-            }
-
-            if (UnavailableFrom.HasValue && UnavailableTo.HasValue && UnavailableTo.Value.Date < UnavailableFrom.Value.Date)
-            {
-                yield return new ValidationResult(
-                    "Дата \"Недоступний до\" не може бути раніше дати \"Недоступний з\".",
-                    new[] { nameof(UnavailableTo) });
-            }
-        }
-
         public ICollection<ExecutorTask>? ExecutorTasks { get; set; }
 
         public ICollection<ClientTask> ClientTasks { get; set; } = new List<ClientTask>();
