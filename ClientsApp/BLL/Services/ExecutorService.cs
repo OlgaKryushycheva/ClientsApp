@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace ClientsApp.BLL.Services
 {
@@ -19,11 +20,13 @@ namespace ClientsApp.BLL.Services
 
         public async Task<IEnumerable<Executor>> GetAllAsync()
         {
+            await ClearExpiredUnavailablePeriodAsync();
             return await _context.Executors.ToListAsync();
         }
 
-        public async Task<Executor> GetByIdAsync(int id)
+        public async Task<Executor?> GetByIdAsync(int id)
         {
+            await ClearExpiredUnavailablePeriodAsync();
             return await _context.Executors.FindAsync(id);
         }
 
@@ -49,8 +52,9 @@ namespace ClientsApp.BLL.Services
             }
         }
 
-        public async Task<IEnumerable<Executor>> SearchAsync(string fullName, decimal? hourlyRate)
+        public async Task<IEnumerable<Executor>> SearchAsync(string? fullName, decimal? hourlyRate)
         {
+            await ClearExpiredUnavailablePeriodAsync();
             var query = _context.Executors.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(fullName))
@@ -65,6 +69,28 @@ namespace ClientsApp.BLL.Services
             }
 
             return await query.ToListAsync();
+        }
+
+        private async Task ClearExpiredUnavailablePeriodAsync()
+        {
+            var today = DateTime.Today;
+
+            var expiredExecutors = await _context.Executors
+                .Where(e => e.UnavailableTo.HasValue && e.UnavailableTo.Value.Date < today)
+                .ToListAsync();
+
+            if (expiredExecutors.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var executor in expiredExecutors)
+            {
+                executor.UnavailableFrom = null;
+                executor.UnavailableTo = null;
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }

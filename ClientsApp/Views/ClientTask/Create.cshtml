@@ -9,6 +9,14 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
+        <label asp-for="ClientId"></label>
+        <select asp-for="ClientId" class="form-control" asp-items="ViewBag.Clients">
+            <option value="">Виберіть клієнта</option>
+        </select>
+        <span asp-validation-for="ClientId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
         <label asp-for="TaskTitle"></label>
         <input asp-for="TaskTitle" class="form-control" />
         <span asp-validation-for="TaskTitle" class="text-danger"></span>
@@ -33,16 +41,8 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="ClientId"></label>
-        <select asp-for="ClientId" class="form-control" asp-items="ViewBag.Clients">
-            <option value="">Виберіть клієнта</option>
-        </select>
-        <span asp-validation-for="ClientId" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
         <label>Виконавці</label>
-        <select name="selectedExecutors" class="form-control" multiple asp-items="ViewBag.Executors"></select>
+        <select id="selectedExecutors" name="selectedExecutors" class="form-control" multiple asp-items="ViewBag.Executors"></select>
     </div>
 
     <div class="form-group">
@@ -56,3 +56,80 @@
     <button type="submit" class="btn btn-success">Зберегти</button>
     <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
 </form>
+
+<div class="modal fade" id="inProgressTasksModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Поточні завдання виконавця (InProgress)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="inProgressTasksContent">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const executorsSelect = document.getElementById('selectedExecutors');
+            const modalElement = document.getElementById('inProgressTasksModal');
+            const modalContent = document.getElementById('inProgressTasksContent');
+            if (!executorsSelect || !modalElement || !modalContent || !window.bootstrap) return;
+
+            const modal = new bootstrap.Modal(modalElement);
+
+            executorsSelect.addEventListener('change', async () => {
+                const selectedIds = Array.from(executorsSelect.selectedOptions).map(o => o.value).filter(Boolean);
+                if (selectedIds.length === 0) return;
+
+                try {
+                    const query = selectedIds.map(id => `executorIds=${encodeURIComponent(id)}`).join('&');
+                    const response = await fetch(`/ClientTask/InProgressByExecutorIds?${query}`);
+                    if (!response.ok) return;
+
+                    const data = await response.json();
+                    if (!Array.isArray(data)) return;
+
+                    if (data.length === 0) {
+                        modalContent.innerHTML = '<p class="mb-0">Для обраного виконавця немає активних завдань зі статусом InProgress.</p>';
+                    } else {
+                        const rows = data.map(item => `
+                            <tr>
+                                <td>${item.clientName ?? ''}</td>
+                                <td>${item.taskTitle ?? ''}</td>
+                                <td>${item.status ?? ''}</td>
+                                <td>${(item.executors ?? []).join(', ')}</td>
+                            </tr>
+                        `).join('');
+
+                        modalContent.innerHTML = `
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Клієнт</th>
+                                            <th>Завдання</th>
+                                            <th>Статус</th>
+                                            <th>Виконавець</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>${rows}</tbody>
+                                </table>
+                            </div>`;
+                    }
+
+                    modal.show();
+                } catch {
+                    modalContent.innerHTML = '<p class="text-danger mb-0">Не вдалося завантажити список поточних завдань.</p>';
+                    modal.show();
+                }
+            });
+        })();
+    </script>
+}
