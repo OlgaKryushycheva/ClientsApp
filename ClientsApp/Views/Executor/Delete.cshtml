@@ -15,6 +15,17 @@
 
         <dt class="col-sm-2">Ставка за годину</dt>
         <dd class="col-sm-10">@Model.HourlyRate</dd>
+
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
+
+        <dt class="col-sm-2">Недоступний</dt>
+        <dd class="col-sm-10">
+            @if (Model.UnavailableFrom.HasValue && Model.UnavailableTo.HasValue)
+            {
+                @($"{Model.UnavailableFrom:dd.MM.yyyy} - {Model.UnavailableTo:dd.MM.yyyy}")
+            }
+        </dd>
     </dl>
 </div>
 
