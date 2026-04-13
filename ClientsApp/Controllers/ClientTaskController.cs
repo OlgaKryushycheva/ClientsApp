@@ -66,7 +66,10 @@ namespace ClientsApp.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name");
-            ViewBag.Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName");
+            var availableExecutors = (await _executorService.GetAllAsync())
+                .Where(e => !e.UnavailableFrom.HasValue && !e.UnavailableTo.HasValue)
+                .ToList();
+            ViewBag.Executors = new MultiSelectList(availableExecutors, "ExecutorId", "FullName");
             ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)));
             return View();
         }
@@ -78,7 +81,10 @@ namespace ClientsApp.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task.ClientId);
-                ViewBag.Executors = new MultiSelectList(await _executorService.GetAllAsync(), "ExecutorId", "FullName", selectedExecutors);
+                var availableExecutors = (await _executorService.GetAllAsync())
+                    .Where(e => !e.UnavailableFrom.HasValue && !e.UnavailableTo.HasValue)
+                    .ToList();
+                ViewBag.Executors = new MultiSelectList(availableExecutors, "ExecutorId", "FullName", selectedExecutors);
                 ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), task.TaskStatus);
                 return View(task);
             }
@@ -91,6 +97,34 @@ namespace ClientsApp.Controllers
             await _taskService.AddAsync(task);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> InProgressByExecutorIds([FromQuery] int[] executorIds)
+        {
+            if (executorIds == null || executorIds.Length == 0)
+            {
+                return Json(Array.Empty<object>());
+            }
+
+            var allInProgressTasks = await _taskService.SearchAsync(null, null, ClientTaskStatusEnum.InProgress);
+
+            var result = allInProgressTasks
+                .Where(t => t.ExecutorTasks.Any(et => et.ExecutorId.HasValue && executorIds.Contains(et.ExecutorId.Value)))
+                .Select(t => new
+                {
+                    clientName = t.Client?.Name ?? "Без клієнта",
+                    taskTitle = t.TaskTitle,
+                    status = t.TaskStatus.ToString(),
+                    executors = t.ExecutorTasks
+                        .Where(et => et.ExecutorId.HasValue && executorIds.Contains(et.ExecutorId.Value))
+                        .Select(et => et.Executor?.FullName ?? "Невідомий виконавець")
+                        .Distinct()
+                        .ToList()
+                })
+                .ToList();
+
+            return Json(result);
         }
 
 
