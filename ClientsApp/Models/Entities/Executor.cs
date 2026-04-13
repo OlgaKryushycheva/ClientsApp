@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClientsApp.Models.Entities
@@ -18,6 +19,18 @@ namespace ClientsApp.Models.Entities
         [RegularExpression(@"^\d+(\.\d{1,2})?$", ErrorMessage = "Введіть правильну ставку, наприклад 150.50")]
         [Display(Name = "Ставка за годину")]
         public decimal HourlyRate { get; set; }
+
+        [EmailAddress(ErrorMessage = "Введіть коректний email")]
+        [Display(Name = "Email")]
+        public string? Email { get; set; }
+
+        [DataType(DataType.Date)]
+        [Display(Name = "Недоступний з")]
+        public DateTime? UnavailableFrom { get; set; }
+
+        [DataType(DataType.Date)]
+        [Display(Name = "Недоступний до")]
+        public DateTime? UnavailableTo { get; set; }
 
         public ICollection<ExecutorTask>? ExecutorTasks { get; set; }
 

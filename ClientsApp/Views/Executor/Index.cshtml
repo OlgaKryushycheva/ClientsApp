@@ -28,6 +28,8 @@
         <tr>
             <th>ПІБ</th>
             <th>Ставка/год</th>
+            <th>Email</th>
+            <th>Недоступний</th>
             <th>Дії</th>
         </tr>
     </thead>
@@ -37,6 +39,13 @@
             <tr>
                 <td>@executor.FullName</td>
                 <td>@executor.HourlyRate</td>
+                <td>@executor.Email</td>
+                <td>
+                    @if (executor.UnavailableFrom.HasValue && executor.UnavailableTo.HasValue)
+                    {
+                        @($"{executor.UnavailableFrom:dd.MM.yyyy} - {executor.UnavailableTo:dd.MM.yyyy}")
+                    }
+                </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@executor.ExecutorId" class="btn btn-primary btn-sm">Редагувати</a>
                     <a asp-action="Delete" asp-route-id="@executor.ExecutorId" class="btn btn-danger btn-sm">Видалити</a>
