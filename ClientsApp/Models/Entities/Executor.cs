@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ClientsApp.Models.Entities
 {
+    using ClientsApp.Models;
     public class Executor : IValidatableObject
     {
         public int ExecutorId { get; set; }
