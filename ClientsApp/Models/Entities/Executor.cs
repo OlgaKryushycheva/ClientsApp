@@ -52,7 +52,6 @@ namespace ClientsApp.Models.Entities
                     new[] { nameof(UnavailableTo) });
             }
         }
-
         public ICollection<ExecutorTask>? ExecutorTasks { get; set; }
 
         public ICollection<ClientTask> ClientTasks { get; set; } = new List<ClientTask>();
