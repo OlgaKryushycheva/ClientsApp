@@ -18,7 +18,7 @@
 
     <div class="mb-3">
         <label asp-for="HourlyRate" class="form-label"></label>
-        <input asp-for="HourlyRate" class="form-control" />
+        <input asp-for="HourlyRate" asp-format="{0:0}" class="form-control" type="text" inputmode="numeric" pattern="[0-9]+" />
         <span asp-validation-for="HourlyRate" class="text-danger"></span>
     </div>
 

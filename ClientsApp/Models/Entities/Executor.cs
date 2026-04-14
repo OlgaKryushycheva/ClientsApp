@@ -15,8 +15,8 @@ namespace ClientsApp.Models.Entities
         public string FullName { get; set; }
 
         [Required(ErrorMessage = "Ставка за годину обов'язкова")]
-        [Range(0.1, 10000, ErrorMessage = "Ставка має бути більше 0")]
-        [RegularExpression(@"^\d+(\.\d{1,2})?$", ErrorMessage = "Введіть правильну ставку, наприклад 150.50")]
+        [Range(1, 10000, ErrorMessage = "Ставка має бути цілим числом більше 0")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "Введіть ставку цілим числом без крапок і ком")]
         [Display(Name = "Ставка за годину")]
         public decimal HourlyRate { get; set; }
 
