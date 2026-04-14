@@ -1,0 +1,41 @@
+@model ClientsApp.Models.Entities.ExecutorTask
+
+@{
+    ViewData["Title"] = "Редагування фактичного часу";
+}
+
+<h1>Редагування фактичного часу</h1>
+
+<h4>Завдання виконавця</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ExecutorTaskId" />
+
+            <div class="mb-3">
+                <label class="form-label">Виконавець</label>
+                <input class="form-control" value="@Model.Executor?.FullName" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Завдання</label>
+                <input class="form-control" value="@Model.ClientTask?.TaskTitle" readonly />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ActualTime" class="form-label"></label>
+                <input asp-for="ActualTime" class="form-control" />
+                <span asp-validation-for="ActualTime" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Зберегти</button>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Назад</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
