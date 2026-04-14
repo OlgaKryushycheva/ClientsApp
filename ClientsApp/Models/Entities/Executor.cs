@@ -53,6 +53,7 @@ namespace ClientsApp.Models.Entities
                     new[] { nameof(UnavailableTo) });
             }
         }
+        public ApplicationUser? ApplicationUser { get; set; }
 
 
         [Display(Name = "Користувач")]
