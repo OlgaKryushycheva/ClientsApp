@@ -49,7 +49,6 @@ using (var scope = app.Services.CreateScope())
     try
     {
         dbContext.Database.Migrate();
-        await SeedRolesAsync(scope.ServiceProvider);
     }
     catch (InvalidOperationException ex) when (ex.Message.Contains("PendingModelChangesWarning", StringComparison.Ordinal))
     {

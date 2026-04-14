@@ -31,9 +31,9 @@ namespace ClientsApp.Models
                 .Property(e => e.HourlyRate)
                 .HasColumnType("decimal(18,2)");
 
-            modelBuilder.Entity<Executor>()
-                .HasOne(e => e.ApplicationUser)
-                .WithOne(u => u.Executor)
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(u => u.Executor)
+                .WithOne()
                 .HasForeignKey<ApplicationUser>(u => u.ExecutorId)
                 .OnDelete(DeleteBehavior.SetNull);
 

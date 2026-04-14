@@ -53,13 +53,6 @@ namespace ClientsApp.Models.Entities
                     new[] { nameof(UnavailableTo) });
             }
         }
-        public ApplicationUser? ApplicationUser { get; set; }
-
-
-        [Display(Name = "Користувач")]
-        public string? ApplicationUserId { get; set; }
-        public ApplicationUser? ApplicationUser { get; set; }
-
         public ICollection<ExecutorTask>? ExecutorTasks { get; set; }
 
         public ICollection<ClientTask> ClientTasks { get; set; } = new List<ClientTask>();
