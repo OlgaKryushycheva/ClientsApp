@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ClientsApp.Controllers
 {
-    [Authorize(Roles = "Manager")]
+    [Authorize]
     public class StatisticsController : Controller
     {
         private readonly IClientService _clientService;

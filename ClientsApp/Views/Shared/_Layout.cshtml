@@ -18,28 +18,25 @@
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <ul class="navbar-nav me-auto">
-                        @if (User.IsInRole("Manager"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Client" ? "active" : "")" asp-controller="Client" asp-action="Index">Клієнти</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Executor" ? "active" : "")" asp-controller="Executor" asp-action="Index">Виконавці</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ClientTask" ? "active" : "")" asp-controller="ClientTask" asp-action="Index">Завдання</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ExecutorTask" ? "active" : "")" asp-controller="ExecutorTask" asp-action="Index">Облік робочого часу</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Payment" ? "active" : "")" asp-controller="Payment" asp-action="Index">Оплати</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Statistics" ? "active" : "")" asp-controller="Statistics" asp-action="Index">Статистики та звіти</a>
-                            </li>
-                        }
-                        @if (User.IsInRole("Accountant"))
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Client" ? "active" : "")" asp-controller="Client" asp-action="Index">Клієнти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Executor" ? "active" : "")" asp-controller="Executor" asp-action="Index">Виконавці</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ClientTask" ? "active" : "")" asp-controller="ClientTask" asp-action="Index">Завдання</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ExecutorTask" ? "active" : "")" asp-controller="ExecutorTask" asp-action="Index">Облік робочого часу</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Payment" ? "active" : "")" asp-controller="Payment" asp-action="Index">Оплати</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Statistics" ? "active" : "")" asp-controller="Statistics" asp-action="Index">Статистики та звіти</a>
+                        </li>
+                        @if (User.IsInRole("Manager") || User.IsInRole("Accountant"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Payment" && ViewContext.RouteData.Values["action"]?.ToString() == "Create" ? "active" : "")" asp-controller="Payment" asp-action="Create">Створення оплати</a>

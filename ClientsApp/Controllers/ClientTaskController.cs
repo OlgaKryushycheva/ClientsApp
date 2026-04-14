@@ -10,7 +10,7 @@ using ClientsApp.BLL.Interfaces;
 
 namespace ClientsApp.Controllers
 {
-    [Authorize(Roles = "Manager")]
+    [Authorize]
     public class ClientTaskController : Controller
     {
         private readonly IClientTaskService _taskService;
@@ -65,6 +65,7 @@ namespace ClientsApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name");
@@ -78,6 +79,7 @@ namespace ClientsApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create(ClientTask task, int[] selectedExecutors)
         {
             if (!ModelState.IsValid)
@@ -130,6 +132,7 @@ namespace ClientsApp.Controllers
         }
 
 
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int id)
         {
             var task = await _taskService.GetByIdAsync(id);
@@ -158,6 +161,7 @@ namespace ClientsApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(ClientTaskEditViewModel model)
         {
             if (!ModelState.IsValid)
@@ -184,6 +188,7 @@ namespace ClientsApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Delete(int id)
         {
             var task = await _taskService.GetByIdAsync(id);
@@ -193,6 +198,7 @@ namespace ClientsApp.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _taskService.DeleteAsync(id);

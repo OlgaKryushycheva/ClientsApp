@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ClientsApp.Controllers
 {
-    [Authorize(Roles = "Manager")]
+    [Authorize]
     public class PaymentController : Controller
     {
         private readonly IPaymentService _paymentService;
@@ -97,6 +97,7 @@ namespace ClientsApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int id)
         {
             var payment = await _paymentService.GetByIdAsync(id);
@@ -107,6 +108,7 @@ namespace ClientsApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(Payment payment)
         {
             if (!ModelState.IsValid)
@@ -121,6 +123,7 @@ namespace ClientsApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Delete(int id)
         {
             var payment = await _paymentService.GetByIdAsync(id);
@@ -130,6 +133,7 @@ namespace ClientsApp.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _paymentService.DeleteAsync(id);

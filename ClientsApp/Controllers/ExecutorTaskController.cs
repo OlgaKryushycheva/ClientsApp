@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ClientsApp.Controllers
 {
-    [Authorize(Roles = "Manager")]
+    [Authorize]
     public class ExecutorTaskController : Controller
     {
         private readonly IExecutorTaskService _executorTaskService;
@@ -40,6 +40,7 @@ namespace ClientsApp.Controllers
             return View(items);
         }
 
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Executors = await _executorService.GetAllAsync();
@@ -50,6 +51,7 @@ namespace ClientsApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create(ExecutorTask executorTask)
         {
             if (ModelState.IsValid)
@@ -127,6 +129,7 @@ namespace ClientsApp.Controllers
             return View(executorTask);
         }
 
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Delete(int id)
         {
             var executorTask = await _executorTaskService.GetByIdAsync(id);
@@ -136,6 +139,7 @@ namespace ClientsApp.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _executorTaskService.DeleteAsync(id);
@@ -143,6 +147,7 @@ namespace ClientsApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetClientsByExecutor(int executorId)
         {
             var clients = await _executorTaskService.GetClientsByExecutorAsync(executorId);
@@ -150,6 +155,7 @@ namespace ClientsApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetTasksByExecutorClient(int executorId, int clientId)
         {
             var tasks = await _executorTaskService.GetTasksByExecutorAndClientAsync(executorId, clientId);
