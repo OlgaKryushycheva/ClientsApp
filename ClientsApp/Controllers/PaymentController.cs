@@ -1,14 +1,13 @@
 using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
 using ClientsApp.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClientsApp.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class PaymentController : Controller
     {
         private readonly IPaymentService _paymentService;
@@ -69,12 +68,14 @@ namespace ClientsApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Manager,Accountant")]
         public async Task<IActionResult> Create()
         {
             await PopulateTasks();
             return View();
         }
 
+        [Authorize(Roles = "Manager,Accountant")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Payment payment)
@@ -88,6 +89,11 @@ namespace ClientsApp.Controllers
             payment.PaymentDate = DateTime.Now;
             payment.BalanceDue = await CalculateBalanceDue(payment.ClientTaskId, payment.Amount, null);
             await _paymentService.AddAsync(payment);
+            if (User.IsInRole("Accountant"))
+            {
+                return RedirectToAction("Create");
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

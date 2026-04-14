@@ -1,5 +1,6 @@
 ﻿using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Globalization;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClientsApp.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class ExecutorController : Controller
     {
         private readonly IExecutorService _executorService;

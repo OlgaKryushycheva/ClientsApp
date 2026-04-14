@@ -10,11 +10,13 @@ using ClientsApp.Models.ViewModels.Statistics;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ClientsApp.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class StatisticsController : Controller
     {
         private readonly IClientService _clientService;
