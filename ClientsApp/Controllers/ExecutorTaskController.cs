@@ -1,29 +1,33 @@
 using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ClientsApp.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class ExecutorTaskController : Controller
     {
         private readonly IExecutorTaskService _executorTaskService;
         private readonly IExecutorService _executorService;
         private readonly IClientService _clientService;
         private readonly IClientTaskService _clientTaskService;
+        private readonly UserManager<Models.ApplicationUser> _userManager;
 
         public ExecutorTaskController(
             IExecutorTaskService executorTaskService,
             IExecutorService executorService,
             IClientService clientService,
-            IClientTaskService clientTaskService)
+            IClientTaskService clientTaskService,
+            UserManager<Models.ApplicationUser> userManager)
         {
             _executorTaskService = executorTaskService;
             _executorService = executorService;
             _clientService = clientService;
             _clientTaskService = clientTaskService;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(int? executorId, int? clientId, int? taskId)
@@ -61,10 +65,21 @@ namespace ClientsApp.Controllers
             return View(executorTask);
         }
 
+        [Authorize(Roles = "Manager,Executor")]
         public async Task<IActionResult> Edit(int id)
         {
             var executorTask = await _executorTaskService.GetByIdAsync(id);
             if (executorTask == null) return NotFound();
+
+            if (User.IsInRole("Executor"))
+            {
+                if (!await CanExecutorEditTaskAsync(executorTask))
+                {
+                    return Forbid();
+                }
+
+                return View("EditActualTime", executorTask);
+            }
 
             ViewBag.Executors = await _executorService.GetAllAsync();
             ViewBag.Clients = await _executorTaskService.GetClientsByExecutorAsync(executorTask.ExecutorId ?? 0);
@@ -75,15 +90,35 @@ namespace ClientsApp.Controllers
             return View(executorTask);
         }
 
+        [Authorize(Roles = "Manager,Executor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ExecutorTask executorTask)
         {
+            if (User.IsInRole("Executor"))
+            {
+                var existingTask = await _executorTaskService.GetByIdAsync(executorTask.ExecutorTaskId);
+                if (existingTask == null)
+                {
+                    return NotFound();
+                }
+
+                if (!await CanExecutorEditTaskAsync(existingTask))
+                {
+                    return Forbid();
+                }
+
+                existingTask.ActualTime = executorTask.ActualTime;
+                await _executorTaskService.UpdateAsync(existingTask);
+                return RedirectToAction("Index", "Home");
+            }
+
             if (ModelState.IsValid)
             {
                 await _executorTaskService.UpdateAsync(executorTask);
                 return RedirectToAction(nameof(Index));
             }
+
             ViewBag.Executors = await _executorService.GetAllAsync();
             ViewBag.Clients = await _executorTaskService.GetClientsByExecutorAsync(executorTask.ExecutorId ?? 0);
             var clientId = executorTask.ClientId ?? (await _executorTaskService.GetByIdAsync(executorTask.ExecutorTaskId))?.ClientTask?.ClientId ?? 0;
@@ -119,6 +154,17 @@ namespace ClientsApp.Controllers
         {
             var tasks = await _executorTaskService.GetTasksByExecutorAndClientAsync(executorId, clientId);
             return Json(tasks.Select(t => new { t.ClientTaskId, t.TaskTitle }));
+        }
+
+        private async Task<bool> CanExecutorEditTaskAsync(ExecutorTask executorTask)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null || !user.ExecutorId.HasValue)
+            {
+                return false;
+            }
+
+            return executorTask.ExecutorId == user.ExecutorId.Value;
         }
     }
 }

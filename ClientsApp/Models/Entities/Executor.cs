@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ClientsApp.Models.Entities
 {
+    using ClientsApp.Models;
     public class Executor : IValidatableObject
     {
         public int ExecutorId { get; set; }
@@ -52,6 +53,11 @@ namespace ClientsApp.Models.Entities
                     new[] { nameof(UnavailableTo) });
             }
         }
+
+
+        [Display(Name = "Користувач")]
+        public string? ApplicationUserId { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
 
         public ICollection<ExecutorTask>? ExecutorTasks { get; set; }
 

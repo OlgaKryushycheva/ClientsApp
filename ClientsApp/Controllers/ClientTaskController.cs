@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Linq;
@@ -9,6 +10,7 @@ using ClientsApp.BLL.Interfaces;
 
 namespace ClientsApp.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class ClientTaskController : Controller
     {
         private readonly IClientTaskService _taskService;
