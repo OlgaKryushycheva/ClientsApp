@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ClientsApp.Models.Entities;
 
 namespace ClientsApp.Models
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -15,6 +16,8 @@ namespace ClientsApp.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<ClientTask>()
                 .Property(t => t.TaskStatus)
                 .HasConversion<int>();
@@ -27,6 +30,12 @@ namespace ClientsApp.Models
             modelBuilder.Entity<Executor>()
                 .Property(e => e.HourlyRate)
                 .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(u => u.Executor)
+                .WithOne()
+                .HasForeignKey<ApplicationUser>(u => u.ExecutorId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<ExecutorTask>()
                 .Property(et => et.ActualTime)
@@ -52,8 +61,6 @@ namespace ClientsApp.Models
                 .HasOne(et => et.ClientTask)
                 .WithMany(ct => ct.ExecutorTasks)
                 .HasForeignKey(et => et.ClientTaskId);
-
-            base.OnModelCreating(modelBuilder);
         }
 
     }

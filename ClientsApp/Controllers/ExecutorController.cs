@@ -1,5 +1,6 @@
 ﻿using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Globalization;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClientsApp.Controllers
 {
+    [Authorize]
     public class ExecutorController : Controller
     {
         private readonly IExecutorService _executorService;
@@ -31,9 +33,11 @@ namespace ClientsApp.Controllers
             return View(executors);
         }
 
+        [Authorize(Roles = "Manager")]
         public IActionResult Create() => View();
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create(Executor executor)
         {
             ValidateUnavailablePeriod(executor);
@@ -43,6 +47,7 @@ namespace ClientsApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int id)
         {
             var executor = await _executorService.GetByIdAsync(id);
@@ -52,6 +57,7 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(Executor executor)
         {
             ValidateUnavailablePeriod(executor);
@@ -62,6 +68,7 @@ namespace ClientsApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Delete(int id)
         {
             var executor = await _executorService.GetByIdAsync(id);
@@ -71,6 +78,7 @@ namespace ClientsApp.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _executorService.DeleteAsync(id);
