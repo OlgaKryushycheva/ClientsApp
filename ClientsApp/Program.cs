@@ -44,16 +44,22 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();
+    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("Startup");
 
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    string[] roles = ["Manager", "Accountant", "Executor"];
-    foreach (var role in roles)
+    try
     {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
+        dbContext.Database.Migrate();
+        await SeedRolesAsync(scope.ServiceProvider);
+    }
+    catch (InvalidOperationException ex) when (ex.Message.Contains("PendingModelChangesWarning", StringComparison.Ordinal))
+    {
+        logger.LogWarning(ex,
+            "Database migration skipped because the model has pending changes. Create and apply a migration before using Identity features.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogWarning(ex,
+            "Database migration/role seed failed at startup. The app will continue to run, but authentication setup may be incomplete until migrations are applied.");
     }
 }
 
@@ -76,3 +82,16 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+static async Task SeedRolesAsync(IServiceProvider serviceProvider)
+{
+    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    string[] roles = ["Manager", "Accountant", "Executor"];
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}
