@@ -36,12 +36,6 @@
                         <li class="nav-item">
                             <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Statistics" ? "active" : "")" asp-controller="Statistics" asp-action="Index">Статистики та звіти</a>
                         </li>
-                        @if (User.IsInRole("Manager") || User.IsInRole("Accountant"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Payment" && ViewContext.RouteData.Values["action"]?.ToString() == "Create" ? "active" : "")" asp-controller="Payment" asp-action="Create">Створення оплати</a>
-                            </li>
-                        }
                     </ul>
 
                     <ul class="navbar-nav ms-auto">
