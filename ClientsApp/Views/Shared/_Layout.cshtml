@@ -46,7 +46,14 @@
 
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item me-2 align-self-center">
-                            <span class="nav-link text-muted">@User.Identity.Name</span>
+                            @if (User.IsInRole("Manager"))
+                            {
+                                <a class="nav-link" asp-controller="Account" asp-action="Profile">@User.Identity.Name</a>
+                            }
+                            else
+                            {
+                                <span class="nav-link text-muted">@User.Identity.Name</span>
+                            }
                         </li>
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post">
