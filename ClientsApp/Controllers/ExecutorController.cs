@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ClientsApp.Controllers
@@ -18,17 +19,37 @@ namespace ClientsApp.Controllers
             _executorService = executorService;
         }
 
-        public async Task<IActionResult> Index(string? fullName, decimal? hourlyRate)
+        public async Task<IActionResult> Index(string? fullName, decimal? hourlyRate, string? statusFilter, string? sortOrder)
         {
             var hasFilters = !string.IsNullOrWhiteSpace(fullName) || hourlyRate.HasValue;
             var executors = hasFilters
                 ? await _executorService.SearchAsync(fullName, hourlyRate)
                 : await _executorService.GetAllAsync();
 
+            var today = DateTime.Today;
+            var normalizedStatus = string.IsNullOrWhiteSpace(statusFilter) ? "all" : statusFilter.ToLowerInvariant();
+            executors = normalizedStatus switch
+            {
+                "working" => executors.Where(e => !e.DismissedFrom.HasValue || e.DismissedFrom.Value.Date > today),
+                "dismissed" => executors.Where(e => e.DismissedFrom.HasValue && e.DismissedFrom.Value.Date <= today),
+                _ => executors
+            };
+
+            var normalizedSort = string.IsNullOrWhiteSpace(sortOrder) ? "id_desc" : sortOrder.ToLowerInvariant();
+            executors = normalizedSort switch
+            {
+                "name_asc" => executors.OrderBy(e => e.FullName),
+                "name_desc" => executors.OrderByDescending(e => e.FullName),
+                "id_asc" => executors.OrderBy(e => e.ExecutorId),
+                _ => executors.OrderByDescending(e => e.ExecutorId)
+            };
+
             ViewData["FullName"] = fullName;
             ViewData["HourlyRate"] = hourlyRate.HasValue
                 ? hourlyRate.Value.ToString(CultureInfo.InvariantCulture)
                 : null;
+            ViewData["StatusFilter"] = normalizedStatus;
+            ViewData["SortOrder"] = normalizedSort;
 
             return View(executors);
         }
@@ -99,6 +120,11 @@ namespace ClientsApp.Controllers
                 && executor.UnavailableTo.Value.Date < executor.UnavailableFrom.Value.Date)
             {
                 ModelState.AddModelError(nameof(Executor.UnavailableTo), "Дата \"Недоступний до\" не може бути раніше дати \"Недоступний з\".");
+            }
+
+            if (executor.DismissedFrom.HasValue && executor.DismissedFrom.Value.Date < today)
+            {
+                ModelState.AddModelError(nameof(Executor.DismissedFrom), "Дата \"Звільнений з дати\" не може бути раніше поточної дати.");
             }
         }
     }

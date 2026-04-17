@@ -104,6 +104,9 @@ namespace ClientsApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExecutorId"));
 
+                    b.Property<DateTime?>("DismissedFrom")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
