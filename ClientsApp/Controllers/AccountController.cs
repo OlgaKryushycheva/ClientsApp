@@ -7,10 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClientsApp.Controllers
 {
-    [AllowAnonymous]
     public class AccountController : Controller
     {
-        private static readonly string[] AllowedRoles = ["Manager", "Accountant", "Executor"];
+        private static readonly string[] AllowedRoles = ["Accountant", "Executor"];
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -26,6 +25,7 @@ namespace ClientsApp.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpGet]
         public IActionResult Register()
         {
@@ -33,6 +33,7 @@ namespace ClientsApp.Controllers
             return View(new RegisterViewModel());
         }
 
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -79,11 +80,11 @@ namespace ClientsApp.Controllers
             }
 
             await _userManager.AddToRoleAsync(user, model.Role);
-            await _signInManager.SignInAsync(user, isPersistent: false);
 
             return RedirectToAction("Index", "Home");
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
         {
@@ -91,6 +92,7 @@ namespace ClientsApp.Controllers
             return View(new LoginViewModel());
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
@@ -120,6 +122,7 @@ namespace ClientsApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult AccessDenied()
         {
