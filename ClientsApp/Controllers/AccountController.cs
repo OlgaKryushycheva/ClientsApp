@@ -84,6 +84,142 @@ namespace ClientsApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize(Roles = "Manager")]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            var model = new ManageAccountViewModel
+            {
+                UpdateEmail = new UpdateEmailViewModel
+                {
+                    NewEmail = user.Email ?? string.Empty
+                },
+                ChangePassword = new ChangePasswordViewModel()
+            };
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Manager")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateEmail([Bind(Prefix = "UpdateEmail")] UpdateEmailViewModel model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("Profile", new ManageAccountViewModel
+                {
+                    UpdateEmail = model,
+                    ChangePassword = new ChangePasswordViewModel()
+                });
+            }
+
+            var emailInUse = await _userManager.FindByEmailAsync(model.NewEmail);
+            if (emailInUse is not null && emailInUse.Id != user.Id)
+            {
+                ModelState.AddModelError("UpdateEmail.NewEmail", "Користувач з таким email вже існує.");
+                return View("Profile", new ManageAccountViewModel
+                {
+                    UpdateEmail = model,
+                    ChangePassword = new ChangePasswordViewModel()
+                });
+            }
+
+            var setEmailResult = await _userManager.SetEmailAsync(user, model.NewEmail);
+            if (!setEmailResult.Succeeded)
+            {
+                foreach (var error in setEmailResult.Errors)
+                {
+                    ModelState.AddModelError("UpdateEmail.NewEmail", error.Description);
+                }
+
+                return View("Profile", new ManageAccountViewModel
+                {
+                    UpdateEmail = model,
+                    ChangePassword = new ChangePasswordViewModel()
+                });
+            }
+
+            var setUserNameResult = await _userManager.SetUserNameAsync(user, model.NewEmail);
+            if (!setUserNameResult.Succeeded)
+            {
+                foreach (var error in setUserNameResult.Errors)
+                {
+                    ModelState.AddModelError("UpdateEmail.NewEmail", error.Description);
+                }
+
+                return View("Profile", new ManageAccountViewModel
+                {
+                    UpdateEmail = model,
+                    ChangePassword = new ChangePasswordViewModel()
+                });
+            }
+
+            await _signInManager.RefreshSignInAsync(user);
+            TempData["SuccessMessage"] = "Email успішно змінено.";
+
+            return RedirectToAction(nameof(Profile));
+        }
+
+        [Authorize(Roles = "Manager")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePassword")] ChangePasswordViewModel model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("Profile", new ManageAccountViewModel
+                {
+                    UpdateEmail = new UpdateEmailViewModel
+                    {
+                        NewEmail = user.Email ?? string.Empty
+                    },
+                    ChangePassword = model
+                });
+            }
+
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                foreach (var error in changePasswordResult.Errors)
+                {
+                    ModelState.AddModelError("ChangePassword.CurrentPassword", error.Description);
+                }
+
+                return View("Profile", new ManageAccountViewModel
+                {
+                    UpdateEmail = new UpdateEmailViewModel
+                    {
+                        NewEmail = user.Email ?? string.Empty
+                    },
+                    ChangePassword = model
+                });
+            }
+
+            await _signInManager.RefreshSignInAsync(user);
+            TempData["SuccessMessage"] = "Пароль успішно змінено.";
+
+            return RedirectToAction(nameof(Profile));
+        }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
