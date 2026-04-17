@@ -26,6 +26,12 @@
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
+    <div class="mb-3">
+        <label asp-for="DismissedFrom" class="form-label"></label>
+        <input asp-for="DismissedFrom" type="date" class="form-control" min="@today" />
+        <span asp-validation-for="DismissedFrom" class="text-danger"></span>
+    </div>
+
     <div class="row">
         <div class="mb-3 col-md-6">
             <label asp-for="UnavailableFrom" class="form-label"></label>
