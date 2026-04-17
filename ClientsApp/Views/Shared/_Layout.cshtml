@@ -56,6 +56,12 @@
                             }
                         </li>
                         <li class="nav-item">
+                            @if (User.IsInRole("Manager"))
+                            {
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">Створити користувача</a>
+                            }
+                        </li>
+                        <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-outline-secondary btn-sm">Вийти</button>
