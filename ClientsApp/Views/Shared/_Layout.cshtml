@@ -36,10 +36,25 @@
                         <li class="nav-item">
                             <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Statistics" ? "active" : "")" asp-controller="Statistics" asp-action="Index">Статистики та звіти</a>
                         </li>
+                        @if (User.IsInRole("Manager"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["action"]?.ToString() == "Register" ? "active" : "")" asp-controller="Account" asp-action="Register">Створити користувача</a>
+                            </li>
+                        }
                     </ul>
 
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item me-2 align-self-center text-muted">@User.Identity.Name</li>
+                        <li class="nav-item me-2 align-self-center">
+                            @if (User.IsInRole("Manager"))
+                            {
+                                <a class="nav-link" asp-controller="Account" asp-action="Profile">@User.Identity.Name</a>
+                            }
+                            else
+                            {
+                                <span class="nav-link text-muted">@User.Identity.Name</span>
+                            }
+                        </li>
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post">
                                 @Html.AntiForgeryToken()
@@ -52,7 +67,6 @@
                 {
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Вхід</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Реєстрація</a></li>
                     </ul>
                 }
             </div>
