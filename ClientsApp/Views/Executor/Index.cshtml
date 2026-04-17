@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Виконавці";
+    var selectedStatus = ViewData["StatusFilter"]?.ToString() ?? "all";
+    var selectedSort = ViewData["SortOrder"]?.ToString() ?? "id_desc";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -15,7 +17,22 @@
     <div class="col-md-3">
         <input type="text" name="hourlyRate" value="@ViewData["HourlyRate"]" class="form-control" placeholder="Пошук за ставкою" inputmode="numeric" pattern="[0-9]+" />
     </div>
-    <div class="col-md-5 d-flex align-items-end">
+    <div class="col-md-2">
+        <select name="statusFilter" class="form-select">
+            <option value="all" selected="@(selectedStatus == "all" ? "selected" : null)">Усі</option>
+            <option value="working" selected="@(selectedStatus == "working" ? "selected" : null)">Працює</option>
+            <option value="dismissed" selected="@(selectedStatus == "dismissed" ? "selected" : null)">Звільнений</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="sortOrder" class="form-select">
+            <option value="id_desc" selected="@(selectedSort == "id_desc" ? "selected" : null)">Дата внесення (новіші)</option>
+            <option value="id_asc" selected="@(selectedSort == "id_asc" ? "selected" : null)">Дата внесення (старіші)</option>
+            <option value="name_asc" selected="@(selectedSort == "name_asc" ? "selected" : null)">ПІБ ↑</option>
+            <option value="name_desc" selected="@(selectedSort == "name_desc" ? "selected" : null)">ПІБ ↓</option>
+        </select>
+    </div>
+    <div class="col-md-12 d-flex align-items-end">
         <button type="submit" class="btn btn-primary me-2">Пошук</button>
         <a asp-action="Index" class="btn btn-secondary">Скинути</a>
     </div>
@@ -30,6 +47,7 @@
             <th>Ставка/год</th>
             <th>Email</th>
             <th>Недоступний</th>
+            <th>Звільнений з дати</th>
             <th>Дії</th>
         </tr>
     </thead>
@@ -46,6 +64,7 @@
                         @($"{executor.UnavailableFrom:dd.MM.yyyy} - {executor.UnavailableTo:dd.MM.yyyy}")
                     }
                 </td>
+                <td>@executor.DismissedFrom?.ToString("dd.MM.yyyy")</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@executor.ExecutorId" class="btn btn-primary btn-sm">Редагувати</a>
                     <a asp-action="Delete" asp-route-id="@executor.ExecutorId" class="btn btn-danger btn-sm">Видалити</a>
