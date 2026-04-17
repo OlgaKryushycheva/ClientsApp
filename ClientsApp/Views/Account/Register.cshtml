@@ -1,9 +1,9 @@
 @model ClientsApp.Models.ViewModels.Account.RegisterViewModel
 @{
-    ViewData["Title"] = "Реєстрація";
+    ViewData["Title"] = "Створення користувача";
 }
 
-<h2>Реєстрація</h2>
+<h2>Створення користувача</h2>
 
 <form asp-action="Register" method="post" class="mt-3">
     @Html.AntiForgeryToken()
@@ -39,7 +39,7 @@
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Зареєструватися</button>
+    <button type="submit" class="btn btn-primary">Створити користувача</button>
 </form>
 
 @section Scripts {

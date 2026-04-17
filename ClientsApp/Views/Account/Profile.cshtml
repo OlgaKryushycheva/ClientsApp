@@ -1,0 +1,75 @@
+@model ClientsApp.Models.ViewModels.Account.ManageAccountViewModel
+@{
+    ViewData["Title"] = "Мій профіль";
+}
+
+<h2>Мій профіль</h2>
+
+@if (TempData["SuccessMessage"] is string successMessage)
+{
+    <div class="alert alert-success" role="alert">
+        @successMessage
+    </div>
+}
+
+<div class="row g-4 mt-1">
+    <div class="col-12 col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Зміна email</h5>
+
+                <form asp-action="UpdateEmail" method="post" class="mt-3">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="UpdateEmail.NewEmail" class="form-label"></label>
+                        <input asp-for="UpdateEmail.NewEmail" class="form-control" />
+                        <span asp-validation-for="UpdateEmail.NewEmail" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Змінити email</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Зміна пароля</h5>
+
+                <form asp-action="ChangePassword" method="post" class="mt-3">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="ChangePassword.CurrentPassword" class="form-label"></label>
+                        <input asp-for="ChangePassword.CurrentPassword" class="form-control" />
+                        <span asp-validation-for="ChangePassword.CurrentPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ChangePassword.NewPassword" class="form-label"></label>
+                        <input asp-for="ChangePassword.NewPassword" class="form-control" />
+                        <span asp-validation-for="ChangePassword.NewPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ChangePassword.ConfirmNewPassword" class="form-label"></label>
+                        <input asp-for="ChangePassword.ConfirmNewPassword" class="form-control" />
+                        <span asp-validation-for="ChangePassword.ConfirmNewPassword" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Змінити пароль</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
