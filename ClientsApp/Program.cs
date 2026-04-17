@@ -63,6 +63,7 @@ using (var scope = app.Services.CreateScope())
 
     await EnsureIdentitySchemaAsync(dbContext, logger);
     await SeedRolesAsync(scope.ServiceProvider, logger);
+    await SeedFirstManagerAsync(scope.ServiceProvider, builder.Configuration, logger);
 }
 
 if (!app.Environment.IsDevelopment())
@@ -84,6 +85,60 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+
+static async Task SeedFirstManagerAsync(IServiceProvider serviceProvider, IConfiguration configuration, ILogger logger)
+{
+    var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    var managers = await userManager.GetUsersInRoleAsync("Manager");
+    if (managers.Count > 0)
+    {
+        return;
+    }
+
+    var seedManagerEmail = configuration["SeedAdmin:Email"];
+    var seedManagerPassword = configuration["SeedAdmin:Password"];
+
+    if (string.IsNullOrWhiteSpace(seedManagerEmail) || string.IsNullOrWhiteSpace(seedManagerPassword))
+    {
+        logger.LogWarning("No users with Manager role were found, but SeedAdmin credentials are missing in configuration. Set SeedAdmin:Email and SeedAdmin:Password.");
+        return;
+    }
+
+    var existingUser = await userManager.FindByEmailAsync(seedManagerEmail);
+    if (existingUser is null)
+    {
+        existingUser = new ApplicationUser
+        {
+            UserName = seedManagerEmail,
+            Email = seedManagerEmail
+        };
+
+        var createResult = await userManager.CreateAsync(existingUser, seedManagerPassword);
+        if (!createResult.Succeeded)
+        {
+            logger.LogWarning("Failed to create seed manager user {Email}: {Errors}",
+                seedManagerEmail,
+                string.Join("; ", createResult.Errors.Select(e => e.Description)));
+            return;
+        }
+    }
+
+    if (!await userManager.IsInRoleAsync(existingUser, "Manager"))
+    {
+        var addRoleResult = await userManager.AddToRoleAsync(existingUser, "Manager");
+        if (!addRoleResult.Succeeded)
+        {
+            logger.LogWarning("Failed to assign Manager role to user {Email}: {Errors}",
+                seedManagerEmail,
+                string.Join("; ", addRoleResult.Errors.Select(e => e.Description)));
+            return;
+        }
+    }
+
+    logger.LogInformation("Seed manager user is available: {Email}", seedManagerEmail);
+}
 
 static async Task SeedRolesAsync(IServiceProvider serviceProvider, ILogger logger)
 {
