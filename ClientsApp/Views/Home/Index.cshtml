@@ -2,15 +2,118 @@
     ViewData["Title"] = "Головна сторінка";
 }
 
-<div class="text-center my-5">
-    <h1 class="display-4">Вітаємо в системі обліку клієнтів ClientsApp!</h1>
-    <p class="lead">Цей застосунок допомагає керувати клієнтами, завданнями, робочим часом та оплатами.</p>
-</div>
+<section class="home-hero text-center">
+    <h1 class="home-hero-title">Вітаємо в системі обліку клієнтів ClientsApp!</h1>
+    <p class="home-hero-subtitle">Цей застосунок допомагає керувати клієнтами, завданнями, робочим часом та оплатами.</p>
+</section>
 
-<div class="home-links">
-    <p><a href="@Url.Action("Index", "Client")">Клієнти</a>Керуйте інформацією про клієнтів.</p>
-    <p><a href="@Url.Action("Index", "Executor")">Виконавці</a>Додавайте та редагуйте виконавців.</p>
-    <p><a href="@Url.Action("Index", "ClientTask")">Завдання</a>Створюйте та відстежуйте завдання клієнтів.</p>
-    <p><a href="@Url.Action("Index", "ExecutorTask")">Облік робочого часу</a>Фіксуйте витрати часу виконавців.</p>
-    <p><a href="@Url.Action("Index", "Payment")">Оплати</a>Переглядайте та додавайте платежі.</p>
-</div>
+<section class="home-cards" aria-label="Основні розділи ClientsApp">
+    <a class="dashboard-card" href="@Url.Action("Index", "Client")" aria-label="Перейти до розділу Клієнти">
+        <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 21V19C17 16.7909 15.2091 15 13 15H7C4.79086 15 3 16.7909 3 19V21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="10" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M21 21V19C20.9986 17.1553 19.7322 15.5518 17.94 15.123" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 3.13C15.7961 3.58946 17.0553 5.19406 17.0553 7.05C17.0553 8.90594 15.7961 10.5105 14 10.97" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </span>
+        <span class="card-content">
+            <span class="card-title">Клієнти</span>
+            <span class="card-description">Керуйте інформацією про клієнтів.</span>
+        </span>
+    </a>
+
+    <a class="dashboard-card" href="@Url.Action("Index", "Executor")" aria-label="Перейти до розділу Виконавці">
+        <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M4 22C4 18.6863 7.58172 16 12 16C16.4183 16 20 18.6863 20 22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M19 9L21 11L23 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </span>
+        <span class="card-content">
+            <span class="card-title">Виконавці</span>
+            <span class="card-description">Додавайте та редагуйте виконавців.</span>
+        </span>
+    </a>
+
+    <a class="dashboard-card" href="@Url.Action("Index", "ClientTask")" aria-label="Перейти до розділу Завдання">
+        <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M8 2V6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M16 2V6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M3 9H21" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M8 14H12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M8 18H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+        </span>
+        <span class="card-content">
+            <span class="card-title">Завдання</span>
+            <span class="card-description">Створюйте та відстежуйте завдання клієнтів.</span>
+        </span>
+    </a>
+
+    <a class="dashboard-card" href="@Url.Action("Index", "ExecutorTask")" aria-label="Перейти до розділу Облік робочого часу">
+        <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 7V12L15 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 3L5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M17 3L19 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+        </span>
+        <span class="card-content">
+            <span class="card-title">Облік робочого часу</span>
+            <span class="card-description">Фіксуйте витрати часу виконавців.</span>
+        </span>
+    </a>
+
+    <a class="dashboard-card" href="@Url.Action("Index", "Payment")" aria-label="Перейти до розділу Оплати">
+        <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2.5" y="5" width="19" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M2.5 10H21.5" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M7 15H11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <circle cx="17" cy="15" r="1" fill="currentColor"/>
+            </svg>
+        </span>
+        <span class="card-content">
+            <span class="card-title">Оплати</span>
+            <span class="card-description">Переглядайте та додавайте платежі.</span>
+        </span>
+    </a>
+
+    <a class="dashboard-card" href="@Url.Action("Index", "Statistics")" aria-label="Перейти до розділу Статистики та звіти">
+        <span class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 19H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <rect x="5" y="11" width="3" height="6" rx="1" stroke="currentColor" stroke-width="1.8"/>
+                <rect x="10.5" y="8" width="3" height="9" rx="1" stroke="currentColor" stroke-width="1.8"/>
+                <rect x="16" y="5" width="3" height="12" rx="1" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+        </span>
+        <span class="card-content">
+            <span class="card-title">Статистики та звіти</span>
+            <span class="card-description">Аналізуйте ключові показники та результати.</span>
+        </span>
+    </a>
+
+    @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Manager"))
+    {
+        <a class="dashboard-card" href="@Url.Action("Register", "Account")" aria-label="Перейти до розділу Створити користувача">
+            <span class="card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="9" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="M2.5 21C2.5 17.6863 5.41015 15 9 15C12.5899 15 15.5 17.6863 15.5 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <path d="M19 8V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <path d="M16 11H22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+            </span>
+            <span class="card-content">
+                <span class="card-title">Створити користувача</span>
+                <span class="card-description">Додайте нового користувача з відповідною роллю доступу.</span>
+            </span>
+        </a>
+    }
+</section>
