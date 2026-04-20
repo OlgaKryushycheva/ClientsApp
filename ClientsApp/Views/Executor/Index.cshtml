@@ -2,6 +2,13 @@
 
 @{
     ViewData["Title"] = "Виконавці";
+    var selectedStatus = ViewData["StatusFilter"]?.ToString() ?? "all";
+    var currentSortBy = ViewData["SortBy"]?.ToString() ?? "id";
+    var currentSortDirection = ViewData["SortDirection"]?.ToString() ?? "desc";
+    var nextNameDirection = currentSortBy == "name" && currentSortDirection == "asc" ? "desc" : "asc";
+    var nextIdDirection = currentSortBy == "id" && currentSortDirection == "desc" ? "asc" : "desc";
+    var nameArrow = currentSortBy == "name" ? (currentSortDirection == "asc" ? " ↑" : " ↓") : string.Empty;
+    var idArrow = currentSortBy == "id" ? (currentSortDirection == "desc" ? " ↓" : " ↑") : string.Empty;
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -9,17 +16,47 @@
 <p>На цій сторінці Виконавці Ви можете отримати усю інформацію по усіх виконавцях фірми,  а також додавати інформацію, редагувати та видаляти її. </p>
 
 <form method="get" class="row g-3 mb-3">
+    <input type="hidden" name="sortBy" value="@currentSortBy" />
+    <input type="hidden" name="sortDirection" value="@currentSortDirection" />
     <div class="col-md-4">
         <input type="text" name="fullName" value="@ViewData["FullName"]" class="form-control" placeholder="Пошук за ПІБ" />
     </div>
     <div class="col-md-3">
         <input type="text" name="hourlyRate" value="@ViewData["HourlyRate"]" class="form-control" placeholder="Пошук за ставкою" inputmode="numeric" pattern="[0-9]+" />
     </div>
-    <div class="col-md-5 d-flex align-items-end">
+    <div class="col-md-2">
+        <select name="statusFilter" class="form-select">
+            <option value="all" selected="@(selectedStatus == "all" ? "selected" : null)">Усі</option>
+            <option value="working" selected="@(selectedStatus == "working" ? "selected" : null)">Працює</option>
+            <option value="dismissed" selected="@(selectedStatus == "dismissed" ? "selected" : null)">Звільнений</option>
+        </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
         <button type="submit" class="btn btn-primary me-2">Пошук</button>
         <a asp-action="Index" class="btn btn-secondary">Скинути</a>
     </div>
 </form>
+
+<div class="mb-3 d-flex gap-2">
+    <a asp-action="Index"
+       asp-route-fullName="@ViewData["FullName"]"
+       asp-route-hourlyRate="@ViewData["HourlyRate"]"
+       asp-route-statusFilter="@selectedStatus"
+       asp-route-sortBy="name"
+       asp-route-sortDirection="@nextNameDirection"
+       class="btn @(currentSortBy == "name" ? "btn-primary" : "btn-outline-primary")">
+        Сортувати за ПІБ@nameArrow
+    </a>
+    <a asp-action="Index"
+       asp-route-fullName="@ViewData["FullName"]"
+       asp-route-hourlyRate="@ViewData["HourlyRate"]"
+       asp-route-statusFilter="@selectedStatus"
+       asp-route-sortBy="id"
+       asp-route-sortDirection="@nextIdDirection"
+       class="btn @(currentSortBy == "id" ? "btn-primary" : "btn-outline-primary")">
+        Сортувати за датою внесення@idArrow
+    </a>
+</div>
 
 <a asp-action="Create" class="btn btn-success mb-2">Додати Виконавця</a>
 
@@ -30,6 +67,7 @@
             <th>Ставка/год</th>
             <th>Email</th>
             <th>Недоступний</th>
+            <th>Звільнений з дати</th>
             <th>Дії</th>
         </tr>
     </thead>
@@ -46,6 +84,7 @@
                         @($"{executor.UnavailableFrom:dd.MM.yyyy} - {executor.UnavailableTo:dd.MM.yyyy}")
                     }
                 </td>
+                <td>@executor.DismissedFrom?.ToString("dd.MM.yyyy")</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@executor.ExecutorId" class="btn btn-primary btn-sm">Редагувати</a>
                     <a asp-action="Delete" asp-route-id="@executor.ExecutorId" class="btn btn-danger btn-sm">Видалити</a>

@@ -33,6 +33,10 @@ namespace ClientsApp.Models.Entities
         [Display(Name = "Недоступний до")]
         public DateTime? UnavailableTo { get; set; }
 
+        [DataType(DataType.Date)]
+        [Display(Name = "Звільнений з дати")]
+        public DateTime? DismissedFrom { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var today = DateTime.Today;
@@ -51,6 +55,13 @@ namespace ClientsApp.Models.Entities
                 yield return new ValidationResult(
                     "Дата \"Недоступний до\" не може бути раніше дати \"Недоступний з\".",
                     new[] { nameof(UnavailableTo) });
+            }
+
+            if (DismissedFrom.HasValue && DismissedFrom.Value.Date < today)
+            {
+                yield return new ValidationResult(
+                    "Дата \"Звільнений з дати\" не може бути раніше поточної дати.",
+                    new[] { nameof(DismissedFrom) });
             }
         }
         public ICollection<ExecutorTask>? ExecutorTasks { get; set; }

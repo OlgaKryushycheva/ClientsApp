@@ -202,6 +202,11 @@ BEGIN
     ALTER TABLE [AspNetUsers] ADD [ExecutorId] int NULL;
 END;
 
+IF COL_LENGTH('Executors', 'DismissedFrom') IS NULL
+BEGIN
+    ALTER TABLE [Executors] ADD [DismissedFrom] datetime2 NULL;
+END;
+
 IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'FK_AspNetUsers_Executors_ExecutorId')
 BEGIN
     ALTER TABLE [AspNetUsers] ADD CONSTRAINT [FK_AspNetUsers_Executors_ExecutorId]
