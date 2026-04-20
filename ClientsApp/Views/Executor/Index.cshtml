@@ -7,8 +7,6 @@
     var currentSortDirection = ViewData["SortDirection"]?.ToString() ?? "desc";
     var nextNameDirection = currentSortBy == "name" && currentSortDirection == "asc" ? "desc" : "asc";
     var nextIdDirection = currentSortBy == "id" && currentSortDirection == "desc" ? "asc" : "desc";
-    var nameArrow = currentSortBy == "name" ? (currentSortDirection == "asc" ? " ↑" : " ↓") : string.Empty;
-    var idArrow = currentSortBy == "id" ? (currentSortDirection == "desc" ? " ↓" : " ↑") : string.Empty;
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -45,7 +43,11 @@
        asp-route-sortBy="name"
        asp-route-sortDirection="@nextNameDirection"
        class="btn @(currentSortBy == "name" ? "btn-primary" : "btn-outline-primary")">
-        Сортувати за ПІБ@nameArrow
+        Сортувати за ПІБ
+        @if (currentSortBy == "name")
+        {
+            <span>@(currentSortDirection == "asc" ? "↑" : "↓")</span>
+        }
     </a>
     <a asp-action="Index"
        asp-route-fullName="@ViewData["FullName"]"
@@ -54,7 +56,11 @@
        asp-route-sortBy="id"
        asp-route-sortDirection="@nextIdDirection"
        class="btn @(currentSortBy == "id" ? "btn-primary" : "btn-outline-primary")">
-        Сортувати за датою внесення@idArrow
+        Сортувати за датою внесення
+        @if (currentSortBy == "id")
+        {
+            <span>@(currentSortDirection == "desc" ? "↓" : "↑")</span>
+        }
     </a>
 </div>
 
