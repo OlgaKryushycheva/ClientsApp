@@ -19,7 +19,12 @@ namespace ClientsApp.Controllers
             _executorService = executorService;
         }
 
-        public async Task<IActionResult> Index(string? fullName, decimal? hourlyRate, string? statusFilter, string? sortOrder)
+        public async Task<IActionResult> Index(
+            string? fullName,
+            decimal? hourlyRate,
+            string? statusFilter,
+            string? sortBy,
+            string? sortDirection)
         {
             var hasFilters = !string.IsNullOrWhiteSpace(fullName) || hourlyRate.HasValue;
             var executors = hasFilters
@@ -35,12 +40,25 @@ namespace ClientsApp.Controllers
                 _ => executors
             };
 
-            var normalizedSort = string.IsNullOrWhiteSpace(sortOrder) ? "id_desc" : sortOrder.ToLowerInvariant();
-            executors = normalizedSort switch
+            var normalizedSortBy = string.IsNullOrWhiteSpace(sortBy) ? "id" : sortBy.ToLowerInvariant();
+            if (normalizedSortBy != "name" && normalizedSortBy != "id")
             {
-                "name_asc" => executors.OrderBy(e => e.FullName),
-                "name_desc" => executors.OrderByDescending(e => e.FullName),
-                "id_asc" => executors.OrderBy(e => e.ExecutorId),
+                normalizedSortBy = "id";
+            }
+
+            var normalizedSortDirection = string.IsNullOrWhiteSpace(sortDirection)
+                ? "desc"
+                : sortDirection.ToLowerInvariant();
+            if (normalizedSortDirection != "asc" && normalizedSortDirection != "desc")
+            {
+                normalizedSortDirection = normalizedSortBy == "name" ? "asc" : "desc";
+            }
+
+            executors = normalizedSortBy switch
+            {
+                "name" when normalizedSortDirection == "desc" => executors.OrderByDescending(e => e.FullName),
+                "name" => executors.OrderBy(e => e.FullName),
+                "id" when normalizedSortDirection == "asc" => executors.OrderBy(e => e.ExecutorId),
                 _ => executors.OrderByDescending(e => e.ExecutorId)
             };
 
@@ -49,7 +67,8 @@ namespace ClientsApp.Controllers
                 ? hourlyRate.Value.ToString(CultureInfo.InvariantCulture)
                 : null;
             ViewData["StatusFilter"] = normalizedStatus;
-            ViewData["SortOrder"] = normalizedSort;
+            ViewData["SortBy"] = normalizedSortBy;
+            ViewData["SortDirection"] = normalizedSortDirection;
 
             return View(executors);
         }

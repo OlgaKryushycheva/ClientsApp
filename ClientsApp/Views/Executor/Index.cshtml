@@ -3,7 +3,12 @@
 @{
     ViewData["Title"] = "Виконавці";
     var selectedStatus = ViewData["StatusFilter"]?.ToString() ?? "all";
-    var selectedSort = ViewData["SortOrder"]?.ToString() ?? "id_desc";
+    var currentSortBy = ViewData["SortBy"]?.ToString() ?? "id";
+    var currentSortDirection = ViewData["SortDirection"]?.ToString() ?? "desc";
+    var nextNameDirection = currentSortBy == "name" && currentSortDirection == "asc" ? "desc" : "asc";
+    var nextIdDirection = currentSortBy == "id" && currentSortDirection == "desc" ? "asc" : "desc";
+    var nameArrow = currentSortBy == "name" ? (currentSortDirection == "asc" ? " ↑" : " ↓") : string.Empty;
+    var idArrow = currentSortBy == "id" ? (currentSortDirection == "desc" ? " ↓" : " ↑") : string.Empty;
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -11,6 +16,8 @@
 <p>На цій сторінці Виконавці Ви можете отримати усю інформацію по усіх виконавцях фірми,  а також додавати інформацію, редагувати та видаляти її. </p>
 
 <form method="get" class="row g-3 mb-3">
+    <input type="hidden" name="sortBy" value="@currentSortBy" />
+    <input type="hidden" name="sortDirection" value="@currentSortDirection" />
     <div class="col-md-4">
         <input type="text" name="fullName" value="@ViewData["FullName"]" class="form-control" placeholder="Пошук за ПІБ" />
     </div>
@@ -24,19 +31,32 @@
             <option value="dismissed" selected="@(selectedStatus == "dismissed" ? "selected" : null)">Звільнений</option>
         </select>
     </div>
-    <div class="col-md-3">
-        <select name="sortOrder" class="form-select">
-            <option value="id_desc" selected="@(selectedSort == "id_desc" ? "selected" : null)">Дата внесення (новіші)</option>
-            <option value="id_asc" selected="@(selectedSort == "id_asc" ? "selected" : null)">Дата внесення (старіші)</option>
-            <option value="name_asc" selected="@(selectedSort == "name_asc" ? "selected" : null)">ПІБ ↑</option>
-            <option value="name_desc" selected="@(selectedSort == "name_desc" ? "selected" : null)">ПІБ ↓</option>
-        </select>
-    </div>
-    <div class="col-md-12 d-flex align-items-end">
+    <div class="col-md-3 d-flex align-items-end">
         <button type="submit" class="btn btn-primary me-2">Пошук</button>
         <a asp-action="Index" class="btn btn-secondary">Скинути</a>
     </div>
 </form>
+
+<div class="mb-3 d-flex gap-2">
+    <a asp-action="Index"
+       asp-route-fullName="@ViewData["FullName"]"
+       asp-route-hourlyRate="@ViewData["HourlyRate"]"
+       asp-route-statusFilter="@selectedStatus"
+       asp-route-sortBy="name"
+       asp-route-sortDirection="@nextNameDirection"
+       class="btn @(currentSortBy == "name" ? "btn-primary" : "btn-outline-primary")">
+        Сортувати за ПІБ@nameArrow
+    </a>
+    <a asp-action="Index"
+       asp-route-fullName="@ViewData["FullName"]"
+       asp-route-hourlyRate="@ViewData["HourlyRate"]"
+       asp-route-statusFilter="@selectedStatus"
+       asp-route-sortBy="id"
+       asp-route-sortDirection="@nextIdDirection"
+       class="btn @(currentSortBy == "id" ? "btn-primary" : "btn-outline-primary")">
+        Сортувати за датою внесення@idArrow
+    </a>
+</div>
 
 <a asp-action="Create" class="btn btn-success mb-2">Додати Виконавця</a>
 
