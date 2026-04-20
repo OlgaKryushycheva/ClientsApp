@@ -1,84 +1,90 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ClientsApp</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
-        <div class="container">
-            <a class="navbar-brand fs-2 fw-bold" asp-area="" asp-controller="Home" asp-action="Index">ClientsApp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Перемкнути навігацію">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Client" ? "active" : "")" asp-controller="Client" asp-action="Index">Клієнти</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Executor" ? "active" : "")" asp-controller="Executor" asp-action="Index">Виконавці</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ClientTask" ? "active" : "")" asp-controller="ClientTask" asp-action="Index">Завдання</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ExecutorTask" ? "active" : "")" asp-controller="ExecutorTask" asp-action="Index">Облік робочого часу</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Payment" ? "active" : "")" asp-controller="Payment" asp-action="Index">Оплати</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Statistics" ? "active" : "")" asp-controller="Statistics" asp-action="Index">Статистики та звіти</a>
-                        </li>
-                        @if (User.IsInRole("Manager"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["action"]?.ToString() == "Register" ? "active" : "")" asp-controller="Account" asp-action="Register">Створити користувача</a>
-                            </li>
-                        }
-                    </ul>
+<body class="app-shell d-flex flex-column min-vh-100">
+    <header class="app-header">
+        <nav class="navbar navbar-expand-xl app-navbar">
+            <div class="container app-navbar-container">
+                <a class="navbar-brand app-brand @((ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index") ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">ClientsApp</a>
 
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item me-2 align-self-center">
+                <button class="navbar-toggler app-navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Перемкнути навігацію">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <ul class="navbar-nav app-nav-center">
+                            <li class="nav-item">
+                                <a class="nav-link app-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Client" ? "active" : "")" asp-controller="Client" asp-action="Index">Клієнти</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link app-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Executor" ? "active" : "")" asp-controller="Executor" asp-action="Index">Виконавці</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link app-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ClientTask" ? "active" : "")" asp-controller="ClientTask" asp-action="Index">Завдання</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link app-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ExecutorTask" ? "active" : "")" asp-controller="ExecutorTask" asp-action="Index">Облік робочого часу</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link app-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Payment" ? "active" : "")" asp-controller="Payment" asp-action="Index">Оплати</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link app-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Statistics" ? "active" : "")" asp-controller="Statistics" asp-action="Index">Статистики та звіти</a>
+                            </li>
                             @if (User.IsInRole("Manager"))
                             {
-                                <a class="nav-link" asp-controller="Account" asp-action="Profile">@User.Identity.Name</a>
+                                <li class="nav-item">
+                                    <a class="nav-link app-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["action"]?.ToString() == "Register" ? "active" : "")" asp-controller="Account" asp-action="Register">Створити користувача</a>
+                                </li>
+                            }
+                        </ul>
+
+                        <div class="app-nav-right">
+                            @if (User.IsInRole("Manager"))
+                            {
+                                <a class="app-user-link" asp-controller="Account" asp-action="Profile">@User.Identity?.Name</a>
                             }
                             else
                             {
-                                <span class="nav-link text-muted">@User.Identity.Name</span>
+                                <span class="app-user-email">@User.Identity?.Name</span>
                             }
-                        </li>
-                        <li class="nav-item">
-                            <form asp-controller="Account" asp-action="Logout" method="post">
+
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
                                 @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-outline-secondary btn-sm">Вийти</button>
+                                <button type="submit" class="btn app-logout-btn">Вийти</button>
                             </form>
-                        </li>
-                    </ul>
-                }
-                else
-                {
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Вхід</a></li>
-                    </ul>
-                }
+                        </div>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link app-nav-link" asp-controller="Account" asp-action="Login">Вхід</a>
+                            </li>
+                        </ul>
+                    }
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <div class="container">
+    <main class="container app-main-content">
         @RenderBody()
-    </div>
+    </main>
 
-    <footer class="mt-auto text-center py-3 border-top">
-        <p>&copy; 2025 ClientsApp</p>
+    <footer class="app-footer mt-auto">
+        <div class="container">
+            <p>&copy; 2025 ClientsApp</p>
+        </div>
     </footer>
 
     @RenderSection("Scripts", required: false)
