@@ -99,21 +99,4 @@
         </span>
     </a>
 
-    @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Manager"))
-    {
-        <a class="dashboard-card" href="@Url.Action("Register", "Account")" aria-label="Перейти до розділу Створити користувача">
-            <span class="card-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="9" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
-                    <path d="M2.5 21C2.5 17.6863 5.41015 15 9 15C12.5899 15 15.5 17.6863 15.5 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                    <path d="M19 8V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                    <path d="M16 11H22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                </svg>
-            </span>
-            <span class="card-content">
-                <span class="card-title">Створити користувача</span>
-                <span class="card-description">Додайте нового користувача з відповідною роллю доступу.</span>
-            </span>
-        </a>
-    }
 </section>
