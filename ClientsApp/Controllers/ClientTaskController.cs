@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ClientsApp.Models.Entities;
 using ClientsApp.Models.ViewModels;
 using ClientsApp.BLL.Interfaces;
+using System.Collections.Generic;
 
 namespace ClientsApp.Controllers
 {
@@ -68,12 +69,7 @@ namespace ClientsApp.Controllers
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create()
         {
-            ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name");
-            var availableExecutors = (await _executorService.GetAllAsync())
-                .Where(e => !e.UnavailableFrom.HasValue && !e.UnavailableTo.HasValue)
-                .ToList();
-            ViewBag.Executors = new MultiSelectList(availableExecutors, "ExecutorId", "FullName");
-            ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)));
+            await PopulateCreateViewBagsAsync();
             return View();
         }
 
@@ -84,12 +80,41 @@ namespace ClientsApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task.ClientId);
-                var availableExecutors = (await _executorService.GetAllAsync())
-                    .Where(e => !e.UnavailableFrom.HasValue && !e.UnavailableTo.HasValue)
-                    .ToList();
-                ViewBag.Executors = new MultiSelectList(availableExecutors, "ExecutorId", "FullName", selectedExecutors);
-                ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), task.TaskStatus);
+                await PopulateCreateViewBagsAsync(task, selectedExecutors);
+                return View(task);
+            }
+
+            var startDate = task.StartDate.Date;
+            var selectedExecutorsData = (await _executorService.GetAllAsync())
+                .Where(e => selectedExecutors.Contains(e.ExecutorId))
+                .ToList();
+
+            var invalidUnavailableExecutors = selectedExecutorsData
+                .Where(e => e.UnavailableFrom.HasValue
+                    && e.UnavailableTo.HasValue
+                    && startDate >= e.UnavailableFrom.Value.Date
+                    && startDate <= e.UnavailableTo.Value.Date)
+                .Select(e => e.FullName)
+                .ToList();
+
+            if (invalidUnavailableExecutors.Count > 0)
+            {
+                ModelState.AddModelError(string.Empty, $"Обрані виконавці недоступні на дату початку: {string.Join(", ", invalidUnavailableExecutors)}.");
+            }
+
+            var dismissedExecutors = selectedExecutorsData
+                .Where(e => e.DismissedFrom.HasValue && startDate >= e.DismissedFrom.Value.Date)
+                .Select(e => e.FullName)
+                .ToList();
+
+            if (dismissedExecutors.Count > 0)
+            {
+                ModelState.AddModelError(string.Empty, $"Обрані виконавці звільнені на дату початку: {string.Join(", ", dismissedExecutors)}.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                await PopulateCreateViewBagsAsync(task, selectedExecutors);
                 return View(task);
             }
 
@@ -203,6 +228,19 @@ namespace ClientsApp.Controllers
         {
             await _taskService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task PopulateCreateViewBagsAsync(ClientTask? task = null, int[]? selectedExecutors = null)
+        {
+            var today = DateTime.Today;
+
+            ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task?.ClientId);
+            ViewBag.Executors = (await _executorService.GetAllAsync())
+                .Where(e => !e.DismissedFrom.HasValue || e.DismissedFrom.Value.Date >= today)
+                .OrderBy(e => e.FullName)
+                .ToList();
+            ViewBag.SelectedExecutors = new HashSet<int>(selectedExecutors ?? Array.Empty<int>());
+            ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(ClientTaskStatusEnum)), task?.TaskStatus);
         }
     }
 }
