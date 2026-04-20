@@ -18,7 +18,7 @@ namespace ClientsApp.Controllers
             _clientService = clientService;
         }
 
-        public async Task<IActionResult> Index(string searchString, string sortOrder)
+        public async Task<IActionResult> Index(string searchString, string? sortBy, string? sortDirection)
         {
             IEnumerable<Client> clients;
             var hasSearch = !string.IsNullOrWhiteSpace(searchString) && searchString.Length >= 3;
@@ -26,14 +26,31 @@ namespace ClientsApp.Controllers
                 ? await _clientService.SearchByNameAsync(searchString)
                 : await _clientService.GetAllAsync();
 
-            var normalizedSortOrder = sortOrder == "desc" ? "desc" : "asc";
-            clients = normalizedSortOrder == "desc"
-                ? clients.OrderByDescending(c => c.ClientId)
-                : clients.OrderBy(c => c.ClientId);
+            var normalizedSortBy = string.IsNullOrWhiteSpace(sortBy) ? "id" : sortBy.ToLowerInvariant();
+            if (normalizedSortBy != "name" && normalizedSortBy != "id")
+            {
+                normalizedSortBy = "id";
+            }
+
+            var normalizedSortDirection = string.IsNullOrWhiteSpace(sortDirection)
+                ? "asc"
+                : sortDirection.ToLowerInvariant();
+            if (normalizedSortDirection != "asc" && normalizedSortDirection != "desc")
+            {
+                normalizedSortDirection = "asc";
+            }
+
+            clients = normalizedSortBy switch
+            {
+                "name" when normalizedSortDirection == "desc" => clients.OrderByDescending(c => c.Name),
+                "name" => clients.OrderBy(c => c.Name),
+                "id" when normalizedSortDirection == "desc" => clients.OrderByDescending(c => c.ClientId),
+                _ => clients.OrderBy(c => c.ClientId)
+            };
 
             ViewData["SearchString"] = searchString;
-            ViewData["SortOrder"] = normalizedSortOrder;
-            ViewData["NextSortOrder"] = normalizedSortOrder == "asc" ? "desc" : "asc";
+            ViewData["SortBy"] = normalizedSortBy;
+            ViewData["SortDirection"] = normalizedSortDirection;
             return View(clients);
         }
 

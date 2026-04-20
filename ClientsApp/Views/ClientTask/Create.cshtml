@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Додати завдання";
     Layout = "_Layout";
+    var executors = ViewBag.Executors as IEnumerable<ClientsApp.Models.Entities.Executor> ?? new List<ClientsApp.Models.Entities.Executor>();
+    var selectedExecutors = ViewBag.SelectedExecutors as HashSet<int> ?? new HashSet<int>();
 }
 
 <h2>Додати завдання</h2>
@@ -42,7 +44,33 @@
 
     <div class="form-group">
         <label>Виконавці</label>
-        <select id="selectedExecutors" name="selectedExecutors" class="form-control" multiple asp-items="ViewBag.Executors"></select>
+        <select id="selectedExecutors" name="selectedExecutors" class="form-control" multiple>
+            @foreach (var executor in executors)
+            {
+                var unavailableFrom = executor.UnavailableFrom?.ToString("yyyy-MM-dd");
+                var unavailableTo = executor.UnavailableTo?.ToString("yyyy-MM-dd");
+                var dismissedFrom = executor.DismissedFrom?.ToString("yyyy-MM-dd");
+                if (selectedExecutors.Contains(executor.ExecutorId))
+                {
+                    <option value="@executor.ExecutorId"
+                            selected="selected"
+                            data-unavailable-from="@unavailableFrom"
+                            data-unavailable-to="@unavailableTo"
+                            data-dismissed-from="@dismissedFrom">
+                        @executor.FullName
+                    </option>
+                }
+                else
+                {
+                    <option value="@executor.ExecutorId"
+                            data-unavailable-from="@unavailableFrom"
+                            data-unavailable-to="@unavailableTo"
+                            data-dismissed-from="@dismissedFrom">
+                        @executor.FullName
+                    </option>
+                }
+            }
+        </select>
     </div>
 
     <div class="form-group">
@@ -78,17 +106,77 @@
     <script>
         (function () {
             const executorsSelect = document.getElementById('selectedExecutors');
+            const startDateInput = document.getElementById('StartDate');
             const modalElement = document.getElementById('inProgressTasksModal');
             const modalContent = document.getElementById('inProgressTasksContent');
-            if (!executorsSelect || !modalElement || !modalContent || !window.bootstrap) return;
+            if (!executorsSelect || !startDateInput || !modalElement || !modalContent || !window.bootstrap) return;
 
             const modal = new bootstrap.Modal(modalElement);
+            const parseDate = (value) => value ? new Date(`${value}T00:00:00`) : null;
+
+            const formatUaDate = (value) => {
+                const date = parseDate(value);
+                if (!date || Number.isNaN(date.getTime())) return '';
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                return `${day}.${month}.${date.getFullYear()}`;
+            };
+
+            const applyExecutorAvailability = () => {
+                const startDate = parseDate(startDateInput.value);
+                const options = Array.from(executorsSelect.options);
+                options.forEach(option => {
+                    const dismissedFrom = parseDate(option.dataset.dismissedFrom);
+                    const unavailableFrom = parseDate(option.dataset.unavailableFrom);
+                    const unavailableTo = parseDate(option.dataset.unavailableTo);
+
+                    let allowed = true;
+
+                    if (startDate && dismissedFrom && startDate >= dismissedFrom) {
+                        allowed = false;
+                    }
+
+                    if (startDate && unavailableFrom && unavailableTo && startDate >= unavailableFrom && startDate <= unavailableTo) {
+                        allowed = false;
+                    }
+
+                    option.hidden = !allowed;
+                    option.disabled = !allowed;
+                    if (!allowed) {
+                        option.selected = false;
+                    }
+                });
+            };
+
+            startDateInput.addEventListener('change', () => {
+                applyExecutorAvailability();
+                executorsSelect.dispatchEvent(new Event('change'));
+            });
 
             executorsSelect.addEventListener('change', async () => {
                 const selectedIds = Array.from(executorsSelect.selectedOptions).map(o => o.value).filter(Boolean);
                 if (selectedIds.length === 0) return;
 
                 try {
+                    const startDate = parseDate(startDateInput.value);
+                    const warningMessages = [];
+
+                    if (startDate) {
+                        Array.from(executorsSelect.selectedOptions).forEach(option => {
+                            const unavailableFrom = parseDate(option.dataset.unavailableFrom);
+                            const unavailableTo = parseDate(option.dataset.unavailableTo);
+                            const dismissedFrom = parseDate(option.dataset.dismissedFrom);
+
+                            if (unavailableFrom && unavailableTo && startDate < unavailableFrom) {
+                                warningMessages.push(`Виконавець ${option.text} буде недоступний у період з ${formatUaDate(option.dataset.unavailableFrom)} по ${formatUaDate(option.dataset.unavailableTo)}.`);
+                            }
+
+                            if (dismissedFrom && startDate < dismissedFrom) {
+                                warningMessages.push(`Виконавець ${option.text} буде звільнений з ${formatUaDate(option.dataset.dismissedFrom)}.`);
+                            }
+                        });
+                    }
+
                     const query = selectedIds.map(id => `executorIds=${encodeURIComponent(id)}`).join('&');
                     const response = await fetch(`/ClientTask/InProgressByExecutorIds?${query}`);
                     if (!response.ok) return;
@@ -96,8 +184,12 @@
                     const data = await response.json();
                     if (!Array.isArray(data)) return;
 
+                    const warningsHtml = warningMessages.length > 0
+                        ? `<div class="alert alert-warning">${warningMessages.map(m => `<div>${m}</div>`).join('')}</div>`
+                        : '';
+
                     if (data.length === 0) {
-                        modalContent.innerHTML = '<p class="mb-0">Для обраного виконавця немає активних завдань зі статусом InProgress.</p>';
+                        modalContent.innerHTML = `${warningsHtml}<p class="mb-0">Для обраного виконавця немає активних завдань зі статусом InProgress.</p>`;
                     } else {
                         const rows = data.map(item => `
                             <tr>
@@ -109,6 +201,7 @@
                         `).join('');
 
                         modalContent.innerHTML = `
+                            ${warningsHtml}
                             <div class="table-responsive">
                                 <table class="table table-striped">
                                     <thead>
@@ -130,6 +223,8 @@
                     modal.show();
                 }
             });
+
+            applyExecutorAvailability();
         })();
     </script>
 }

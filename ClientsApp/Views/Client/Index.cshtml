@@ -3,6 +3,10 @@
 @{
     ViewData["Title"] = "Клієнти";
     Layout = "_Layout";
+    var currentSortBy = ViewData["SortBy"]?.ToString() ?? "id";
+    var currentSortDirection = ViewData["SortDirection"]?.ToString() ?? "asc";
+    var nextIdDirection = currentSortBy == "id" && currentSortDirection == "asc" ? "desc" : "asc";
+    var nextNameDirection = currentSortBy == "name" && currentSortDirection == "asc" ? "desc" : "asc";
 }
 <h2>@ViewData["Title"]</h2>
 
@@ -14,6 +18,8 @@
 </p>
 
 <form method="get" class="row g-3 mb-3">
+    <input type="hidden" name="sortBy" value="@currentSortBy" />
+    <input type="hidden" name="sortDirection" value="@currentSortDirection" />
     <div class="col-md-4">
         <input type="text" name="searchString" value="@ViewData["SearchString"]" class="form-control" placeholder="Пошук за ім'ям" minlength="3" />
     </div>
@@ -21,16 +27,32 @@
         <button type="submit" class="btn btn-primary me-2">Пошук</button>
         <a asp-action="Index" class="btn btn-secondary" id="resetFilters">Скинути</a>
     </div>
-    <div class="col-md-4 d-flex align-items-end justify-content-md-end">
-        <a asp-action="Index"
-           asp-route-searchString="@ViewData["SearchString"]"
-           asp-route-sortOrder="@ViewData["NextSortOrder"]"
-           class="btn btn-outline-primary flex-fill flex-md-grow-0 ms-md-auto">
-            Сортувати за датою додавання
-            <span class="ms-1">@((ViewData["SortOrder"] as string) == "asc" ? "↑" : "↓")</span>
-        </a>
-    </div>
 </form>
+
+<div class="mb-3 d-flex gap-2">
+    <a asp-action="Index"
+       asp-route-searchString="@ViewData["SearchString"]"
+       asp-route-sortBy="id"
+       asp-route-sortDirection="@nextIdDirection"
+       class="btn @(currentSortBy == "id" ? "btn-primary" : "btn-outline-primary")">
+        Сортувати за датою додавання
+        @if (currentSortBy == "id")
+        {
+            <span>@(currentSortDirection == "asc" ? "↑" : "↓")</span>
+        }
+    </a>
+    <a asp-action="Index"
+       asp-route-searchString="@ViewData["SearchString"]"
+       asp-route-sortBy="name"
+       asp-route-sortDirection="@nextNameDirection"
+       class="btn @(currentSortBy == "name" ? "btn-primary" : "btn-outline-primary")">
+        Сортувати за назвою
+        @if (currentSortBy == "name")
+        {
+            <span>@(currentSortDirection == "asc" ? "↑" : "↓")</span>
+        }
+    </a>
+</div>
 
 <table class="table table-striped">
     <thead>
