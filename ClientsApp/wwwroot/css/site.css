@@ -116,8 +116,12 @@ body.app-shell {
 
 .app-nav-link.active {
     color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.24);
-    box-shadow: inset 0 -2px 0 #ffffff;
+    background-color: rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 -1.5px 0 rgba(255, 255, 255, 0.95);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 6px;
+    text-decoration-color: rgba(255, 255, 255, 0.95);
 }
 
 .app-nav-right {
@@ -174,6 +178,11 @@ body.app-shell {
 .home-hero {
     margin-bottom: 2.1rem;
     padding: 2.6rem 1rem 1.5rem;
+    border-radius: 16px;
+    background:
+        radial-gradient(circle at 12% 16%, rgba(114, 165, 250, 0.14), transparent 52%),
+        radial-gradient(circle at 88% 24%, rgba(131, 184, 255, 0.1), transparent 44%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
 }
 
 .home-hero-title {
@@ -230,8 +239,9 @@ body.app-shell {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: linear-gradient(145deg, #e7f0ff, #f2f7ff);
-    color: #2a5a95;
+    background: linear-gradient(145deg, #deebff, #eef5ff);
+    color: #1f4f88;
+    box-shadow: inset 0 0 0 1px rgba(54, 101, 166, 0.08);
 }
 
 .card-icon svg {
@@ -257,13 +267,15 @@ body.app-shell {
 }
 
 .app-footer {
-    border-top: 1px solid rgba(22, 50, 85, 0.12);
+    border-top: 1px solid rgba(22, 50, 85, 0.16);
     background-color: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(4px);
+    box-shadow: 0 -8px 22px rgba(21, 48, 84, 0.06);
     text-align: center;
     color: #5e728f;
     font-size: 0.92rem;
-    padding: 0.95rem 0;
+    padding: 1.15rem 0;
+    margin-top: 0.5rem;
 }
 
 .table-responsive,
