@@ -5,36 +5,36 @@
     Layout = "_Layout";
 }
 
-<section class="client-form-page" aria-labelledby="client-create-title">
-    <div class="client-form-card">
-        <h1 id="client-create-title" class="client-form-title">@ViewData["Title"]</h1>
+<section class="app-form-page" aria-labelledby="client-create-title">
+    <div class="app-form-card">
+        <h1 id="client-create-title" class="app-form-title">@ViewData["Title"]</h1>
 
-        <form asp-action="Create" method="post" class="client-form" novalidate>
-            <div class="client-form-group">
-                <label asp-for="Name" class="client-form-label"></label>
-                <input asp-for="Name" class="form-control client-form-input" />
+        <form asp-action="Create" method="post" class="app-form" novalidate>
+            <div class="app-form-group">
+                <label asp-for="Name" class="app-form-label"></label>
+                <input asp-for="Name" class="form-control app-form-input" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <div class="client-form-group">
-                <label asp-for="Address" class="client-form-label"></label>
-                <input asp-for="Address" class="form-control client-form-input" />
+            <div class="app-form-group">
+                <label asp-for="Address" class="app-form-label"></label>
+                <input asp-for="Address" class="form-control app-form-input" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
 
-            <div class="client-form-group">
-                <label asp-for="Email" class="client-form-label"></label>
-                <input asp-for="Email" class="form-control client-form-input" />
+            <div class="app-form-group">
+                <label asp-for="Email" class="app-form-label"></label>
+                <input asp-for="Email" class="form-control app-form-input" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
-            <div class="client-form-group">
-                <label asp-for="Phone" class="client-form-label"></label>
-                <input asp-for="Phone" class="form-control client-form-input" />
+            <div class="app-form-group">
+                <label asp-for="Phone" class="app-form-label"></label>
+                <input asp-for="Phone" class="form-control app-form-input" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
 
-            <div class="client-form-actions">
+            <div class="app-form-actions">
                 <button type="submit" class="btn btn-success">Зберегти</button>
             </div>
         </form>

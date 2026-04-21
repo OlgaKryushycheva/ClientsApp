@@ -3,21 +3,27 @@
     ViewData["Title"] = "Додати платіж";
 }
 
-<h2>Додати платіж</h2>
+<section class="app-form-page">
+    <div class="app-form-card">
+        <h1 class="app-form-title">Додати платіж</h1>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="ClientTaskId"></label>
-        <select asp-for="ClientTaskId" class="form-control" asp-items="ViewBag.Tasks">
-            <option value="">-- Виберіть завдання --</option>
-        </select>
-        <span asp-validation-for="ClientTaskId" class="text-danger"></span>
+        <form asp-action="Create" method="post" class="app-form">
+            <div class="app-form-group">
+                <label asp-for="ClientTaskId" class="app-form-label"></label>
+                <select asp-for="ClientTaskId" class="form-select app-form-input" asp-items="ViewBag.Tasks">
+                    <option value="">-- Виберіть завдання --</option>
+                </select>
+                <span asp-validation-for="ClientTaskId" class="text-danger"></span>
+            </div>
+            <div class="app-form-group">
+                <label asp-for="Amount" class="app-form-label"></label>
+                <input asp-for="Amount" class="form-control app-form-input" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="app-form-actions">
+                <button type="submit" class="btn btn-success">Зберегти</button>
+                <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="Amount"></label>
-        <input asp-for="Amount" class="form-control" />
-        <span asp-validation-for="Amount" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-success">Зберегти</button>
-    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
-</form>
+</section>

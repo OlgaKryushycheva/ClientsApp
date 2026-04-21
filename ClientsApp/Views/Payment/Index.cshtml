@@ -1,60 +1,70 @@
 @model ClientsApp.Models.ViewModels.PaymentIndexViewModel
 @{
     ViewData["Title"] = "Оплати";
-    ViewData["MainContentClass"] = "app-main-content--wide";
 }
 
-<h2>@ViewData["Title"]</h2>
-<p>На цій сторінці Оплати Ви можете отримати усю інформацію по усіх оплатах завдань клієнтів,  а також додавати інформацію про оплати. </p>
-<p>Ви можете здійснювати фільтрацію у зручному для Вас форматі відповідно до обраних фільтрів. </p>
-
-
-<form method="get" class="row g-3 mb-3">
-    <div class="col-md-4">
-        <select asp-for="SelectedClientId" asp-items="Model.Clients" class="form-select">
-            <option value="">Всі клієнти</option>
-        </select>
+<section class="app-page">
+    <div class="app-page-header">
+        <h1 class="app-page-title">@ViewData["Title"]</h1>
+        <p class="app-page-description">На цій сторінці Оплати Ви можете отримати усю інформацію по усіх оплатах завдань клієнтів,  а також додавати інформацію про оплати.</p>
+        <p class="app-page-description">Ви можете здійснювати фільтрацію у зручному для Вас форматі відповідно до обраних фільтрів.</p>
+        <div class="app-page-actions">
+            <a asp-action="Create" class="btn btn-success app-primary-action">Додати платіж</a>
+        </div>
     </div>
-    <div class="col-md-4">
-        <select asp-for="IsPaid" class="form-select">
-            <option value="">Всі</option>
-            <option value="true">Оплачені</option>
-            <option value="false">Неоплачені</option>
-        </select>
-    </div>
-    <div class="col-md-4 d-flex align-items-end">
-        <button type="submit" class="btn btn-primary me-2">Фільтрувати</button>
-        <a asp-action="Index" class="btn btn-secondary" id="resetFilters">Скинути усі фільтри</a>
-    </div>
-</form>
 
-<a asp-action="Create" class="btn btn-success mb-2">Додати платіж</a>
+    <section class="app-control-card">
+        <h2 class="app-control-card-title">Фільтри</h2>
+        <form method="get" class="app-filters-form">
+            <div class="app-form-field app-form-field--wide">
+                <select asp-for="SelectedClientId" asp-items="Model.Clients" class="form-select">
+                    <option value="">Всі клієнти</option>
+                </select>
+            </div>
+            <div class="app-form-field app-form-field--wide">
+                <select asp-for="IsPaid" class="form-select">
+                    <option value="">Всі</option>
+                    <option value="true">Оплачені</option>
+                    <option value="false">Неоплачені</option>
+                </select>
+            </div>
+            <div class="app-form-field">
+                <button type="submit" class="btn btn-primary w-100">Фільтрувати</button>
+            </div>
+            <div class="app-form-field">
+                <a asp-action="Index" class="btn btn-secondary w-100" id="resetFilters">Скинути усі фільтри</a>
+            </div>
+        </form>
+    </section>
 
-<div class="app-table-wrap">
-    <table class="table table-striped app-table">
-        <thead>
-            <tr>
-                <th>Клієнт</th>
-                <th>Завдання</th>
-                <th>Вартість послуг</th>
-                <th>Оплачено</th>
-                <th>Заборгованість</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var p in Model.Payments)
-        {
-            <tr>
-                <td>@p.ClientName</td>
-                <td>@p.TaskTitle</td>
-                <td>@p.ServiceCost.ToString("F2")</td>
-                <td>@p.AmountReceived.ToString("F2")</td>
-                <td>@p.BalanceDue.ToString("F2")</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-</div>
+    <section class="app-table-card">
+        <div class="app-table-wrap">
+            <table class="table table-striped app-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Клієнт</th>
+                        <th>Завдання</th>
+                        <th>Вартість послуг</th>
+                        <th>Оплачено</th>
+                        <th>Заборгованість</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var p in Model.Payments)
+                {
+                    <tr>
+                        <td>@p.ClientName</td>
+                        <td>@p.TaskTitle</td>
+                        <td>@p.ServiceCost.ToString("F2")</td>
+                        <td>@p.AmountReceived.ToString("F2")</td>
+                        <td>@p.BalanceDue.ToString("F2")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
 
 @section Scripts {
     <script>
