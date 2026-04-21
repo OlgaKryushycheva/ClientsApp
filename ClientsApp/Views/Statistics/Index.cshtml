@@ -78,8 +78,8 @@
                 <h5 class="fw-semibold">@Model.ClientStatistics.ClientName</h5>
                 @if (Model.ClientStatistics.Tasks.Any())
                 {
-                    <div class="table-responsive">
-                        <table class="table table-sm table-striped align-middle">
+                    <div class="table-responsive app-table-wrap">
+                        <table class="table table-sm table-striped align-middle app-table">
                             <thead>
                                 <tr>
                                     <th>Назва завдання</th>
@@ -141,8 +141,8 @@
     <div class="card-body">
         @if (Model.ExecutorPerformances.Any())
         {
-            <div class="table-responsive">
-                <table class="table table-sm table-striped align-middle">
+            <div class="table-responsive app-table-wrap">
+                <table class="table table-sm table-striped align-middle app-table">
                     <thead>
                         <tr>
                             <th>ПІБ виконавця</th>
@@ -187,8 +187,8 @@
     <div class="card-body">
         @if (Model.DebtStatistics.Any())
         {
-            <div class="table-responsive">
-                <table class="table table-sm table-striped align-middle">
+            <div class="table-responsive app-table-wrap">
+                <table class="table table-sm table-striped align-middle app-table">
                     <thead>
                         <tr>
                             <th>Клієнт</th>
