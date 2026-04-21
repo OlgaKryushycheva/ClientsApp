@@ -835,10 +835,10 @@ a {
 
 .app-page-description {
     margin: 0;
-    max-width: 740px;
+    width: 100%;
     font-size: 0.98rem;
     line-height: 1.65;
-    color: #5f6b7a;
+    color: var(--text-secondary);
     text-align: left;
 }
 
@@ -847,11 +847,12 @@ a {
 }
 
 .app-page-description + .app-page-description {
-    margin-top: 0.35rem;
+    margin-top: 0;
+    margin-bottom: 0.45rem;
 }
 
 .app-page-header > .app-page-description:last-of-type {
-    margin-bottom: 1.35rem;
+    margin-bottom: 1.4rem;
 }
 
 .app-page-actions {
