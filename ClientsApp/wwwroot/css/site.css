@@ -962,6 +962,34 @@ a {
     font-size: 0.9rem;
 }
 
+.app-filters-form--executors {
+    row-gap: 0.8rem;
+}
+
+.app-filters-form--executors .app-form-field--name {
+    grid-column: span 5;
+}
+
+.app-filters-form--executors .app-form-field--rate {
+    grid-column: span 4;
+}
+
+.app-filters-form--executors .app-form-field--status {
+    grid-column: span 3;
+}
+
+.app-filters-form--executors .app-form-field--action {
+    grid-column: span 3;
+}
+
+.app-sort-buttons--executors {
+    align-items: center;
+}
+
+.app-sort-buttons--executors .btn {
+    padding-inline: 0.65rem;
+}
+
 .app-table-card {
     margin-top: 0.25rem;
 }
@@ -1048,6 +1076,13 @@ a {
     .app-form-field--wide {
         grid-column: span 6;
     }
+
+    .app-filters-form--executors .app-form-field--name,
+    .app-filters-form--executors .app-form-field--rate,
+    .app-filters-form--executors .app-form-field--status,
+    .app-filters-form--executors .app-form-field--action {
+        grid-column: span 6;
+    }
 }
 
 @media (max-width: 767.98px) {
@@ -1064,6 +1099,13 @@ a {
 
     .app-form-field,
     .app-form-field--wide {
+        grid-column: span 1;
+    }
+
+    .app-filters-form--executors .app-form-field--name,
+    .app-filters-form--executors .app-form-field--rate,
+    .app-filters-form--executors .app-form-field--status,
+    .app-filters-form--executors .app-form-field--action {
         grid-column: span 1;
     }
 
