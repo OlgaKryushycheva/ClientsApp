@@ -835,9 +835,23 @@ a {
 
 .app-page-description {
     margin: 0;
-    max-width: 920px;
-    color: var(--text-secondary);
-    line-height: 1.6;
+    max-width: 740px;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: #5f6b7a;
+    text-align: left;
+}
+
+.app-page-title + .app-page-description {
+    margin-top: 0.6rem;
+}
+
+.app-page-description + .app-page-description {
+    margin-top: 0.35rem;
+}
+
+.app-page-header > .app-page-description:last-of-type {
+    margin-bottom: 1.35rem;
 }
 
 .app-page-actions {
