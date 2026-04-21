@@ -3,44 +3,50 @@
     ViewData["Title"] = "Створення користувача";
 }
 
-<h2>Створення користувача</h2>
+<section class="app-form-page" aria-labelledby="register-user-title">
+    <div class="app-form-card">
+        <h1 id="register-user-title" class="app-form-title">Створення користувача</h1>
 
-<form asp-action="Register" method="post" class="mt-3">
-    @Html.AntiForgeryToken()
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Register" method="post" class="app-form" novalidate>
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+            <div class="app-form-group">
+                <label asp-for="Email" class="app-form-label"></label>
+                <input asp-for="Email" class="form-control app-form-input" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="Role" class="app-form-label"></label>
+                <select asp-for="Role" class="form-select app-form-input app-form-select">
+                    <option value="">Оберіть роль</option>
+                    @foreach (var role in (string[])ViewBag.Roles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="Password" class="app-form-label"></label>
+                <input asp-for="Password" class="form-control app-form-input" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="ConfirmPassword" class="app-form-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control app-form-input" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-actions">
+                <button type="submit" class="btn btn-success">Створити користувача</button>
+            </div>
+        </form>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Role" class="form-label"></label>
-        <select asp-for="Role" class="form-select">
-            <option value="">Оберіть роль</option>
-            @foreach (var role in (string[])ViewBag.Roles)
-            {
-                <option value="@role">@role</option>
-            }
-        </select>
-        <span asp-validation-for="Role" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="ConfirmPassword" class="form-label"></label>
-        <input asp-for="ConfirmPassword" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Створити користувача</button>
-</form>
+</section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

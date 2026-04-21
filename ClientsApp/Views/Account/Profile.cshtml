@@ -3,72 +3,72 @@
     ViewData["Title"] = "Мій профіль";
 }
 
-<h2>Мій профіль</h2>
+<section class="app-form-page" aria-labelledby="profile-title">
+    <div class="container px-0">
+        <h1 id="profile-title" class="app-form-title">Мій профіль</h1>
 
-@if (TempData["SuccessMessage"] is string successMessage)
-{
-    <div class="alert alert-success" role="alert">
-        @successMessage
-    </div>
-}
+        @if (TempData["SuccessMessage"] is string successMessage)
+        {
+            <div class="alert alert-success" role="alert">
+                @successMessage
+            </div>
+        }
 
-<div class="row g-4 mt-1">
-    <div class="col-12 col-lg-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Зміна email</h5>
+        <div class="app-controls-grid">
+            <div class="app-form-card">
+                <h2 class="app-control-card-title">Зміна email</h2>
 
-                <form asp-action="UpdateEmail" method="post" class="mt-3">
+                <form asp-action="UpdateEmail" method="post" class="app-form" novalidate>
                     @Html.AntiForgeryToken()
 
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                    <div class="mb-3">
-                        <label asp-for="UpdateEmail.NewEmail" class="form-label"></label>
-                        <input asp-for="UpdateEmail.NewEmail" class="form-control" />
+                    <div class="app-form-group">
+                        <label asp-for="UpdateEmail.NewEmail" class="app-form-label"></label>
+                        <input asp-for="UpdateEmail.NewEmail" class="form-control app-form-input" />
                         <span asp-validation-for="UpdateEmail.NewEmail" class="text-danger"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Змінити email</button>
+                    <div class="app-form-actions">
+                        <button type="submit" class="btn btn-success">Змінити email</button>
+                    </div>
                 </form>
             </div>
-        </div>
-    </div>
 
-    <div class="col-12 col-lg-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Зміна пароля</h5>
+            <div class="app-form-card">
+                <h2 class="app-control-card-title">Зміна пароля</h2>
 
-                <form asp-action="ChangePassword" method="post" class="mt-3">
+                <form asp-action="ChangePassword" method="post" class="app-form" novalidate>
                     @Html.AntiForgeryToken()
 
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                    <div class="mb-3">
-                        <label asp-for="ChangePassword.CurrentPassword" class="form-label"></label>
-                        <input asp-for="ChangePassword.CurrentPassword" class="form-control" />
+                    <div class="app-form-group">
+                        <label asp-for="ChangePassword.CurrentPassword" class="app-form-label"></label>
+                        <input asp-for="ChangePassword.CurrentPassword" class="form-control app-form-input" />
                         <span asp-validation-for="ChangePassword.CurrentPassword" class="text-danger"></span>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="ChangePassword.NewPassword" class="form-label"></label>
-                        <input asp-for="ChangePassword.NewPassword" class="form-control" />
+                    <div class="app-form-group">
+                        <label asp-for="ChangePassword.NewPassword" class="app-form-label"></label>
+                        <input asp-for="ChangePassword.NewPassword" class="form-control app-form-input" />
                         <span asp-validation-for="ChangePassword.NewPassword" class="text-danger"></span>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="ChangePassword.ConfirmNewPassword" class="form-label"></label>
-                        <input asp-for="ChangePassword.ConfirmNewPassword" class="form-control" />
+                    <div class="app-form-group">
+                        <label asp-for="ChangePassword.ConfirmNewPassword" class="app-form-label"></label>
+                        <input asp-for="ChangePassword.ConfirmNewPassword" class="form-control app-form-input" />
                         <span asp-validation-for="ChangePassword.ConfirmNewPassword" class="text-danger"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Змінити пароль</button>
+                    <div class="app-form-actions">
+                        <button type="submit" class="btn btn-success">Змінити пароль</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

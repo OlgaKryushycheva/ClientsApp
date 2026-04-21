@@ -930,6 +930,11 @@ a {
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
+.app-form-select {
+    min-height: 42px;
+    border-radius: 10px;
+}
+
 .app-filters-form .form-control:focus,
 .app-filters-form .form-select:focus,
 .app-form-input:focus {
