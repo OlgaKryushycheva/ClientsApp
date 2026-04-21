@@ -4,53 +4,56 @@
     var executors = ViewBag.Executors as IEnumerable<ClientsApp.Models.Entities.Executor>;
 }
 
-<h2>Додати запис</h2>
-
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="ExecutorId"></label>
-        <select asp-for="ExecutorId" class="form-control" id="ExecutorId">
-            <option value="">-- Виберіть виконавця --</option>
-            @foreach (var ex in executors)
-            {
-                <option value="@ex.ExecutorId" data-rate="@ex.HourlyRate">
-                    @ex.FullName
-                </option>
-            }
-        </select>
-        <span asp-validation-for="ExecutorId" class="text-danger"></span>
+<section class="app-form-page">
+    <div class="app-form-card">
+        <h1 class="app-form-title">Додати запис</h1>
+        <form asp-action="Create" method="post" class="app-form">
+            <div class="app-form-group">
+                <label asp-for="ExecutorId" class="app-form-label"></label>
+                <select asp-for="ExecutorId" class="form-select app-form-input" id="ExecutorId">
+                    <option value="">-- Виберіть виконавця --</option>
+                    @foreach (var ex in executors)
+                    {
+                        <option value="@ex.ExecutorId" data-rate="@ex.HourlyRate">@ex.FullName</option>
+                    }
+                </select>
+                <span asp-validation-for="ExecutorId" class="text-danger"></span>
+            </div>
+            <div class="app-form-group">
+                <label asp-for="ClientId" class="app-form-label"></label>
+                <select asp-for="ClientId" class="form-select app-form-input" asp-items="ViewBag.Clients" id="ClientId">
+                    <option value="">-- Виберіть клієнта --</option>
+                </select>
+                <span asp-validation-for="ClientId" class="text-danger"></span>
+            </div>
+            <div class="app-form-group">
+                <label asp-for="ClientTaskId" class="app-form-label"></label>
+                <select asp-for="ClientTaskId" class="form-select app-form-input" asp-items="ViewBag.Tasks" id="ClientTaskId">
+                    <option value="">-- Виберіть завдання --</option>
+                </select>
+                <span asp-validation-for="ClientTaskId" class="text-danger"></span>
+            </div>
+            <div class="app-form-group">
+                <label asp-for="ActualTime" class="app-form-label"></label>
+                <input asp-for="ActualTime" class="form-control app-form-input" />
+                <span asp-validation-for="ActualTime" class="text-danger"></span>
+            </div>
+            <div class="app-form-group">
+                <label asp-for="AdjustedTime" class="app-form-label"></label>
+                <input asp-for="AdjustedTime" class="form-control app-form-input" id="AdjustedTime" />
+                <span asp-validation-for="AdjustedTime" class="text-danger"></span>
+            </div>
+            <div class="app-form-group">
+                <label class="app-form-label">Вартість</label>
+                <input id="TaskCost" class="form-control app-form-input" readonly />
+            </div>
+            <div class="app-form-actions">
+                <button type="submit" class="btn btn-success">Зберегти</button>
+                <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label asp-for="ClientId"></label>
-        <select asp-for="ClientId" class="form-control" asp-items="ViewBag.Clients" id="ClientId">
-            <option value="">-- Виберіть клієнта --</option>
-        </select>
-        <span asp-validation-for="ClientId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ClientTaskId"></label>
-        <select asp-for="ClientTaskId" class="form-control" asp-items="ViewBag.Tasks" id="ClientTaskId">
-            <option value="">-- Виберіть завдання --</option>
-        </select>
-        <span asp-validation-for="ClientTaskId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ActualTime"></label>
-        <input asp-for="ActualTime" class="form-control" />
-        <span asp-validation-for="ActualTime" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="AdjustedTime"></label>
-        <input asp-for="AdjustedTime" class="form-control" id="AdjustedTime" />
-        <span asp-validation-for="AdjustedTime" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label>Вартість</label>
-        <input id="TaskCost" class="form-control" readonly />
-    </div>
-    <button type="submit" class="btn btn-success">Зберегти</button>
-    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
-</form>
+</section>
 
 @section Scripts{
 <script>

@@ -4,83 +4,94 @@
     ViewData["MainContentClass"] = "app-main-content--wide";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<p>На цій сторінці Облік робочого часу Виконавці завдань ведуть облік робочого часу, витрачено на виконання завдань клієнтів. </p>
-<p>Тут Ви можете отримати усю інформацію по витратах робочого часу по усіх завданнях клієнтів,  а також додавати інформацію про нові завдання та витрати робочого часу, редагувати інформацію та видаляти її. </p>
-<p>Ви можете здійснювати фільтрацію у зручному для Вас форматі відповідно до обраних фільтрів. </p>
-<p>Розрахунок вартості послуг з виконання завдання здійснюється автоматично відповідно по ставок оплат відповідного виконавця. </p>
-
-<form method="get" class="row g-3 mb-3">
-    <div class="col-md-3">
-        <select name="executorId" class="form-select">
-            <option value="">Всі виконавці</option>
-            @foreach (var e in (SelectList)ViewBag.Executors)
-            {
-                <option value="@e.Value" selected="@(e.Selected ? "selected" : null)">@e.Text</option>
-            }
-        </select>
+<section class="app-page">
+    <div class="app-page-header">
+        <h1 class="app-page-title">@ViewData["Title"]</h1>
+        <p class="app-page-description">На цій сторінці Облік робочого часу Виконавці завдань ведуть облік робочого часу, витрачено на виконання завдань клієнтів.</p>
+        <p class="app-page-description">Тут Ви можете отримати усю інформацію по витратах робочого часу по усіх завданнях клієнтів,  а також додавати інформацію про нові завдання та витрати робочого часу, редагувати інформацію та видаляти її.</p>
+        <p class="app-page-description">Ви можете здійснювати фільтрацію у зручному для Вас форматі відповідно до обраних фільтрів.</p>
+        <p class="app-page-description">Розрахунок вартості послуг з виконання завдання здійснюється автоматично відповідно по ставок оплат відповідного виконавця.</p>
+        <div class="app-page-actions">
+            <a asp-action="Create" class="btn btn-success app-primary-action">Додати запис</a>
+        </div>
     </div>
-    <div class="col-md-3">
-        <select name="clientId" class="form-select">
-            <option value="">Всі клієнти</option>
-            @foreach (var c in (SelectList)ViewBag.Clients)
-            {
-                <option value="@c.Value" selected="@(c.Selected ? "selected" : null)">@c.Text</option>
-            }
-        </select>
-    </div>
-    <div class="col-md-3">
-        <select name="taskId" class="form-select">
-            <option value="">Всі завдання</option>
-            @foreach (var t in (SelectList)ViewBag.Tasks)
-            {
-                <option value="@t.Value" selected="@(t.Selected ? "selected" : null)">@t.Text</option>
-            }
-        </select>
-    </div>
-    <div class="col-md-3 d-flex align-items-end">
-        <button type="submit" class="btn btn-primary me-2">Фільтрувати</button>
-        <a asp-action="Index" class="btn btn-secondary" id="resetFilters">Скинути усі фільтри</a>
-    </div>
-</form>
 
-<a asp-action="Create" class="btn btn-success mb-2">Додати запис</a>
+    <section class="app-control-card" aria-label="Фільтри обліку часу">
+        <h2 class="app-control-card-title">Фільтри</h2>
+        <form method="get" class="app-filters-form">
+            <div class="app-form-field">
+                <select name="executorId" class="form-select">
+                    <option value="">Всі виконавці</option>
+                    @foreach (var e in (SelectList)ViewBag.Executors)
+                    {
+                        <option value="@e.Value" selected="@(e.Selected ? "selected" : null)">@e.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="app-form-field">
+                <select name="clientId" class="form-select">
+                    <option value="">Всі клієнти</option>
+                    @foreach (var c in (SelectList)ViewBag.Clients)
+                    {
+                        <option value="@c.Value" selected="@(c.Selected ? "selected" : null)">@c.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="app-form-field">
+                <select name="taskId" class="form-select">
+                    <option value="">Всі завдання</option>
+                    @foreach (var t in (SelectList)ViewBag.Tasks)
+                    {
+                        <option value="@t.Value" selected="@(t.Selected ? "selected" : null)">@t.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="app-form-field">
+                <button type="submit" class="btn btn-primary w-100">Фільтрувати</button>
+            </div>
+            <div class="app-form-field">
+                <a asp-action="Index" class="btn btn-secondary w-100" id="resetFilters">Скинути усі фільтри</a>
+            </div>
+        </form>
+    </section>
 
-<div class="app-table-wrap">
-    <table class="table table-striped app-table app-table--wide">
-        <thead>
-            <tr>
-                <th>Виконавець</th>
-                <th>Клієнт</th>
-                <th>Завдання</th>
-                <th>Фактичний час</th>
-                <th>Скоригований час</th>
-                <th>Вартість</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Executor?.FullName</td>
-                <td>@item.ClientTask?.Client?.Name</td>
-                <td>@item.ClientTask?.TaskTitle</td>
-                <td>@item.ActualTime</td>
-                <td>@item.AdjustedTime</td>
-                <td>@item.TaskCost.ToString("F2")</td>
-                <td>
-                    <div class="app-table-actions">
-                        <a asp-action="Edit" asp-route-id="@item.ExecutorTaskId" class="btn btn-primary btn-sm">Редагувати</a>
-                        <a asp-action="Delete" asp-route-id="@item.ExecutorTaskId" class="btn btn-danger btn-sm">Видалити</a>
-                    </div>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-</div>
+    <section class="app-table-card">
+        <div class="app-table-wrap">
+            <table class="table table-striped app-table app-table--wide mb-0">
+                <thead>
+                    <tr>
+                        <th>Виконавець</th>
+                        <th>Клієнт</th>
+                        <th>Завдання</th>
+                        <th>Фактичний час</th>
+                        <th>Скоригований час</th>
+                        <th>Вартість</th>
+                        <th class="app-cell-actions">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Executor?.FullName</td>
+                        <td>@item.ClientTask?.Client?.Name</td>
+                        <td>@item.ClientTask?.TaskTitle</td>
+                        <td>@item.ActualTime</td>
+                        <td>@item.AdjustedTime</td>
+                        <td>@item.TaskCost.ToString("F2")</td>
+                        <td class="app-cell-actions">
+                            <div class="app-table-actions">
+                                <a asp-action="Edit" asp-route-id="@item.ExecutorTaskId" class="btn btn-primary btn-sm">Редагувати</a>
+                                <a asp-action="Delete" asp-route-id="@item.ExecutorTaskId" class="btn btn-danger btn-sm">Видалити</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
 
 @section Scripts {
     <script>
