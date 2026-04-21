@@ -5,53 +5,59 @@
     Layout = "_Layout";
 }
 
-<h2>Редагувати завдання</h2>
+<section class="app-form-page">
+    <div class="app-form-card">
+        <h1 class="app-form-title">Редагувати завдання</h1>
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="ClientTaskId" />
+        <form asp-action="Edit" method="post" class="app-form">
+            <input type="hidden" asp-for="ClientTaskId" />
 
-    <div class="form-group">
-        <label asp-for="TaskTitle"></label>
-        <input asp-for="TaskTitle" class="form-control" />
-        <span asp-validation-for="TaskTitle" class="text-danger"></span>
+            <div class="app-form-group">
+                <label asp-for="TaskTitle" class="app-form-label"></label>
+                <input asp-for="TaskTitle" class="form-control app-form-input" />
+                <span asp-validation-for="TaskTitle" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="Description" class="app-form-label"></label>
+                <input asp-for="Description" class="form-control app-form-input" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="StartDate" class="app-form-label"></label>
+                <input asp-for="StartDate" type="date" class="form-control app-form-input" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="EndDate" class="app-form-label"></label>
+                <input asp-for="EndDate" type="date" class="form-control app-form-input" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="ClientId" class="app-form-label"></label>
+                <select asp-for="ClientId" class="form-select app-form-input" asp-items="Model.Clients">
+                    <option value="">Виберіть клієнта</option>
+                </select>
+                <span asp-validation-for="ClientId" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="SelectedExecutors" class="app-form-label">Виконавці</label>
+                <select asp-for="SelectedExecutors" class="form-select app-form-input" multiple asp-items="Model.Executors"></select>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="TaskStatus" class="app-form-label"></label>
+                <select asp-for="TaskStatus" class="form-select app-form-input" asp-items="Model.Statuses"></select>
+            </div>
+
+            <div class="app-form-actions">
+                <button type="submit" class="btn btn-success">Зберегти</button>
+                <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+            </div>
+        </form>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <input asp-for="Description" class="form-control" />
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="StartDate"></label>
-        <input asp-for="StartDate" type="date" class="form-control" />
-        <span asp-validation-for="StartDate" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="EndDate"></label>
-        <input asp-for="EndDate" type="date" class="form-control" />
-        <span asp-validation-for="EndDate" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ClientId"></label>
-        <select asp-for="ClientId" class="form-control" asp-items="Model.Clients">
-            <option value="">Виберіть клієнта</option>
-        </select>
-        <span asp-validation-for="ClientId" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="SelectedExecutors">Виконавці</label>
-        <select asp-for="SelectedExecutors" class="form-control" multiple asp-items="Model.Executors"></select>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="TaskStatus"></label>
-        <select asp-for="TaskStatus" class="form-control" asp-items="Model.Statuses"></select>
-    </div>
-
-    <button type="submit" class="btn btn-success">Зберегти</button>
-    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
-</form>
+</section>

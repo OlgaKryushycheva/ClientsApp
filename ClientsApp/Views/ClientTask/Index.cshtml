@@ -6,92 +6,107 @@
     ViewData["MainContentClass"] = "app-main-content--wide";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<p>На цій сторінці Завдання Ви можете отримати усю інформацію по усіх завданнях фірми,  а також додавати інформацію, редагувати та видаляти її. </p>
-<p>Ви можете здійснювати фільтрацію у зручному для Вас форматі відповідно до обраних фільтрів. </p>
-
- <a asp-action="Create" class="btn btn-success mb-2">Додати завдання</a>
-
-<form asp-action="Index" method="get" class="row g-3 mb-3">
-    <div class="col-md-3">
-        <select asp-for="SelectedClientId" class="form-select" asp-items="Model.Clients">
-            <option value="">Всі клієнти</option>
-        </select>
+<section class="app-page">
+    <div class="app-page-header">
+        <h1 class="app-page-title">@ViewData["Title"]</h1>
+        <p class="app-page-description">На цій сторінці Завдання Ви можете отримати усю інформацію по усіх завданнях фірми,  а також додавати інформацію, редагувати та видаляти її.</p>
+        <p class="app-page-description">Ви можете здійснювати фільтрацію у зручному для Вас форматі відповідно до обраних фільтрів.</p>
+        <div class="app-page-actions">
+            <a asp-action="Create" class="btn btn-success app-primary-action">Додати завдання</a>
+        </div>
     </div>
-    <div class="col-md-3">
-        <select asp-for="SelectedExecutorId" class="form-select" asp-items="Model.Executors">
-            <option value="">Всі виконавці</option>
-        </select>
-    </div>
-    <div class="col-md-3">
-        <select asp-for="SelectedStatus" class="form-select" asp-items="Model.Statuses">
-            <option value="">Всі статуси</option>
-        </select>
-    </div>
-    <div class="col-md-3 d-flex align-items-end">
-        <button type="submit" class="btn btn-primary me-2">Фільтрувати</button>
-        <a asp-action="Index" class="btn btn-secondary" id="resetFilters">Скинути усі фільтри</a>
-    </div>
-</form>
 
-<div class="mb-3 d-flex justify-content-md-end">
-    <a asp-action="Index"
-       asp-route-selectedClientId="@Model.SelectedClientId"
-       asp-route-selectedExecutorId="@Model.SelectedExecutorId"
-       asp-route-selectedStatus="@(Model.SelectedStatus.HasValue ? ((int)Model.SelectedStatus.Value).ToString() : null)"
-       asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")"
-       class="btn btn-outline-primary">
-        Сортувати за датою початку
-        <span class="ms-1">@((Model.SortOrder == "asc") ? "↑" : "↓")</span>
-    </a>
-</div>
+    <div class="app-controls-grid">
+        <section class="app-control-card" aria-label="Фільтри завдань">
+            <h2 class="app-control-card-title">Фільтри</h2>
+            <form asp-action="Index" method="get" class="app-filters-form">
+                <div class="app-form-field">
+                    <select asp-for="SelectedClientId" class="form-select" asp-items="Model.Clients">
+                        <option value="">Всі клієнти</option>
+                    </select>
+                </div>
+                <div class="app-form-field">
+                    <select asp-for="SelectedExecutorId" class="form-select" asp-items="Model.Executors">
+                        <option value="">Всі виконавці</option>
+                    </select>
+                </div>
+                <div class="app-form-field">
+                    <select asp-for="SelectedStatus" class="form-select" asp-items="Model.Statuses">
+                        <option value="">Всі статуси</option>
+                    </select>
+                </div>
+                <div class="app-form-field">
+                    <button type="submit" class="btn btn-primary w-100">Фільтрувати</button>
+                </div>
+                <div class="app-form-field">
+                    <a asp-action="Index" class="btn btn-secondary w-100" id="resetFilters">Скинути усі фільтри</a>
+                </div>
+            </form>
+        </section>
 
-<div class="app-table-wrap">
-    <table class="table table-striped app-table app-table--wide">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Клієнт</th>
-                <th>Опис</th>
-                <th>Початок</th>
-                <th>Закінчення</th>
-                <th>Виконавці</th>
-                <th>Статус</th>
-                 <th>Дії</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var task in Model.Tasks)
-            {
-                <tr>
-                    <td>@task.ClientTaskId</td>
-                    <td>@task.Client?.Name</td>
-                    <td>@task.Description</td>
-                    <td>@task.StartDate.ToShortDateString()</td>
-                    <td>@(task.EndDate?.ToShortDateString() ?? "")</td>
-                    <td>
-                        @if (task.ExecutorTasks != null && task.ExecutorTasks.Any())
-                        {
-                            @string.Join(", ", task.ExecutorTasks.Select(et => et.Executor?.FullName).Where(name => !string.IsNullOrWhiteSpace(name)))
-                        }
-                        else
-                        {
-                            <text>-</text>
-                        }
-                    </td>
-                    <td>@task.TaskStatus</td>
-                    <td>
-                        <div class="app-table-actions">
-                            <a asp-action="Edit" asp-route-id="@task.ClientTaskId" class="btn btn-primary btn-sm">Редагувати</a>
-                            <a asp-action="Delete" asp-route-id="@task.ClientTaskId" class="btn btn-danger btn-sm">Видалити</a>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+        <section class="app-control-card" aria-label="Сортування завдань">
+            <h2 class="app-control-card-title">Сортування</h2>
+            <div class="app-sort-buttons">
+                <a asp-action="Index"
+                   asp-route-selectedClientId="@Model.SelectedClientId"
+                   asp-route-selectedExecutorId="@Model.SelectedExecutorId"
+                   asp-route-selectedStatus="@(Model.SelectedStatus.HasValue ? ((int)Model.SelectedStatus.Value).ToString() : null)"
+                   asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")"
+                   class="btn btn-outline-primary">
+                    Сортувати за датою початку <span class="ms-1">@((Model.SortOrder == "asc") ? "↑" : "↓")</span>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <section class="app-table-card">
+        <div class="app-table-wrap">
+            <table class="table table-striped app-table app-table--wide mb-0">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Клієнт</th>
+                        <th>Опис</th>
+                        <th>Початок</th>
+                        <th>Закінчення</th>
+                        <th>Виконавці</th>
+                        <th>Статус</th>
+                        <th class="app-cell-actions">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var task in Model.Tasks)
+                    {
+                        <tr>
+                            <td>@task.ClientTaskId</td>
+                            <td>@task.Client?.Name</td>
+                            <td>@task.Description</td>
+                            <td>@task.StartDate.ToShortDateString()</td>
+                            <td>@(task.EndDate?.ToShortDateString() ?? "")</td>
+                            <td>
+                                @if (task.ExecutorTasks != null && task.ExecutorTasks.Any())
+                                {
+                                    @string.Join(", ", task.ExecutorTasks.Select(et => et.Executor?.FullName).Where(name => !string.IsNullOrWhiteSpace(name)))
+                                }
+                                else
+                                {
+                                    <text>-</text>
+                                }
+                            </td>
+                            <td>@task.TaskStatus</td>
+                            <td class="app-cell-actions">
+                                <div class="app-table-actions">
+                                    <a asp-action="Edit" asp-route-id="@task.ClientTaskId" class="btn btn-primary btn-sm">Редагувати</a>
+                                    <a asp-action="Delete" asp-route-id="@task.ClientTaskId" class="btn btn-danger btn-sm">Видалити</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
 
 @section Scripts {
     <script>
