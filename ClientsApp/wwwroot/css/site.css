@@ -482,10 +482,15 @@ a {
     width: 100%;
     padding: 0.5rem 0.68rem;
     display: inline-flex;
-    gap: 0.4rem;
-    justify-content: space-between;
+    justify-content: center;
     font-size: 0.9rem;
     line-height: 1.2;
+}
+
+.clients-sort-buttons .sort-label-with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .clients-sort-buttons .sort-arrow {
@@ -549,14 +554,14 @@ a {
 }
 
 .clients-table tbody td {
-    padding: 0.48rem 0.68rem;
+    padding: 0.5rem 0.68rem;
     vertical-align: middle;
     border-color: rgba(20, 49, 89, 0.05);
-    line-height: 1.35;
+    line-height: 1.25;
 }
 
 .clients-table tbody tr:nth-child(even) {
-    background-color: #eef2f7;
+    background-color: #f1f5f9;
 }
 
 .clients-table tbody tr:nth-child(odd) {

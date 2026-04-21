@@ -60,11 +60,13 @@
                    asp-route-sortBy="id"
                    asp-route-sortDirection="@nextIdDirection"
                    class="btn @(currentSortBy == "id" ? "btn-primary" : "btn-outline-primary")">
-                    <span>За датою додавання</span>
-                    <span class="sort-arrow @dateArrowDirectionClass" aria-hidden="true">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 5v14M12 19l-4-4M12 19l4-4" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
+                    <span class="sort-label-with-icon">
+                        <span>За датою додавання</span>
+                        <span class="sort-arrow @dateArrowDirectionClass" aria-hidden="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M12 19l-4-4M12 19l4-4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
                     </span>
                 </a>
                 <a asp-action="Index"
