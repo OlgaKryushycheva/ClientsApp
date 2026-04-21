@@ -7,83 +7,89 @@
     var selectedExecutors = ViewBag.SelectedExecutors as HashSet<int> ?? new HashSet<int>();
 }
 
-<h2>Додати завдання</h2>
+<section class="app-form-page">
+    <div class="app-form-card">
+        <h1 class="app-form-title">Додати завдання</h1>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="ClientId"></label>
-        <select asp-for="ClientId" class="form-control" asp-items="ViewBag.Clients">
-            <option value="">Виберіть клієнта</option>
-        </select>
-        <span asp-validation-for="ClientId" class="text-danger"></span>
+        <form asp-action="Create" method="post" class="app-form">
+            <div class="app-form-group">
+                <label asp-for="ClientId" class="app-form-label"></label>
+                <select asp-for="ClientId" class="form-select app-form-input" asp-items="ViewBag.Clients">
+                    <option value="">Виберіть клієнта</option>
+                </select>
+                <span asp-validation-for="ClientId" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="TaskTitle" class="app-form-label"></label>
+                <input asp-for="TaskTitle" class="form-control app-form-input" />
+                <span asp-validation-for="TaskTitle" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="Description" class="app-form-label"></label>
+                <input asp-for="Description" class="form-control app-form-input" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="StartDate" class="app-form-label"></label>
+                <input asp-for="StartDate" type="date" class="form-control app-form-input" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="EndDate" class="app-form-label"></label>
+                <input asp-for="EndDate" type="date" class="form-control app-form-input" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-group">
+                <label class="app-form-label">Виконавці</label>
+                <select id="selectedExecutors" name="selectedExecutors" class="form-select app-form-input" multiple>
+                    @foreach (var executor in executors)
+                    {
+                        var unavailableFrom = executor.UnavailableFrom?.ToString("yyyy-MM-dd");
+                        var unavailableTo = executor.UnavailableTo?.ToString("yyyy-MM-dd");
+                        var dismissedFrom = executor.DismissedFrom?.ToString("yyyy-MM-dd");
+                        if (selectedExecutors.Contains(executor.ExecutorId))
+                        {
+                            <option value="@executor.ExecutorId"
+                                    selected="selected"
+                                    data-unavailable-from="@unavailableFrom"
+                                    data-unavailable-to="@unavailableTo"
+                                    data-dismissed-from="@dismissedFrom">
+                                @executor.FullName
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@executor.ExecutorId"
+                                    data-unavailable-from="@unavailableFrom"
+                                    data-unavailable-to="@unavailableTo"
+                                    data-dismissed-from="@dismissedFrom">
+                                @executor.FullName
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="app-form-group">
+                <label asp-for="TaskStatus" class="app-form-label"></label>
+                <select asp-for="TaskStatus" class="form-select app-form-input" asp-items="ViewBag.Statuses">
+                    <option value="">-- Виберіть статус --</option>
+                </select>
+                <span asp-validation-for="TaskStatus" class="text-danger"></span>
+            </div>
+
+            <div class="app-form-actions">
+                <button type="submit" class="btn btn-success">Зберегти</button>
+                <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+            </div>
+        </form>
     </div>
-
-    <div class="form-group">
-        <label asp-for="TaskTitle"></label>
-        <input asp-for="TaskTitle" class="form-control" />
-        <span asp-validation-for="TaskTitle" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <input asp-for="Description" class="form-control" />
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="StartDate"></label>
-        <input asp-for="StartDate" type="date" class="form-control" />
-        <span asp-validation-for="StartDate" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="EndDate"></label>
-        <input asp-for="EndDate" type="date" class="form-control" />
-        <span asp-validation-for="EndDate" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Виконавці</label>
-        <select id="selectedExecutors" name="selectedExecutors" class="form-control" multiple>
-            @foreach (var executor in executors)
-            {
-                var unavailableFrom = executor.UnavailableFrom?.ToString("yyyy-MM-dd");
-                var unavailableTo = executor.UnavailableTo?.ToString("yyyy-MM-dd");
-                var dismissedFrom = executor.DismissedFrom?.ToString("yyyy-MM-dd");
-                if (selectedExecutors.Contains(executor.ExecutorId))
-                {
-                    <option value="@executor.ExecutorId"
-                            selected="selected"
-                            data-unavailable-from="@unavailableFrom"
-                            data-unavailable-to="@unavailableTo"
-                            data-dismissed-from="@dismissedFrom">
-                        @executor.FullName
-                    </option>
-                }
-                else
-                {
-                    <option value="@executor.ExecutorId"
-                            data-unavailable-from="@unavailableFrom"
-                            data-unavailable-to="@unavailableTo"
-                            data-dismissed-from="@dismissedFrom">
-                        @executor.FullName
-                    </option>
-                }
-            }
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="TaskStatus"></label>
-        <select asp-for="TaskStatus" class="form-control" asp-items="ViewBag.Statuses">
-            <option value="">-- Виберіть статус --</option>
-        </select>
-        <span asp-validation-for="TaskStatus" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">Зберегти</button>
-    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
-</form>
+</section>
 
 <div class="modal fade" id="inProgressTasksModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
