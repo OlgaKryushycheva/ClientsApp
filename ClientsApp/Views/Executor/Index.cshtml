@@ -21,34 +21,34 @@
     <div class="app-controls-grid">
         <section class="app-control-card" aria-label="Фільтри виконавців">
             <h2 class="app-control-card-title">Фільтри</h2>
-            <form method="get" class="app-filters-form">
+            <form method="get" class="app-filters-form app-filters-form--executors">
                 <input type="hidden" name="sortBy" value="@currentSortBy" />
                 <input type="hidden" name="sortDirection" value="@currentSortDirection" />
-                <div class="app-form-field--wide">
-                    <input type="text" name="fullName" value="@ViewData["FullName"]" class="form-control" placeholder="Пошук за ПІБ" />
+                <div class="app-form-field app-form-field--name">
+                    <input type="text" name="fullName" value="@ViewData["FullName"]" class="form-control" placeholder="ПІБ" />
                 </div>
-                <div class="app-form-field">
-                    <input type="text" name="hourlyRate" value="@ViewData["HourlyRate"]" class="form-control" placeholder="Пошук за ставкою" inputmode="numeric" pattern="[0-9]+" />
+                <div class="app-form-field app-form-field--rate">
+                    <input type="text" name="hourlyRate" value="@ViewData["HourlyRate"]" class="form-control" placeholder="Ставка" inputmode="numeric" pattern="[0-9]+" />
                 </div>
-                <div class="app-form-field">
+                <div class="app-form-field app-form-field--status">
                     <select name="statusFilter" class="form-select">
                         <option value="all" selected="@(selectedStatus == "all" ? "selected" : null)">Усі</option>
                         <option value="working" selected="@(selectedStatus == "working" ? "selected" : null)">Працює</option>
                         <option value="dismissed" selected="@(selectedStatus == "dismissed" ? "selected" : null)">Звільнений</option>
                     </select>
                 </div>
-                <div class="app-form-field">
+                <div class="app-form-field app-form-field--action">
                     <button type="submit" class="btn btn-primary w-100">Пошук</button>
                 </div>
-                <div class="app-form-field">
-                    <a asp-action="Index" class="btn btn-secondary w-100">Скинути</a>
+                <div class="app-form-field app-form-field--action">
+                    <a asp-action="Index" class="btn btn-outline-secondary w-100">Скинути</a>
                 </div>
             </form>
         </section>
 
         <section class="app-control-card" aria-label="Сортування виконавців">
             <h2 class="app-control-card-title">Сортування</h2>
-            <div class="app-sort-buttons">
+            <div class="app-sort-buttons app-sort-buttons--executors">
                 <a asp-action="Index"
                    asp-route-fullName="@ViewData["FullName"]"
                    asp-route-hourlyRate="@ViewData["HourlyRate"]"
