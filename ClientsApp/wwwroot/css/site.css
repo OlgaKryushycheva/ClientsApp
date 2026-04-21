@@ -461,8 +461,8 @@ a {
 }
 
 .clients-sort-buttons {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
 }
 
@@ -476,6 +476,27 @@ a {
     justify-content: center;
     font-weight: 600;
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.clients-sort-buttons .btn {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    display: inline-flex;
+    gap: 0.45rem;
+    justify-content: space-between;
+    white-space: nowrap;
+}
+
+.clients-sort-buttons .sort-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.clients-sort-buttons .sort-arrow.is-asc {
+    transform: rotate(180deg);
 }
 
 .clients-sort-buttons .btn-primary {
@@ -520,18 +541,23 @@ a {
     background-color: #eaf2ff;
     color: #223f64;
     font-weight: 700;
-    padding: 0.9rem 1rem;
+    padding: 0.74rem 0.72rem;
     vertical-align: middle;
 }
 
 .clients-table tbody td {
-    padding: 0.95rem 1rem;
+    padding: 0.62rem 0.72rem;
     vertical-align: middle;
     border-color: rgba(20, 49, 89, 0.08);
+    line-height: 1.35;
 }
 
 .clients-table tbody tr:nth-child(even) {
-    background-color: rgba(245, 248, 255, 0.7);
+    background-color: #f8fafc;
+}
+
+.clients-table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
 }
 
 .clients-table tbody tr {
@@ -539,13 +565,39 @@ a {
 }
 
 .clients-table tbody tr:hover {
-    background-color: rgba(229, 240, 255, 0.55);
+    background-color: rgba(230, 240, 255, 0.62);
+}
+
+.clients-table th,
+.clients-table td {
+    white-space: nowrap;
+}
+
+.clients-table td:nth-child(1),
+.clients-table td:nth-child(2),
+.clients-table td:nth-child(3),
+.clients-table td:nth-child(4) {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .clients-actions {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
     gap: 0.6rem;
+    width: 100%;
+}
+
+.clients-table td:last-child {
+    min-width: 220px;
+}
+
+.clients-actions .btn {
+    width: 100%;
+    padding: 0.42rem 0.55rem;
+    font-size: 0.85rem;
 }
 
 .clients-actions .btn-primary:hover,
@@ -578,14 +630,17 @@ a {
         width: 100%;
     }
 
+    .clients-sort-buttons {
+        grid-template-columns: 1fr;
+    }
+
     .clients-card,
     .clients-table-card {
         padding: 1rem;
     }
 
     .clients-actions {
-        flex-direction: column;
-        align-items: stretch;
+        grid-template-columns: 1fr;
     }
 
     .clients-actions .btn {

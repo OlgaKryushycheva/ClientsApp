@@ -7,6 +7,13 @@
     var currentSortDirection = ViewData["SortDirection"]?.ToString() ?? "asc";
     var nextIdDirection = currentSortBy == "id" && currentSortDirection == "asc" ? "desc" : "asc";
     var nextNameDirection = currentSortBy == "name" && currentSortDirection == "asc" ? "desc" : "asc";
+    var isDateSortActive = currentSortBy == "id";
+    var isNameSortActive = currentSortBy == "name";
+    var dateArrowDirectionClass = isDateSortActive && currentSortDirection == "asc" ? "is-asc" : "is-desc";
+    var nameArrowDirectionClass = isNameSortActive && currentSortDirection == "asc" ? "is-asc" : "is-desc";
+    var nameSortText = isNameSortActive && currentSortDirection == "desc"
+        ? "Сортувати за назвою (Я–А)"
+        : "Сортувати за назвою (А–Я)";
 }
 
 <section class="clients-page">
@@ -58,14 +65,24 @@
                    asp-route-sortBy="id"
                    asp-route-sortDirection="@nextIdDirection"
                    class="btn @(currentSortBy == "id" ? "btn-primary" : "btn-outline-primary")">
-                    Сортувати за датою додавання
+                    <span>Сортувати за датою додавання</span>
+                    <span class="sort-arrow @dateArrowDirectionClass" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M12 19l-4-4M12 19l4-4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
                 </a>
                 <a asp-action="Index"
                    asp-route-searchString="@ViewData["SearchString"]"
                    asp-route-sortBy="name"
                    asp-route-sortDirection="@nextNameDirection"
                    class="btn @(currentSortBy == "name" ? "btn-primary" : "btn-outline-primary")">
-                    Сортувати за назвою
+                    <span>@nameSortText</span>
+                    <span class="sort-arrow @nameArrowDirectionClass" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M12 19l-4-4M12 19l4-4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
                 </a>
             </div>
         </section>
