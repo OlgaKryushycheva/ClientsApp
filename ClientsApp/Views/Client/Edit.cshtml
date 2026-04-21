@@ -5,40 +5,46 @@
     Layout = "_Layout";
 }
 
-<h2>Редагувати Клієнта</h2>
+<section class="client-form-page" aria-labelledby="client-edit-title">
+    <div class="client-form-card">
+        <h1 id="client-edit-title" class="client-form-title">@ViewData["Title"]</h1>
 
-<form asp-action="Edit" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
+        <form asp-action="Edit" method="post" class="client-form" novalidate>
+            <div asp-validation-summary="All" class="text-danger client-form-summary"></div>
 
-    <input type="hidden" asp-for="ClientId" />
+            <input type="hidden" asp-for="ClientId" />
 
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+            <div class="client-form-group">
+                <label asp-for="Name" class="client-form-label"></label>
+                <input asp-for="Name" class="form-control client-form-input" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="client-form-group">
+                <label asp-for="Address" class="client-form-label"></label>
+                <input asp-for="Address" class="form-control client-form-input" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <div class="client-form-group">
+                <label asp-for="Email" class="client-form-label"></label>
+                <input asp-for="Email" class="form-control client-form-input" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="client-form-group">
+                <label asp-for="Phone" class="client-form-label"></label>
+                <input asp-for="Phone" class="form-control client-form-input" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+            <div class="client-form-actions">
+                <button type="submit" class="btn btn-success">Зберегти</button>
+                <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+            </div>
+        </form>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Address"></label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Phone"></label>
-        <input asp-for="Phone" class="form-control" />
-        <span asp-validation-for="Phone" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">Зберегти</button>
-    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
-</form>
+</section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
