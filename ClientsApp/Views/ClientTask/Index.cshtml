@@ -1,7 +1,9 @@
 ﻿@model ClientsApp.Models.ViewModels.ClientTaskIndexViewModel
+@using System.Linq
 
 @{
     ViewData["Title"] = "Завдання";
+    ViewData["MainContentClass"] = "app-main-content--wide";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -45,52 +47,51 @@
     </a>
 </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Клієнт</th>
-            <th>Опис</th>
-            <th>Початок</th>
-            <th>Закінчення</th>
-            <th>Виконавці</th>
-            <th>Статус</th>
-             <th>Дії</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var task in Model.Tasks)
-        {
+<div class="app-table-wrap">
+    <table class="table table-striped app-table app-table--wide">
+        <thead>
             <tr>
-                <td>@task.ClientTaskId</td>
-                <td>@task.Client?.Name</td>
-                <td>@task.Description</td>
-                <td>@task.StartDate.ToShortDateString()</td>
-                <td>@(task.EndDate?.ToShortDateString() ?? "")</td>
-                <td>
-                    @if (task.ExecutorTasks != null && task.ExecutorTasks.Any())
-                    {
-                        foreach (var et in task.ExecutorTasks)
-                        {
-                            @et.Executor?.FullName <br />
-                        }
-                    }
-                    else
-                    {
-                        <text>-</text>
-                    }
-                </td>
-                <td>@task.TaskStatus</td>
-
-               <td>
-    <a asp-action="Edit" asp-route-id="@task.ClientTaskId" class="btn btn-primary btn-sm">Редагувати</a>
-    <a asp-action="Delete" asp-route-id="@task.ClientTaskId" class="btn btn-danger btn-sm">Видалити</a>
-</td>
-
+                <th>Id</th>
+                <th>Клієнт</th>
+                <th>Опис</th>
+                <th>Початок</th>
+                <th>Закінчення</th>
+                <th>Виконавці</th>
+                <th>Статус</th>
+                 <th>Дії</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var task in Model.Tasks)
+            {
+                <tr>
+                    <td>@task.ClientTaskId</td>
+                    <td>@task.Client?.Name</td>
+                    <td>@task.Description</td>
+                    <td>@task.StartDate.ToShortDateString()</td>
+                    <td>@(task.EndDate?.ToShortDateString() ?? "")</td>
+                    <td>
+                        @if (task.ExecutorTasks != null && task.ExecutorTasks.Any())
+                        {
+                            @string.Join(", ", task.ExecutorTasks.Select(et => et.Executor?.FullName).Where(name => !string.IsNullOrWhiteSpace(name)))
+                        }
+                        else
+                        {
+                            <text>-</text>
+                        }
+                    </td>
+                    <td>@task.TaskStatus</td>
+                    <td>
+                        <div class="app-table-actions">
+                            <a asp-action="Edit" asp-route-id="@task.ClientTaskId" class="btn btn-primary btn-sm">Редагувати</a>
+                            <a asp-action="Delete" asp-route-id="@task.ClientTaskId" class="btn btn-danger btn-sm">Видалити</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @section Scripts {
     <script>

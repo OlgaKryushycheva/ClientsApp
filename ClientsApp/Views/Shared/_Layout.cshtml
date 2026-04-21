@@ -77,7 +77,7 @@
         </nav>
     </header>
 
-    <main class="container app-main-content">
+    <main class="container app-main-content @(ViewData["MainContentClass"]?.ToString())">
         @RenderBody()
     </main>
 

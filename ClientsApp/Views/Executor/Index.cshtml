@@ -66,36 +66,40 @@
 
 <a asp-action="Create" class="btn btn-success mb-2">Додати Виконавця</a>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ПІБ</th>
-            <th>Ставка/год</th>
-            <th>Email</th>
-            <th>Недоступний</th>
-            <th>Звільнений з дати</th>
-            <th>Дії</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var executor in Model)
-        {
+<div class="app-table-wrap">
+    <table class="table table-striped app-table">
+        <thead>
             <tr>
-                <td>@executor.FullName</td>
-                <td>@executor.HourlyRate.ToString("0")</td>
-                <td>@executor.Email</td>
-                <td>
-                    @if (executor.UnavailableFrom.HasValue && executor.UnavailableTo.HasValue)
-                    {
-                        @($"{executor.UnavailableFrom:dd.MM.yyyy} - {executor.UnavailableTo:dd.MM.yyyy}")
-                    }
-                </td>
-                <td>@executor.DismissedFrom?.ToString("dd.MM.yyyy")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@executor.ExecutorId" class="btn btn-primary btn-sm">Редагувати</a>
-                    <a asp-action="Delete" asp-route-id="@executor.ExecutorId" class="btn btn-danger btn-sm">Видалити</a>
-                </td>
+                <th>ПІБ</th>
+                <th>Ставка/год</th>
+                <th>Email</th>
+                <th>Недоступний</th>
+                <th>Звільнений з дати</th>
+                <th>Дії</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var executor in Model)
+            {
+                <tr>
+                    <td>@executor.FullName</td>
+                    <td>@executor.HourlyRate.ToString("0")</td>
+                    <td>@executor.Email</td>
+                    <td>
+                        @if (executor.UnavailableFrom.HasValue && executor.UnavailableTo.HasValue)
+                        {
+                            @($"{executor.UnavailableFrom:dd.MM.yyyy} - {executor.UnavailableTo:dd.MM.yyyy}")
+                        }
+                    </td>
+                    <td>@executor.DismissedFrom?.ToString("dd.MM.yyyy")</td>
+                    <td>
+                        <div class="app-table-actions">
+                            <a asp-action="Edit" asp-route-id="@executor.ExecutorId" class="btn btn-primary btn-sm">Редагувати</a>
+                            <a asp-action="Delete" asp-route-id="@executor.ExecutorId" class="btn btn-danger btn-sm">Видалити</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

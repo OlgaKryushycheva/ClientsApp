@@ -81,8 +81,8 @@
     </div>
 
     <section class="clients-card clients-table-card" aria-label="Таблиця клієнтів">
-        <div class="table-responsive clients-table-wrap">
-            <table class="table clients-table mb-0">
+        <div class="table-responsive app-table-wrap clients-table-wrap">
+            <table class="table table-striped app-table clients-table mb-0">
                 <thead>
                     <tr>
                         <th>Ім'я</th>
@@ -101,7 +101,7 @@
                             <td>@client.Email</td>
                             <td>@client.Phone</td>
                             <td>
-                                <div class="clients-actions">
+                                <div class="app-table-actions">
                                     <a asp-action="Edit" asp-route-id="@client.ClientId" class="btn btn-primary btn-sm">Редагувати</a>
                                     <a asp-action="Delete" asp-route-id="@client.ClientId" class="btn btn-danger btn-sm">Видалити</a>
                                 </div>
