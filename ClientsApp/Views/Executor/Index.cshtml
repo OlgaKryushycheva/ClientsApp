@@ -56,7 +56,7 @@
                    asp-route-sortBy="name"
                    asp-route-sortDirection="@nextNameDirection"
                    class="btn @(currentSortBy == "name" ? "btn-primary" : "btn-outline-primary")">
-                    Сортувати за ПІБ @(currentSortBy == "name" ? (currentSortDirection == "asc" ? "↑" : "↓") : "")
+                   ПІБ @(currentSortBy == "name" ? (currentSortDirection == "asc" ? "↑" : "↓") : "")
                 </a>
                 <a asp-action="Index"
                    asp-route-fullName="@ViewData["FullName"]"
@@ -65,7 +65,7 @@
                    asp-route-sortBy="id"
                    asp-route-sortDirection="@nextIdDirection"
                    class="btn @(currentSortBy == "id" ? "btn-primary" : "btn-outline-primary")">
-                    Сортувати за датою внесення @(currentSortBy == "id" ? (currentSortDirection == "desc" ? "↓" : "↑") : "")
+                   Дата внесення @(currentSortBy == "id" ? (currentSortDirection == "desc" ? "↓" : "↑") : "")
                 </a>
             </div>
         </section>
