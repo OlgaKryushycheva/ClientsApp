@@ -44,7 +44,7 @@
             <div class="app-sort-buttons">
                 <a asp-action="Index" asp-route-searchString="@ViewData["SearchString"]" asp-route-sortBy="id" asp-route-sortDirection="@nextIdDirection" class="btn @(currentSortBy == "id" ? "btn-primary" : "btn-outline-primary")">
                     <span class="sort-label-with-icon">
-                        <span>За датою додавання</span>
+                        <span>Дата внесення</span>
                         <span class="sort-arrow @dateArrowDirectionClass" aria-hidden="true">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 5v14M12 19l-4-4M12 19l4-4" stroke-linecap="round" stroke-linejoin="round"/>
@@ -52,7 +52,7 @@
                         </span>
                     </span>
                 </a>
-                <a asp-action="Index" asp-route-searchString="@ViewData["SearchString"]" asp-route-sortBy="name" asp-route-sortDirection="@nextNameDirection" class="btn @(currentSortBy == "name" ? "btn-primary" : "btn-outline-primary")">За назвою (А–Я)</a>
+                <a asp-action="Index" asp-route-searchString="@ViewData["SearchString"]" asp-route-sortBy="name" asp-route-sortDirection="@nextNameDirection" class="btn @(currentSortBy == "name" ? "btn-primary" : "btn-outline-primary")">Назва (А–Я)</a>
             </div>
         </section>
     </div>
