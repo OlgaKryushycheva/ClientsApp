@@ -6,7 +6,6 @@
     var currentSortBy = ViewData["SortBy"]?.ToString() ?? "id";
     var currentSortDirection = ViewData["SortDirection"]?.ToString() ?? "desc";
     var nextNameDirection = currentSortBy == "name" && currentSortDirection == "asc" ? "desc" : "asc";
-    var nextIdDirection = currentSortBy == "id" && currentSortDirection == "desc" ? "asc" : "desc";
 }
 
 <section class="app-page">
@@ -56,16 +55,7 @@
                    asp-route-sortBy="name"
                    asp-route-sortDirection="@nextNameDirection"
                    class="btn @(currentSortBy == "name" ? "btn-primary" : "btn-outline-primary")">
-                   ПІБ @(currentSortBy == "name" ? (currentSortDirection == "asc" ? "↑" : "↓") : "")
-                </a>
-                <a asp-action="Index"
-                   asp-route-fullName="@ViewData["FullName"]"
-                   asp-route-hourlyRate="@ViewData["HourlyRate"]"
-                   asp-route-statusFilter="@selectedStatus"
-                   asp-route-sortBy="id"
-                   asp-route-sortDirection="@nextIdDirection"
-                   class="btn @(currentSortBy == "id" ? "btn-primary" : "btn-outline-primary")">
-                   Дата внесення @(currentSortBy == "id" ? (currentSortDirection == "desc" ? "↓" : "↑") : "")
+                   ПІБ (А-Я)
                 </a>
             </div>
         </section>

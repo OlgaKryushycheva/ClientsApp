@@ -53,7 +53,7 @@
                    asp-route-selectedStatus="@(Model.SelectedStatus.HasValue ? ((int)Model.SelectedStatus.Value).ToString() : null)"
                    asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")"
                    class="btn btn-outline-primary">
-                    Сортувати за датою початку <span class="ms-1">@((Model.SortOrder == "asc") ? "↑" : "↓")</span>
+                    Дата початку <span class="ms-1">@((Model.SortOrder == "asc") ? "↑" : "↓")</span>
                 </a>
             </div>
         </section>
