@@ -882,8 +882,12 @@ a {
 
 .app-controls-grid {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     gap: 1rem;
+}
+
+.app-controls-grid--filters-sort {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 1fr);
+    align-items: start;
 }
 
 .app-section-card,
@@ -1072,8 +1076,8 @@ a {
 }
 
 @media (max-width: 991.98px) {
-    .app-controls-grid {
-        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    .app-controls-grid--filters-sort {
+        grid-template-columns: minmax(0, 4fr) minmax(0, 2fr);
     }
 
     .app-form-page .app-controls-grid {
@@ -1094,7 +1098,7 @@ a {
 }
 
 @media (max-width: 767.98px) {
-    .app-controls-grid {
+    .app-controls-grid--filters-sort {
         grid-template-columns: 1fr;
     }
 
