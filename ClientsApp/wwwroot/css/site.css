@@ -1186,6 +1186,7 @@ a {
 
 @media (max-width: 767.98px) {
     .app-controls-grid--filters-sort {
+        display: grid;
         grid-template-columns: 1fr;
     }
 
