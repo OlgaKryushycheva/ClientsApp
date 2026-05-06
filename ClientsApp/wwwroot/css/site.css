@@ -896,9 +896,15 @@ a {
 }
 
 .app-controls-grid--filters-sort {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
     gap: 1rem;
-    align-items: stretch;
+    align-items: start;
+}
+
+.app-controls-grid--filters-sort > .app-control-card:first-child {
+    min-width: 0;
+    width: 100%;
 }
 
 .app-controls-grid--filters-sort > .app-control-card:first-child {
@@ -941,6 +947,11 @@ a {
     flex: 1 1 0;
 }
 
+.app-filters-form .app-form-field {
+    min-width: 0;
+    flex: 1 1 0;
+}
+
 .app-form-field--wide {
     flex: 1.4 1 0;
 }
@@ -979,13 +990,15 @@ a {
 }
 
 .app-sort-buttons {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    width: max-content;
     gap: 0.75rem;
 }
 
 .app-sort-buttons .btn {
     width: auto;
+    min-width: 150px;
+    max-width: max-content;
     white-space: nowrap;
     padding: 0.5rem 0.8rem;
     font-size: 0.9rem;
@@ -1016,17 +1029,11 @@ a {
 }
 
 .app-controls-grid--filters-sort > .app-control-card:nth-child(2) {
-    flex: 0 0 auto;
-    width: fit-content;
-    min-width: 220px;
-    max-width: 260px;
-    margin-left: auto;
-    display: flex;
-    flex-direction: column;
-}
-
-.app-controls-grid--filters-sort > .app-control-card:nth-child(2) .app-sort-buttons {
-    width: 100%;
+    width: max-content;
+    min-width: 0;
+    max-width: none;
+    justify-self: end;
+    align-self: start;
 }
 
 .app-table-card {
