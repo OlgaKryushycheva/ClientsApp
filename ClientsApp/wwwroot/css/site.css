@@ -986,6 +986,7 @@ a {
     font-size: 0.9rem;
 }
 
+
 .app-filters-form--executors .app-form-field--name {
     flex: 1.6 1 0;
 }
@@ -1022,35 +1023,18 @@ a {
     line-height: 1.2;
 }
 
-.app-filters-form {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 0.75rem;
-    align-items: center;
-}
 
 .app-form-field {
     min-width: 0;
     flex: 1 1 0;
 }
 
-.app-filters-form .app-form-field {
-    min-width: 0;
-    flex: 1 1 0;
-}
-
-.app-filters-form .app-form-field {
-    min-width: 0;
-    flex: 1 1 0;
-}
 
 .app-form-field--wide {
     flex: 1.4 1 0;
 }
 
-.app-filters-form .app-form-field:has(.btn) {
-    flex: 0 0 auto;
-}
+
 
 .app-filters-form .form-control,
 .app-filters-form .form-select,
@@ -1075,26 +1059,8 @@ a {
 }
 
 .app-filters-form .btn,
-.app-sort-buttons .btn {
-    min-height: 42px;
-    border-radius: 10px;
-    font-weight: 600;
-}
 
-.app-sort-buttons {
-    display: flex;
-    width: max-content;
-    gap: 0.75rem;
-}
 
-.app-sort-buttons .btn {
-    width: auto;
-    min-width: 150px;
-    max-width: max-content;
-    white-space: nowrap;
-    padding: 0.5rem 0.8rem;
-    font-size: 0.9rem;
-}
 
 .app-filters-form--executors .app-form-field--name {
     flex: 1.6 1 0;
@@ -1120,13 +1086,6 @@ a {
     padding-inline: 0.65rem;
 }
 
-.app-controls-grid--filters-sort > .app-control-card:nth-child(2) {
-    width: max-content;
-    min-width: 0;
-    max-width: none;
-    justify-self: end;
-    align-self: start;
-}
 
 .app-table-card {
     margin-top: 0.25rem;
