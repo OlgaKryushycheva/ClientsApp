@@ -452,6 +452,16 @@ a {
     }
 }
 
+
+.app-btn-secondary,
+.app-filters-form .btn.btn-secondary,
+.app-filters-form .btn.btn-outline-secondary {
+    min-height: 42px;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+}
+
 @media (max-width: 991.98px) {
     .home-cards {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -886,8 +896,15 @@ a {
 }
 
 .app-controls-grid--filters-sort {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 1fr);
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    gap: 1rem;
+    align-items: start;
+}
+
+.app-controls-grid--filters-sort > .app-control-card:first-child {
+    min-width: 0;
+    width: 100%;
 }
 
 .app-section-card,
@@ -914,19 +931,27 @@ a {
 }
 
 .app-filters-form {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
+    display: flex;
+    flex-wrap: nowrap;
     gap: 0.75rem;
-    align-items: end;
+    align-items: center;
 }
 
 .app-form-field {
-    grid-column: span 3;
+    min-width: 0;
+    flex: 1 1 0;
+}
+
+.app-filters-form .app-form-field {
     min-width: 0;
 }
 
 .app-form-field--wide {
-    grid-column: span 6;
+    flex: 1.4 1 0;
+}
+
+.app-filters-form .app-form-field:has(.btn) {
+    flex: 0 0 auto;
 }
 
 .app-filters-form .form-control,
@@ -959,35 +984,34 @@ a {
 }
 
 .app-sort-buttons {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    width: max-content;
     gap: 0.75rem;
 }
 
 .app-sort-buttons .btn {
-    width: 100%;
+    width: auto;
+    min-width: 150px;
+    max-width: max-content;
+    white-space: nowrap;
     padding: 0.5rem 0.8rem;
     font-size: 0.9rem;
 }
 
-.app-filters-form--executors {
-    row-gap: 0.8rem;
-}
-
 .app-filters-form--executors .app-form-field--name {
-    grid-column: span 5;
+    flex: 1.6 1 0;
 }
 
 .app-filters-form--executors .app-form-field--rate {
-    grid-column: span 4;
+    flex: 1 1 0;
 }
 
 .app-filters-form--executors .app-form-field--status {
-    grid-column: span 3;
+    flex: 1 1 0;
 }
 
 .app-filters-form--executors .app-form-field--action {
-    grid-column: span 3;
+    flex: 0 0 auto;
 }
 
 .app-sort-buttons--executors {
@@ -999,16 +1023,11 @@ a {
 }
 
 .app-controls-grid--filters-sort > .app-control-card:nth-child(2) {
-    width: 100%;
-    max-width: 280px;
+    width: max-content;
+    min-width: 0;
+    max-width: none;
     justify-self: end;
-    display: flex;
-    flex-direction: column;
-}
-
-.app-controls-grid--filters-sort > .app-control-card:nth-child(2) .app-sort-buttons {
-    flex: 1;
-    align-content: center;
+    align-self: start;
 }
 
 .app-table-card {
@@ -1089,33 +1108,28 @@ a {
 }
 
 @media (max-width: 991.98px) {
-    .app-controls-grid--filters-sort {
-        grid-template-columns: minmax(0, 4fr) minmax(0, 1.3fr);
-    }
-
-    .app-controls-grid--filters-sort > .app-control-card:nth-child(2) {
-        max-width: 240px;
-    }
 
     .app-form-page .app-controls-grid {
         grid-template-columns: 1fr;
     }
 
-    .app-form-field,
-    .app-form-field--wide {
-        grid-column: span 6;
+    .app-filters-form {
+        flex-wrap: wrap;
     }
 
+    .app-form-field,
+    .app-form-field--wide,
     .app-filters-form--executors .app-form-field--name,
     .app-filters-form--executors .app-form-field--rate,
     .app-filters-form--executors .app-form-field--status,
     .app-filters-form--executors .app-form-field--action {
-        grid-column: span 6;
+        flex: 1 1 calc(50% - 0.75rem);
     }
 }
 
 @media (max-width: 767.98px) {
     .app-controls-grid--filters-sort {
+        display: grid;
         grid-template-columns: 1fr;
     }
 
@@ -1130,21 +1144,22 @@ a {
         padding: 1rem;
     }
 
-    .app-filters-form,
+    .app-filters-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
     .app-sort-buttons {
         grid-template-columns: 1fr;
     }
 
     .app-form-field,
-    .app-form-field--wide {
-        grid-column: span 1;
-    }
-
+    .app-form-field--wide,
     .app-filters-form--executors .app-form-field--name,
     .app-filters-form--executors .app-form-field--rate,
     .app-filters-form--executors .app-form-field--status,
     .app-filters-form--executors .app-form-field--action {
-        grid-column: span 1;
+        flex: 1 1 100%;
     }
 
     .app-filters-form .btn,
