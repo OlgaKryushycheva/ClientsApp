@@ -897,32 +897,119 @@ a {
 
 .app-controls-grid--filters-sort {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) max-content;
+    grid-template-columns: minmax(0, 1fr) 190px;
     gap: 1rem;
     align-items: start;
 }
 
 .app-controls-grid--filters-sort > .app-control-card:first-child {
+    width: 100%;
     min-width: 0;
+}
+
+.app-controls-grid--filters-sort > .app-control-card:nth-child(2) {
+    width: 190px;
+    min-width: 190px;
+    max-width: 190px;
+    justify-self: end;
+    align-self: start;
+    padding: 1.25rem;
+}
+
+.app-controls-grid--filters-sort > .app-control-card:nth-child(2) .app-control-card-title {
+    white-space: nowrap;
+}
+
+.app-filters-form {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.75rem;
     width: 100%;
 }
 
-.app-controls-grid--filters-sort > .app-control-card:first-child {
-    flex: 1 1 auto;
+.app-filters-form .app-form-field {
     min-width: 0;
+    flex: 1 1 0;
 }
 
-.app-section-card,
-.app-control-card,
-.app-table-card,
-.app-form-card {
-    background: var(--card-bg);
-    border: 1px solid rgba(17, 36, 63, 0.05);
-    border-radius: 12px;
-    box-shadow: 0 10px 24px rgba(20, 49, 89, 0.08);
+.app-filters-form .app-form-field:has(.btn) {
+    flex: 0 0 auto;
 }
 
-.app-control-card,
+.app-filters-form .btn {
+    min-width: 150px;
+    white-space: nowrap;
+}
+
+.app-filters-form .form-control,
+.app-filters-form .form-select,
+.app-form-input {
+    min-height: 42px;
+    border-radius: 10px;
+    border: 1px solid rgba(44, 86, 139, 0.2);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.app-form-select {
+    min-height: 42px;
+    border-radius: 10px;
+}
+
+.app-filters-form .form-control:focus,
+.app-filters-form .form-select:focus,
+.app-form-input:focus {
+    border-color: rgba(47, 95, 155, 0.45);
+    box-shadow: 0 0 0 0.2rem rgba(58, 130, 246, 0.16);
+    background-color: #ffffff;
+}
+
+.app-filters-form .btn,
+.app-sort-buttons .btn {
+    min-height: 42px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.app-sort-buttons {
+    display: flex;
+    width: 100%;
+    gap: 0;
+}
+
+.app-sort-buttons .btn {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    white-space: nowrap;
+    padding: 0.5rem 0.7rem;
+    font-size: 0.9rem;
+}
+
+.app-filters-form--executors .app-form-field--name {
+    flex: 1.6 1 0;
+}
+
+.app-filters-form--executors .app-form-field--rate {
+    flex: 1 1 0;
+}
+
+.app-filters-form--executors .app-form-field--status {
+    flex: 1 1 0;
+}
+
+.app-filters-form--executors .app-form-field--action {
+    flex: 0 0 auto;
+}
+
+.app-sort-buttons--executors {
+    align-items: center;
+}
+
+.app-sort-buttons--executors .btn {
+    padding-inline: 0.65rem;
+}
+
 .app-table-card {
     padding: 1.25rem;
 }
@@ -943,6 +1030,11 @@ a {
 }
 
 .app-form-field {
+    min-width: 0;
+    flex: 1 1 0;
+}
+
+.app-filters-form .app-form-field {
     min-width: 0;
     flex: 1 1 0;
 }
@@ -1140,6 +1232,8 @@ a {
     }
 
     .app-controls-grid--filters-sort > .app-control-card:nth-child(2) {
+        width: 100%;
+        min-width: 0;
         max-width: none;
         justify-self: stretch;
     }
@@ -1155,21 +1249,15 @@ a {
         align-items: stretch;
     }
 
-    .app-sort-buttons {
-        grid-template-columns: 1fr;
-    }
-
-    .app-form-field,
-    .app-form-field--wide,
-    .app-filters-form--executors .app-form-field--name,
-    .app-filters-form--executors .app-form-field--rate,
-    .app-filters-form--executors .app-form-field--status,
-    .app-filters-form--executors .app-form-field--action {
-        flex: 1 1 100%;
-    }
-
+    .app-filters-form .app-form-field,
+    .app-filters-form .app-form-field:has(.btn),
     .app-filters-form .btn,
-    .app-sort-buttons .btn,
+    .app-sort-buttons .btn {
+        width: 100%;
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
     .app-form-actions .btn {
         width: 100%;
     }
