@@ -896,8 +896,14 @@ a {
 }
 
 .app-controls-grid--filters-sort {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: start;
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.app-controls-grid--filters-sort > .app-control-card:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .app-section-card,
@@ -1010,15 +1016,17 @@ a {
 }
 
 .app-controls-grid--filters-sort > .app-control-card:nth-child(2) {
+    flex: 0 0 auto;
     width: fit-content;
-    justify-self: end;
+    min-width: 220px;
+    max-width: 260px;
+    margin-left: auto;
     display: flex;
     flex-direction: column;
 }
 
 .app-controls-grid--filters-sort > .app-control-card:nth-child(2) .app-sort-buttons {
-    flex: 1;
-    align-content: center;
+    width: 100%;
 }
 
 .app-table-card {
@@ -1099,9 +1107,6 @@ a {
 }
 
 @media (max-width: 991.98px) {
-    .app-controls-grid--filters-sort {
-        grid-template-columns: minmax(0, 1fr) auto;
-    }
 
     .app-form-page .app-controls-grid {
         grid-template-columns: 1fr;
@@ -1123,6 +1128,7 @@ a {
 
 @media (max-width: 767.98px) {
     .app-controls-grid--filters-sort {
+        display: grid;
         grid-template-columns: 1fr;
     }
 
