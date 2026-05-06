@@ -907,6 +907,11 @@ a {
     width: 100%;
 }
 
+.app-controls-grid--filters-sort > .app-control-card:first-child {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 .app-section-card,
 .app-control-card,
 .app-table-card,
@@ -944,6 +949,7 @@ a {
 
 .app-filters-form .app-form-field {
     min-width: 0;
+    flex: 1 1 0;
 }
 
 .app-form-field--wide {
