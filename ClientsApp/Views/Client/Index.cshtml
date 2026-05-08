@@ -39,7 +39,7 @@
         <section class="app-control-card" aria-label="Сортування клієнтів">
             <h2 class="app-control-card-title">Сортування</h2>
             <div class="app-sort-buttons">
-                <a asp-action="Index" asp-route-searchString="@ViewData["SearchString"]" asp-route-sortBy="name" asp-route-sortDirection="@nextNameDirection" class="btn @(currentSortBy == "name" ? "btn-primary" : "btn-outline-primary")">Назва (А-Я)</a>
+                <a asp-action="Index" asp-route-searchString="@ViewData["SearchString"]" asp-route-sortBy="name" asp-route-sortDirection="@nextNameDirection" class="btn btn-outline-primary">Назва (А-Я)</a>
             </div>
         </section>
     </div>

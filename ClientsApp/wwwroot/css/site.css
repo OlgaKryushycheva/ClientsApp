@@ -1015,78 +1015,6 @@ a {
     padding: 1.25rem;
 }
 
-.app-control-card-title {
-    margin: 0 0 1rem;
-    color: #163156;
-    font-size: 1.06rem;
-    font-weight: 700;
-    line-height: 1.2;
-}
-
-
-.app-form-field {
-    min-width: 0;
-    flex: 1 1 0;
-}
-
-
-.app-form-field--wide {
-    flex: 1.4 1 0;
-}
-
-
-
-.app-filters-form .form-control,
-.app-filters-form .form-select,
-.app-form-input {
-    min-height: 42px;
-    border-radius: 10px;
-    border: 1px solid rgba(44, 86, 139, 0.2);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}
-
-.app-form-select {
-    min-height: 42px;
-    border-radius: 10px;
-}
-
-.app-filters-form .form-control:focus,
-.app-filters-form .form-select:focus,
-.app-form-input:focus {
-    border-color: rgba(47, 95, 155, 0.45);
-    box-shadow: 0 0 0 0.2rem rgba(58, 130, 246, 0.16);
-    background-color: #ffffff;
-}
-
-.app-filters-form .btn,
-
-
-
-.app-filters-form--executors .app-form-field--name {
-    flex: 1.6 1 0;
-}
-
-.app-filters-form--executors .app-form-field--rate {
-    flex: 1 1 0;
-}
-
-.app-filters-form--executors .app-form-field--status {
-    flex: 1 1 0;
-}
-
-.app-filters-form--executors .app-form-field--action {
-    flex: 0 0 auto;
-}
-
-.app-sort-buttons--executors {
-    align-items: center;
-}
-
-.app-sort-buttons--executors .btn {
-    padding-inline: 0.65rem;
-}
-
-
 .app-table-card {
     margin-top: 0.25rem;
 }
@@ -1242,4 +1170,45 @@ a {
 
 .app-sort-buttons .sort-arrow.is-asc {
     transform: rotate(180deg);
+}
+
+/* FINAL FIX: filters + sorting cards alignment */
+.app-controls-grid--filters-sort {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 190px !important;
+    gap: 1rem !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+    .app-controls-grid--filters-sort > section.app-control-card {
+        background: var(--card-bg) !important;
+        border: 1px solid rgba(17, 36, 63, 0.05) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 24px rgba(20, 49, 89, 0.08) !important;
+        padding: 1.25rem !important;
+    }
+
+        .app-controls-grid--filters-sort > section.app-control-card:first-child {
+            min-width: 0 !important;
+            width: 100% !important;
+        }
+
+        .app-controls-grid--filters-sort > section.app-control-card:nth-child(2) {
+            width: 190px
+        }
+
+/* Smaller titles inside filter/sort cards */
+.app-control-card-title {
+    font-size: 1.1rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.75rem !important;
+    font-weight: 700 !important;
+}
+
+/* Sorting title specifically */
+.app-controls-grid--filters-sort section:nth-child(2) .app-control-card-title {
+    font-size: 1rem !important;
+    white-space: nowrap !important;
 }
