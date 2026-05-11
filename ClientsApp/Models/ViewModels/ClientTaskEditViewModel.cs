@@ -1,4 +1,3 @@
-// ViewModel ClientTaskEditViewModel описує дані, які конкретна сторінка отримує або відправляє.
 // Модель містить лише ті властивості, які реально використовуються у формі/представленні.
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using ClientsApp.Models.Entities;
 
 namespace ClientsApp.Models.ViewModels
 {
-// ClientTaskEditViewModel: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class ClientTaskEditViewModel
     {
         public int ClientTaskId { get; set; }

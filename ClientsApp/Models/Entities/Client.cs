@@ -1,11 +1,9 @@
-// Сутність Client відповідає таблиці/даним предметної області.
 // DataAnnotations нижче керують валідацією форми й мапінгом полів у БД.
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClientsApp.Models.Entities
 {
-// Client: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class Client
     {
         public int ClientId { get; set; }

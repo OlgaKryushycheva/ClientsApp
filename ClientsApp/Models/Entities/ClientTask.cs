@@ -1,4 +1,3 @@
-// Сутність ClientTask відповідає таблиці/даним предметної області.
 // DataAnnotations нижче керують валідацією форми й мапінгом полів у БД.
 ﻿using System;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClientsApp.Models.Entities
 {
-// ClientTask: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class ClientTask
     {
         [Key]

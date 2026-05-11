@@ -1,4 +1,3 @@
-// Сутність Executor відповідає таблиці/даним предметної області.
 // DataAnnotations нижче керують валідацією форми й мапінгом полів у БД.
 ﻿using System;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.ComponentModel.DataAnnotations;
 namespace ClientsApp.Models.Entities
 {
     using ClientsApp.Models;
-// Executor: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class Executor : IValidatableObject
     {
         public int ExecutorId { get; set; }
@@ -40,13 +38,10 @@ namespace ClientsApp.Models.Entities
         [Display(Name = "Звільнений з дати")]
         public DateTime? DismissedFrom { get; set; }
 
-// Метод Validate реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
-// Параметри методу: ValidationContext validationContext.
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var today = DateTime.Today;
 
-// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (UnavailableFrom.HasValue && UnavailableFrom.Value.Date < today)
             {
                 yield return new ValidationResult(
@@ -54,7 +49,6 @@ namespace ClientsApp.Models.Entities
                     new[] { nameof(UnavailableFrom) });
             }
 
-// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (UnavailableFrom.HasValue
                 && UnavailableTo.HasValue
                 && UnavailableTo.Value.Date < UnavailableFrom.Value.Date)
@@ -64,7 +58,6 @@ namespace ClientsApp.Models.Entities
                     new[] { nameof(UnavailableTo) });
             }
 
-// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (DismissedFrom.HasValue && DismissedFrom.Value.Date < today)
             {
                 yield return new ValidationResult(

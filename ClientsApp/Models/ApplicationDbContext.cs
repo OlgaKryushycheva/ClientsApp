@@ -6,7 +6,6 @@ using ClientsApp.Models.Entities;
 
 namespace ClientsApp.Models
 {
-// ApplicationDbContext: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }

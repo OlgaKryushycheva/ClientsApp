@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ClientsApp.Models
 {
-// ApplicationUser: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class ApplicationUser : IdentityUser
     {
         public int? ExecutorId { get; set; }

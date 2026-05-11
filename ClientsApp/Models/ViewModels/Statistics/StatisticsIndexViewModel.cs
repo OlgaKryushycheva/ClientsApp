@@ -1,11 +1,9 @@
-// ViewModel StatisticsIndexViewModel описує дані, які конкретна сторінка отримує або відправляє.
 // Модель містить лише ті властивості, які реально використовуються у формі/представленні.
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ClientsApp.Models.ViewModels.Statistics
 {
-// StatisticsIndexViewModel: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class StatisticsIndexViewModel
     {
         public int? SelectedClientIdForTask { get; set; }

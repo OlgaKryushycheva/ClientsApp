@@ -1,5 +1,3 @@
-// Контролер ClientController обробляє HTTP-запити цього розділу UI.
-// Дії нижче читають параметри запиту, викликають сервіси й повертають View/Redirect/JSON.
 ﻿using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -10,9 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClientsApp.Controllers
 {
-// Атрибут обмежує доступ: дія виконається лише для користувача з потрібною роллю/автентифікацією.
     [Authorize]
-// ClientController: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class ClientController : Controller
     {
         private readonly IClientService _clientService;
@@ -22,8 +18,10 @@ namespace ClientsApp.Controllers
             _clientService = clientService;
         }
 
-// Метод Index реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
-// Параметри методу: string searchString, string? sortBy, string? sortDirection.
+        // searchString — текст із поля пошуку у таблиці клієнтів.
+        // Пошук запускаємо лише від 3 символів, щоб короткі запити ("а", "ан")
+        // не повертали майже весь список і не навантажували БД зайвими фільтраціями.
+        // sortBy керує полем сортування (id або name), sortDirection — напрямком (asc/desc).
         public async Task<IActionResult> Index(string searchString, string? sortBy, string? sortDirection)
         {
             IEnumerable<Client> clients;
@@ -32,8 +30,11 @@ namespace ClientsApp.Controllers
                 ? await _clientService.SearchByNameAsync(searchString)
                 : await _clientService.GetAllAsync();
 
+            // Нормалізуємо параметри з query-string до нижнього регістру,
+            // щоб "Name"/"NAME" оброблялись так само, як "name".
             var normalizedSortBy = string.IsNullOrWhiteSpace(sortBy) ? "id" : sortBy.ToLowerInvariant();
-// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
+            // Якщо прийшло невідоме поле сортування, використовуємо id,
+            // щоб уникнути непередбачуваної поведінки на сторінці списку.
             if (normalizedSortBy != "name" && normalizedSortBy != "id")
             {
                 normalizedSortBy = "id";
@@ -42,105 +43,86 @@ namespace ClientsApp.Controllers
             var normalizedSortDirection = string.IsNullOrWhiteSpace(sortDirection)
                 ? "asc"
                 : sortDirection.ToLowerInvariant();
-// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
+            // Некоректний напрямок теж приводимо до значення за замовчуванням.
             if (normalizedSortDirection != "asc" && normalizedSortDirection != "desc")
             {
                 normalizedSortDirection = "asc";
             }
 
+            // switch формує остаточний порядок рядків у таблиці
+            // залежно від обраного поля й напряму сортування.
             clients = normalizedSortBy switch
             {
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 "name" when normalizedSortDirection == "desc" => clients.OrderByDescending(c => c.Name),
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 "name" => clients.OrderBy(c => c.Name),
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 "id" when normalizedSortDirection == "desc" => clients.OrderByDescending(c => c.ClientId),
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 _ => clients.OrderBy(c => c.ClientId)
             };
 
+            // Зберігаємо поточні фільтри/сортування у ViewData,
+            // щоб після рендеру сторінка показувала актуальний стан елементів керування.
             ViewData["SearchString"] = searchString;
             ViewData["SortBy"] = normalizedSortBy;
             ViewData["SortDirection"] = normalizedSortDirection;
             return View(clients);
         }
 
-// Атрибут обмежує доступ: дія виконається лише для користувача з потрібною роллю/автентифікацією.
+        // Тільки менеджер може створювати нового клієнта.
         [Authorize(Roles = "Manager")]
-// Метод Create реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
         public IActionResult Create() => View();
 
-// HTTP POST приймає дані форми та запускає операцію створення/оновлення/видалення.
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
+        // Захищає POST-форму від CSRF-атак через підроблені запити.
         [ValidateAntiForgeryToken]
-// Атрибут обмежує доступ: дія виконається лише для користувача з потрібною роллю/автентифікацією.
         [Authorize(Roles = "Manager")]
-// Метод Create реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
-// Параметри методу: Client client.
         public async Task<IActionResult> Create(Client client)
         {
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
-// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
+            // Якщо модель невалідна, не виконуємо INSERT і повертаємо форму з помилками.
             if (!ModelState.IsValid) return View(client);
 
+            // Після AddAsync сервіс викликає SaveChangesAsync, і в таблиці Clients з'являється новий рядок.
             await _clientService.AddAsync(client);
             return RedirectToAction(nameof(Index));
         }
 
-// Атрибут обмежує доступ: дія виконається лише для користувача з потрібною роллю/автентифікацією.
+        // Редагування клієнта доступне лише менеджеру.
         [Authorize(Roles = "Manager")]
-// Метод Edit реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
-// Параметри методу: int id.
         public async Task<IActionResult> Edit(int id)
         {
             var client = await _clientService.GetByIdAsync(id);
-// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
+            // Якщо клієнт з таким ID не існує, повертаємо 404 замість порожньої форми.
             if (client == null) return NotFound();
             return View(client);
         }
 
-// HTTP POST приймає дані форми та запускає операцію створення/оновлення/видалення.
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
+        // Захищає POST-форму редагування від CSRF-атак.
         [ValidateAntiForgeryToken]
-// Атрибут обмежує доступ: дія виконається лише для користувача з потрібною роллю/автентифікацією.
         [Authorize(Roles = "Manager")]
-// Метод Edit реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
-// Параметри методу: Client client.
         public async Task<IActionResult> Edit(Client client)
         {
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
-// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
+            // Якщо валідація не пройдена, не виконуємо UPDATE.
             if (!ModelState.IsValid) return View(client);
 
             await _clientService.UpdateAsync(client);
             return RedirectToAction(nameof(Index));
         }
 
-// HTTP GET використовується для читання даних і відкриття сторінки без зміни стану БД.
+        // Спочатку показуємо сторінку підтвердження, щоб користувач не видаляв клієнта випадково.
         [HttpGet]
-// Атрибут обмежує доступ: дія виконається лише для користувача з потрібною роллю/автентифікацією.
         [Authorize(Roles = "Manager")]
-// Метод Delete реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
-// Параметри методу: int id.
         public async Task<IActionResult> Delete(int id)
         {
             var client = await _clientService.GetByIdAsync(id);
-// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
+            // Якщо запис уже відсутній, показуємо 404.
             if (client == null) return NotFound();
             return View(client);
         }
 
-// HTTP POST приймає дані форми та запускає операцію створення/оновлення/видалення.
         [HttpPost, ActionName("Delete")]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
+        // Захищає підтвердження видалення від CSRF-запитів.
         [ValidateAntiForgeryToken]
-// Атрибут обмежує доступ: дія виконається лише для користувача з потрібною роллю/автентифікацією.
         [Authorize(Roles = "Manager")]
-// Метод DeleteConfirmed реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
-// Параметри методу: int id.
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _clientService.DeleteAsync(id);
