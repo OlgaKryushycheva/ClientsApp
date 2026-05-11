@@ -31,4 +31,3 @@ namespace ClientsApp.Models.Entities
         public decimal TaskCost => AdjustedTime * (Executor?.HourlyRate ?? 0);
     }
 }
-
