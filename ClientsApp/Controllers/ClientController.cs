@@ -34,10 +34,11 @@ namespace ClientsApp.Controllers
                 ? await _clientService.SearchByNameAsync(searchString)
                 : await _clientService.GetAllAsync();
 
-            // Нормалізуємо sortBy до нижнього регістру і задаємо "id" за замовчуванням,
-            // щоб параметр із query-string оброблявся стабільно.
+            // Нормалізуємо параметри з query-string до нижнього регістру,
+            // щоб "Name"/"NAME" оброблялись так само, як "name".
             var normalizedSortBy = string.IsNullOrWhiteSpace(sortBy) ? "id" : sortBy.ToLowerInvariant();
-            // Якщо в URL передали невідоме поле, повертаємось до безпечного сортування за ID.
+            // Якщо прийшло невідоме поле сортування, використовуємо id,
+            // щоб уникнути непередбачуваної поведінки на сторінці списку.
             if (normalizedSortBy != "name" && normalizedSortBy != "id")
             {
                 normalizedSortBy = "id";
@@ -79,30 +80,33 @@ namespace ClientsApp.Controllers
 
         // POST-версія Create зберігає нового клієнта в таблицю Clients.
         [HttpPost]
+        // Захищає POST-форму від CSRF-атак через підроблені запити.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create(Client client)
         {
-            // Якщо користувач не заповнив обов'язкові поля, повертаємо ту саму форму з помилками валідації.
+            // Якщо модель невалідна, не виконуємо INSERT і повертаємо форму з помилками.
             if (!ModelState.IsValid) return View(client);
 
-            // Сервіс додає запис до DbSet, а потім виконує SQL INSERT під час SaveChangesAsync.
+            // Після AddAsync сервіс викликає SaveChangesAsync, і в таблиці Clients з'являється новий рядок.
             await _clientService.AddAsync(client);
             return RedirectToAction(nameof(Index));
         }
 
+        // Редагування клієнта доступне лише менеджеру.
         // Відкриває форму редагування конкретного клієнта за його ID.
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int id)
         {
             var client = await _clientService.GetByIdAsync(id);
-            // Якщо запис уже видалено або ID не існує, повертаємо 404.
+            // Якщо клієнт з таким ID не існує, повертаємо 404 замість порожньої форми.
             if (client == null) return NotFound();
             return View(client);
         }
 
         // Приймає змінені дані клієнта та виконує SQL UPDATE через сервіс.
         [HttpPost]
+        // Захищає POST-форму редагування від CSRF-атак.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(Client client)
@@ -114,19 +118,20 @@ namespace ClientsApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET-сторінка підтвердження видалення, щоб користувач бачив, кого саме видаляє.
+        // Спочатку показуємо сторінку підтвердження, щоб користувач не видаляв клієнта випадково.
         [HttpGet]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Delete(int id)
         {
             var client = await _clientService.GetByIdAsync(id);
-            // Захист від прямого переходу по неіснуючому ID.
+            // Якщо запис уже відсутній, показуємо 404.
             if (client == null) return NotFound();
             return View(client);
         }
 
         // Після підтвердження видаляє клієнта та повертає користувача до списку.
         [HttpPost, ActionName("Delete")]
+        // Захищає підтвердження видалення від CSRF-запитів.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
