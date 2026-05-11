@@ -19,7 +19,7 @@ namespace ClientsApp.BLL.Services
             _context = context;
         }
 
-        // Повертає всіх клієнтів для таблиці на сторінці Index.
+        // Повертає весь список клієнтів для таблиці на головній сторінці довідника.
         public async Task<IEnumerable<Client>> GetAllAsync()
         {
             return await _context.Clients.ToListAsync();
@@ -56,16 +56,16 @@ namespace ClientsApp.BLL.Services
             if (client != null)
             {
                 _context.Clients.Remove(client);
-                // Після Remove виконується SQL DELETE, і клієнт зникає зі списків у UI.
+                // Підтверджуємо видалення SQL-командою DELETE.
                 await _context.SaveChangesAsync();
             }
         }
 
-        // Повертає клієнтів, чиє ім'я містить введений фрагмент namePart.
+        // Пошук для поля фільтра в UI: залишаємо клієнтів, у яких ім'я містить введений фрагмент.
         public async Task<IEnumerable<Client>> SearchByNameAsync(string namePart)
         {
             return await _context.Clients
-                // ToLower з обох боків робить пошук нечутливим до регістру (напр. "Іван" == "іван").
+                // ToLower з обох сторін робить порівняння нечутливим до регістру.
                 .Where(c => c.Name.ToLower().Contains(namePart.ToLower()))
                 .ToListAsync();
         }

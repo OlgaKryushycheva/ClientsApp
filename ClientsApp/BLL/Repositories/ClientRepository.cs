@@ -26,13 +26,13 @@ namespace ClientsApp.BLL.Repositories
             return client;
         }
 
-        // Зчитує повний набір клієнтів для сценаріїв, де потрібен список без фільтрів.
+        // Повертає всі записи з таблиці Clients без додаткової фільтрації.
         public async Task<IEnumerable<Client>> GetAllClients()
         {
             return await _context.Clients.ToListAsync();
         }
 
-        // Отримує одного клієнта за ключем; повертає null, якщо такого ID немає.
+        // Шукає одного клієнта за ID; якщо рядок відсутній, результат буде null.
         public async Task<Client> GetClientById(int clientId)
         {
             return await _context.Clients.FindAsync(clientId);

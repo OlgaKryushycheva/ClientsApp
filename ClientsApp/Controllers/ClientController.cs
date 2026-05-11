@@ -20,10 +20,10 @@ namespace ClientsApp.Controllers
             _clientService = clientService;
         }
 
-        // Відкриває сторінку списку клієнтів.
         // searchString — текст із поля пошуку у таблиці клієнтів.
-        // sortBy визначає поле сортування ("id" або "name"), sortDirection — напрямок ("asc"/"desc").
-        // Метод повертає колекцію клієнтів у View.
+        // Пошук запускаємо лише від 3 символів, щоб короткі запити ("а", "ан")
+        // не повертали майже весь список і не навантажували БД зайвими фільтраціями.
+        // sortBy керує полем сортування (id або name), sortDirection — напрямком (asc/desc).
         public async Task<IActionResult> Index(string searchString, string? sortBy, string? sortDirection)
         {
             IEnumerable<Client> clients;
@@ -66,15 +66,15 @@ namespace ClientsApp.Controllers
                 _ => clients.OrderBy(c => c.ClientId)
             };
 
-            // Зберігаємо поточні параметри у ViewData, щоб форма пошуку й індикатор сортування
-            // на сторінці показували той самий стан після перезавантаження.
+            // Зберігаємо поточні фільтри/сортування у ViewData,
+            // щоб після рендеру сторінка показувала актуальний стан елементів керування.
             ViewData["SearchString"] = searchString;
             ViewData["SortBy"] = normalizedSortBy;
             ViewData["SortDirection"] = normalizedSortDirection;
             return View(clients);
         }
 
-        // Створення клієнта дозволено тільки менеджеру.
+        // Тільки менеджер може створювати нового клієнта.
         [Authorize(Roles = "Manager")]
         public IActionResult Create() => View();
 
@@ -94,7 +94,6 @@ namespace ClientsApp.Controllers
         }
 
         // Редагування клієнта доступне лише менеджеру.
-        // Відкриває форму редагування конкретного клієнта за його ID.
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int id)
         {

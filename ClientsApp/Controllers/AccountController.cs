@@ -68,6 +68,7 @@ namespace ClientsApp.Controllers
                 user.ExecutorId = executor.ExecutorId;
             }
 
+// Створюємо нового користувача в таблицях AspNetUsers/AspNetUserRoles.
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
@@ -79,6 +80,7 @@ namespace ClientsApp.Controllers
                 return View(model);
             }
 
+// Призначаємо роль, яка визначатиме доступ до захищених дій контролерів.
             await _userManager.AddToRoleAsync(user, model.Role);
 
             return RedirectToAction("Index", "Home");
@@ -239,6 +241,7 @@ namespace ClientsApp.Controllers
                 return View(model);
             }
 
+// Перевіряємо облікові дані через Identity і при успіху створюємо cookie-сесію.
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
             if (result.Succeeded)
             {
