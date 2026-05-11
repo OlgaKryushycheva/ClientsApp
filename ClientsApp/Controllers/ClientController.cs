@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace ClientsApp.Controllers
 {
+    // Список клієнтів доступний лише авторизованим користувачам,
+    // щоб анонімні відвідувачі не бачили персональні дані.
     [Authorize]
     public class ClientController : Controller
     {
@@ -25,6 +27,8 @@ namespace ClientsApp.Controllers
         public async Task<IActionResult> Index(string searchString, string? sortBy, string? sortDirection)
         {
             IEnumerable<Client> clients;
+            // Пошук запускаємо тільки з 3 символів, щоб уникнути дуже широких запитів
+            // на 1-2 символи, які зазвичай повертають майже всю таблицю.
             var hasSearch = !string.IsNullOrWhiteSpace(searchString) && searchString.Length >= 3;
             clients = hasSearch
                 ? await _clientService.SearchByNameAsync(searchString)
@@ -40,17 +44,20 @@ namespace ClientsApp.Controllers
                 normalizedSortBy = "id";
             }
 
+            // Те саме для напряму сортування: за замовчуванням сортуємо по зростанню.
             var normalizedSortDirection = string.IsNullOrWhiteSpace(sortDirection)
                 ? "asc"
                 : sortDirection.ToLowerInvariant();
-            // Некоректний напрямок теж приводимо до значення за замовчуванням.
+            // Некоректний напрямок замінюємо на "asc", щоб не ламати логіку switch нижче.
             if (normalizedSortDirection != "asc" && normalizedSortDirection != "desc")
             {
                 normalizedSortDirection = "asc";
             }
 
-            // switch формує остаточний порядок рядків у таблиці
-            // залежно від обраного поля й напряму сортування.
+            // switch будує кінцевий порядок:
+            // - за ім'ям у прямому/зворотному напрямку;
+            // - за ID у прямому/зворотному напрямку.
+            // Це дає передбачувану поведінку при кліках по заголовках таблиці.
             clients = normalizedSortBy switch
             {
                 "name" when normalizedSortDirection == "desc" => clients.OrderByDescending(c => c.Name),
@@ -71,6 +78,7 @@ namespace ClientsApp.Controllers
         [Authorize(Roles = "Manager")]
         public IActionResult Create() => View();
 
+        // POST-версія Create зберігає нового клієнта в таблицю Clients.
         [HttpPost]
         // Захищає POST-форму від CSRF-атак через підроблені запити.
         [ValidateAntiForgeryToken]
@@ -95,13 +103,14 @@ namespace ClientsApp.Controllers
             return View(client);
         }
 
+        // Приймає змінені дані клієнта та виконує SQL UPDATE через сервіс.
         [HttpPost]
         // Захищає POST-форму редагування від CSRF-атак.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(Client client)
         {
-            // Якщо валідація не пройдена, не виконуємо UPDATE.
+            // Не зберігаємо невалідні значення (порожнє ім'я, некоректні обмеження тощо).
             if (!ModelState.IsValid) return View(client);
 
             await _clientService.UpdateAsync(client);
@@ -119,6 +128,7 @@ namespace ClientsApp.Controllers
             return View(client);
         }
 
+        // Після підтвердження видаляє клієнта та повертає користувача до списку.
         [HttpPost, ActionName("Delete")]
         // Захищає підтвердження видалення від CSRF-запитів.
         [ValidateAntiForgeryToken]

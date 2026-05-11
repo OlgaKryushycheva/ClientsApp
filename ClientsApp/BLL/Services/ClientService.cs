@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace ClientsApp.BLL.Services
 {
+    // Сервіс інкапсулює базові операції з клієнтами для контролерів:
+    // читання списку, пошук, створення, оновлення та видалення.
     public class ClientService : IClientService
     {
         private readonly ApplicationDbContext _context;
@@ -23,32 +25,34 @@ namespace ClientsApp.BLL.Services
             return await _context.Clients.ToListAsync();
         }
 
-        // Шукає клієнта за первинним ключем; якщо запису немає, EF Core поверне null.
+        // Шукає одного клієнта за первинним ключем ClientId.
+        // Потрібно для форм редагування/видалення, де приходить конкретний ID.
         public async Task<Client> GetByIdAsync(int id)
         {
             return await _context.Clients.FindAsync(id);
         }
 
-        // Додає нового клієнта в DbSet Clients.
+        // Додає нового клієнта до контексту та зберігає його в таблиці Clients.
         public async Task AddAsync(Client client)
         {
             _context.Clients.Add(client);
-            // Після SaveChangesAsync EF Core виконує INSERT у таблицю Clients.
+            // На цьому кроці EF Core виконує SQL INSERT і присвоює ClientId новому запису.
             await _context.SaveChangesAsync();
         }
 
-        // Оновлює існуючий запис після редагування форми клієнта.
+        // Оновлює існуючий запис клієнта після редагування у формі.
         public async Task UpdateAsync(Client client)
         {
             _context.Clients.Update(client);
-            // EF Core формує UPDATE лише для змінених полів відстежуваної сутності.
+            // SaveChangesAsync застосовує змінені поля до таблиці через SQL UPDATE.
             await _context.SaveChangesAsync();
         }
 
-        // Видаляє клієнта тільки якщо запис існує в базі.
+        // Видаляє клієнта за ID, якщо такий запис реально існує в базі.
         public async Task DeleteAsync(int id)
         {
             var client = await _context.Clients.FindAsync(id);
+            // Якщо FindAsync повернув null, видаляти нічого — тихо завершуємо метод без помилки.
             if (client != null)
             {
                 _context.Clients.Remove(client);

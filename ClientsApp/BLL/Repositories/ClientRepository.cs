@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ClientsApp.BLL.Repositories
 {
+    // Репозиторій надає низькорівневий доступ до таблиці Clients через EF Core.
     public class ClientRepository : IClientRepository
     {
         private readonly ApplicationDbContext _context;
@@ -16,11 +17,11 @@ namespace ClientsApp.BLL.Repositories
             _context = context;
         }
 
-        // Створює нового клієнта і повертає сутність після збереження.
+        // Створює нового клієнта й повертає ту ж сутність після збереження.
         public async Task<Client> AddClient(Client client)
         {
             _context.Clients.Add(client);
-            // Після INSERT база заповнює identity-ключ, тому client.ClientId стає доступним у пам'яті.
+            // Після SaveChangesAsync зміни потрапляють у БД, а client.ClientId заповнюється з identity-колонки.
             await _context.SaveChangesAsync();
             return client;
         }
