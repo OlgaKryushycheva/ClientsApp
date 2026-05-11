@@ -88,9 +88,7 @@ namespace ClientsApp.BLL
                 query = query.Where(ct => ct.TaskStatus == status.Value);
 
             query = sortByStartDateDescending
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 ? query.OrderByDescending(ct => ct.StartDate)
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 : query.OrderBy(ct => ct.StartDate);
 
             return await query.ToListAsync();

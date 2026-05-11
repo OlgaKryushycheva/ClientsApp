@@ -1,4 +1,3 @@
-// Завдяки цьому контролер залежить від абстракції, а не від конкретної реалізації.
 using ClientsApp.Models.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;

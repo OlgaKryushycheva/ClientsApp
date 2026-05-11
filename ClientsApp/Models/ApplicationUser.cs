@@ -1,5 +1,3 @@
-// Файл ApplicationUser.cs містить допоміжний тип застосунку.
-// Коментарі нижче пояснюють призначення ключових методів і правил валідації.
 using ClientsApp.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 

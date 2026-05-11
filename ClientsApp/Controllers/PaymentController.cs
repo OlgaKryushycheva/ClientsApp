@@ -1,5 +1,3 @@
-// Контролер PaymentController обробляє HTTP-запити цього розділу UI.
-// Дії нижче читають параметри запиту, викликають сервіси й повертають View/Redirect/JSON.
 using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
 using ClientsApp.Models.ViewModels;
@@ -79,11 +77,9 @@ namespace ClientsApp.Controllers
 
         [Authorize(Roles = "Manager,Accountant")]
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Payment payment)
         {
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid)
             {
                 await PopulateTasks();
@@ -111,12 +107,10 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(Payment payment)
         {
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid)
             {
                 await PopulateTasks();
@@ -138,7 +132,6 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)

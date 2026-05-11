@@ -1,5 +1,3 @@
-// Контролер AccountController обробляє HTTP-запити цього розділу UI.
-// Дії нижче читають параметри запиту, викликають сервіси й повертають View/Redirect/JSON.
 using ClientsApp.Models;
 using ClientsApp.Models.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
@@ -37,7 +35,6 @@ namespace ClientsApp.Controllers
 
         [Authorize(Roles = "Manager")]
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -48,7 +45,6 @@ namespace ClientsApp.Controllers
                 ModelState.AddModelError(nameof(model.Role), "Оберіть коректну роль.");
             }
 
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -112,7 +108,6 @@ namespace ClientsApp.Controllers
 
         [Authorize(Roles = "Manager")]
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateEmail([Bind(Prefix = "UpdateEmail")] UpdateEmailViewModel model)
         {
@@ -122,7 +117,6 @@ namespace ClientsApp.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid)
             {
                 return View("Profile", new ManageAccountViewModel
@@ -181,7 +175,6 @@ namespace ClientsApp.Controllers
 
         [Authorize(Roles = "Manager")]
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword([Bind(Prefix = "ChangePassword")] ChangePasswordViewModel model)
         {
@@ -191,7 +184,6 @@ namespace ClientsApp.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid)
             {
                 return View("Profile", new ManageAccountViewModel
@@ -238,12 +230,10 @@ namespace ClientsApp.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -261,7 +251,6 @@ namespace ClientsApp.Controllers
 
         [Authorize]
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {

@@ -1,4 +1,3 @@
-// Це прибирає ручне копіювання полів у контролерах і сервісах.
 ﻿using AutoMapper;
 using ClientsApp.Models.DTOs;
 using ClientsApp.Models.Entities;

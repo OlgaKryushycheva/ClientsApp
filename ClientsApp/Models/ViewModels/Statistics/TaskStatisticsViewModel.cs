@@ -1,4 +1,3 @@
-// Модель містить лише ті властивості, які реально використовуються у формі/представленні.
 using System;
 
 namespace ClientsApp.Models.ViewModels.Statistics

@@ -1,4 +1,3 @@
-// Модель містить лише ті властивості, які реально використовуються у формі/представленні.
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using ClientsApp.Models.Entities;

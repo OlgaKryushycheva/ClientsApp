@@ -1,5 +1,3 @@
-// Контролер ExecutorTaskController обробляє HTTP-запити цього розділу UI.
-// Дії нижче читають параметри запиту, викликають сервіси й повертають View/Redirect/JSON.
 using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -52,12 +50,10 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create(ExecutorTask executorTask)
         {
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (ModelState.IsValid)
             {
                 await _executorTaskService.AddAsync(executorTask);
@@ -98,7 +94,6 @@ namespace ClientsApp.Controllers
 
         [Authorize(Roles = "Manager,Executor")]
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ExecutorTask executorTask)
         {
@@ -120,7 +115,6 @@ namespace ClientsApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (ModelState.IsValid)
             {
                 await _executorTaskService.UpdateAsync(executorTask);
@@ -144,7 +138,6 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)

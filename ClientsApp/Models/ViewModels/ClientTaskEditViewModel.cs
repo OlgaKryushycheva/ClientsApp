@@ -1,4 +1,3 @@
-// Модель містить лише ті властивості, які реально використовуються у формі/представленні.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

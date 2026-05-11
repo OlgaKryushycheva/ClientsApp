@@ -1,4 +1,3 @@
-// Також тут виконується міграція БД та початкове створення ролей/користувача-менеджера.
 using AutoMapper;
 using ClientsApp.BLL;
 using ClientsApp.BLL.Interfaces;

@@ -1,5 +1,3 @@
-// Файл ApplicationDbContext.cs містить допоміжний тип застосунку.
-// Коментарі нижче пояснюють призначення ключових методів і правил валідації.
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ClientsApp.Models.Entities;

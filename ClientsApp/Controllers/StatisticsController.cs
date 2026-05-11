@@ -1,5 +1,3 @@
-// Контролер StatisticsController обробляє HTTP-запити цього розділу UI.
-// Дії нижче читають параметри запиту, викликають сервіси й повертають View/Redirect/JSON.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -44,7 +42,6 @@ namespace ClientsApp.Controllers
 
         public async Task<IActionResult> Index(int? selectedClientIdForTask, int? selectedTaskId, int? selectedClientIdForClient)
         {
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
             var clients = (await _clientService.GetAllAsync()).OrderBy(c => c.Name).ToList();
             var tasks = (await _clientTaskService.GetAllAsync()).ToList();
             var payments = (await _paymentService.GetAllAsync()).ToList();
@@ -78,7 +75,6 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GenerateTaskReport(int clientId, int taskId)
         {
@@ -97,7 +93,6 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GenerateDebtReport()
         {
@@ -119,7 +114,6 @@ namespace ClientsApp.Controllers
                     Text = c.Name,
                     Selected = selectedId.HasValue && c.ClientId == selectedId.Value
                 })
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 .OrderBy(i => i.Text)
                 .ToList();
 
@@ -150,7 +144,6 @@ namespace ClientsApp.Controllers
 
             var taskItems = tasks
                 .Where(t => t.ClientId == clientId.Value)
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 .OrderBy(t => t.TaskTitle)
                 .Select(t => new SelectListItem
                 {
@@ -281,7 +274,6 @@ namespace ClientsApp.Controllers
             }
 
             return performance
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 .OrderByDescending(p => p.Ratio ?? decimal.MinValue)
                 .ThenBy(p => p.ExecutorName)
                 .ToList();
@@ -309,7 +301,6 @@ namespace ClientsApp.Controllers
             }
 
             debts = debts
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 .OrderByDescending(d => d.BalanceDue)
                 .ThenBy(d => d.ClientName)
                 .ThenBy(d => d.TaskTitle)

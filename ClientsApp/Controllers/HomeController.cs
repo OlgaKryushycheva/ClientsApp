@@ -1,5 +1,3 @@
-// Контролер HomeController обробляє HTTP-запити цього розділу UI.
-// Дії нижче читають параметри запиту, викликають сервіси й повертають View/Redirect/JSON.
 using System.Diagnostics;
 using ClientsApp.Models;
 using Microsoft.AspNetCore.Mvc;

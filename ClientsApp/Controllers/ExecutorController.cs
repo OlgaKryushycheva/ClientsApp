@@ -1,5 +1,3 @@
-// Контролер ExecutorController обробляє HTTP-запити цього розділу UI.
-// Дії нижче читають параметри запиту, викликають сервіси й повертають View/Redirect/JSON.
 ﻿using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -58,13 +56,9 @@ namespace ClientsApp.Controllers
 
             executors = normalizedSortBy switch
             {
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 "name" when normalizedSortDirection == "desc" => executors.OrderByDescending(e => e.FullName),
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 "name" => executors.OrderBy(e => e.FullName),
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 "id" when normalizedSortDirection == "asc" => executors.OrderBy(e => e.ExecutorId),
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 _ => executors.OrderByDescending(e => e.ExecutorId)
             };
 
@@ -87,7 +81,6 @@ namespace ClientsApp.Controllers
         public async Task<IActionResult> Create(Executor executor)
         {
             ValidateUnavailablePeriod(executor);
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid) return View(executor);
 
             await _executorService.AddAsync(executor);
@@ -108,7 +101,6 @@ namespace ClientsApp.Controllers
         public async Task<IActionResult> Edit(Executor executor)
         {
             ValidateUnavailablePeriod(executor);
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid) return View(executor);
 
             await _executorService.UpdateAsync(executor);
@@ -125,7 +117,6 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)

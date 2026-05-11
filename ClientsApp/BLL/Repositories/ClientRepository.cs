@@ -1,4 +1,3 @@
-// Тут зібрані CRUD-операції, щоб контролери/сервіси не працювали напряму з DbSet.
 ﻿using ClientsApp.BLL.Interfaces;
 using ClientsApp.Models;
 using ClientsApp.Models.Entities;

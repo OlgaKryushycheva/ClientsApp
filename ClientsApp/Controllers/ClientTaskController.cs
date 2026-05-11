@@ -1,5 +1,3 @@
-// Контролер ClientTaskController обробляє HTTP-запити цього розділу UI.
-// Дії нижче читають параметри запиту, викликають сервіси й повертають View/Redirect/JSON.
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -76,12 +74,10 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Create(ClientTask task, int[] selectedExecutors)
         {
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid)
             {
                 await PopulateCreateViewBagsAsync(task, selectedExecutors);
@@ -116,7 +112,6 @@ namespace ClientsApp.Controllers
                 ModelState.AddModelError(string.Empty, $"Обрані виконавці звільнені на дату початку: {string.Join(", ", dismissedExecutors)}.");
             }
 
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid)
             {
                 await PopulateCreateViewBagsAsync(task, selectedExecutors);
@@ -190,12 +185,10 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(ClientTaskEditViewModel model)
         {
-// Якщо валідація моделі не пройдена, зупиняємо запис у БД і повертаємо форму з помилками користувачу.
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values
@@ -229,7 +222,6 @@ namespace ClientsApp.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -245,7 +237,6 @@ namespace ClientsApp.Controllers
             ViewBag.Clients = new SelectList(await _clientService.GetAllAsync(), "ClientId", "Name", task?.ClientId);
             ViewBag.Executors = (await _executorService.GetAllAsync())
                 .Where(e => !e.DismissedFrom.HasValue || e.DismissedFrom.Value.Date >= today)
-// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 .OrderBy(e => e.FullName)
                 .ToList();
             ViewBag.SelectedExecutors = new HashSet<int>(selectedExecutors ?? Array.Empty<int>());
