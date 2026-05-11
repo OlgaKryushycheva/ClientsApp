@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ClientsApp.Controllers
 {
+    // Доступ до цього контролера потрібен лише авторизованим користувачам,
+    // оскільки тут зведені фінансові показники: вартість робіт, оплати та борги клієнтів.
     [Authorize]
     public class StatisticsController : Controller
     {
@@ -42,12 +44,16 @@ namespace ClientsApp.Controllers
 
         public async Task<IActionResult> Index(int? selectedClientIdForTask, int? selectedTaskId, int? selectedClientIdForClient)
         {
+            // Завантажуємо повні набори даних для аналітики:
+            // клієнтів, задач, оплат, відпрацьованих годин виконавців і довідник виконавців.
             var clients = (await _clientService.GetAllAsync()).OrderBy(c => c.Name).ToList();
             var tasks = (await _clientTaskService.GetAllAsync()).ToList();
             var payments = (await _paymentService.GetAllAsync()).ToList();
             var executorTasks = (await _executorTaskService.GetAllAsync()).ToList();
             var executors = (await _executorService.GetAllAsync()).ToList();
 
+            // Готуємо ViewModel для сторінки статистики:
+            // випадаючі списки для фільтрів та агреговані блоки для таблиць звітності.
             var model = new StatisticsIndexViewModel
             {
                 SelectedClientIdForTask = selectedClientIdForTask,
@@ -63,11 +69,15 @@ namespace ClientsApp.Controllers
 
             if (selectedClientIdForTask.HasValue && selectedTaskId.HasValue)
             {
+                // Розраховуємо деталізовану статистику тільки для конкретної пари
+                // "клієнт + завдання", яку обрав користувач у фільтрах.
                 model.TaskStatistics = BuildTaskStatistics(selectedClientIdForTask.Value, selectedTaskId.Value, tasks, payments);
             }
 
             if (selectedClientIdForClient.HasValue)
             {
+                // Формуємо зведення по всіх задачах вибраного клієнта:
+                // сума робіт, оплати, борг і перелік задач без нарахованої вартості.
                 model.ClientStatistics = BuildClientStatistics(selectedClientIdForClient.Value, clients, tasks, payments);
             }
 
@@ -107,6 +117,8 @@ namespace ClientsApp.Controllers
 
         private IEnumerable<SelectListItem> BuildClientSelectList(IEnumerable<Client> clients, int? selectedId)
         {
+            // Select перетворює записи клієнтів у пункти списку для UI,
+            // а прапорець Selected зберігає вибір користувача після перезавантаження сторінки.
             var items = clients
                 .Select(c => new SelectListItem
                 {
@@ -114,9 +126,12 @@ namespace ClientsApp.Controllers
                     Text = c.Name,
                     Selected = selectedId.HasValue && c.ClientId == selectedId.Value
                 })
+                // OrderBy сортує клієнтів за назвою, щоб у фільтрі їх легше було знаходити вручну.
                 .OrderBy(i => i.Text)
                 .ToList();
 
+            // Додаємо стартовий пункт "Оберіть клієнта",
+            // якщо жоден клієнт ще не обраний у фільтрі.
             items.Insert(0, new SelectListItem
             {
                 Value = string.Empty,
@@ -131,6 +146,8 @@ namespace ClientsApp.Controllers
         {
             if (!clientId.HasValue)
             {
+                // Без вибраного клієнта не показуємо повний список задач,
+                // щоб не змішувати завдання різних клієнтів в одному фільтрі.
                 return new List<SelectListItem>
                 {
                     new()
@@ -142,6 +159,8 @@ namespace ClientsApp.Controllers
                 };
             }
 
+            // Where відбирає тільки задачі вибраного клієнта,
+            // далі OrderBy впорядковує їх за назвою, а Select готує елементи для випадаючого списку.
             var taskItems = tasks
                 .Where(t => t.ClientId == clientId.Value)
                 .OrderBy(t => t.TaskTitle)
@@ -155,6 +174,7 @@ namespace ClientsApp.Controllers
 
             if (!taskItems.Any())
             {
+                // Якщо у клієнта ще немає задач, показуємо пояснювальний пункт замість порожнього списку.
                 taskItems.Add(new SelectListItem
                 {
                     Value = string.Empty,
@@ -164,6 +184,7 @@ namespace ClientsApp.Controllers
             }
             else
             {
+                // Додаємо окремий пункт-підказку, щоб користувач явно обрав одну задачу для точкового звіту.
                 taskItems.Insert(0, new SelectListItem
                 {
                     Value = string.Empty,
@@ -177,6 +198,8 @@ namespace ClientsApp.Controllers
 
         private TaskStatisticsViewModel? BuildTaskStatistics(int clientId, int taskId, IEnumerable<ClientTask> tasks, IEnumerable<Payment> payments)
         {
+            // Беремо саме ту задачу, яка одночасно належить обраному клієнту
+            // і має вибраний ідентифікатор завдання, щоб уникнути підміни даних між клієнтами.
             var task = tasks.FirstOrDefault(t => t.ClientTaskId == taskId && t.ClientId == clientId);
             if (task is null)
             {
@@ -184,8 +207,12 @@ namespace ClientsApp.Controllers
             }
 
             var taskCost = CalculateTaskCost(task);
+            // Sum підсумовує всі платежі, прив'язані до цієї задачі,
+            // щоб отримати фактично сплачену суму незалежно від кількості транзакцій.
             var totalPayments = payments.Where(p => p.ClientTaskId == task.ClientTaskId).Sum(p => p.Amount);
 
+            // Формуємо модель для картки задачі і DOCX-звіту:
+            // вартість, сплати та залишок боргу по конкретному завданню.
             return new TaskStatisticsViewModel
             {
                 ClientName = task.Client?.Name ?? string.Empty,
@@ -205,7 +232,10 @@ namespace ClientsApp.Controllers
                 return null;
             }
 
+            // Вибираємо всі задачі клієнта для загального клієнтського звіту.
             var clientTasks = tasks.Where(t => t.ClientId == clientId).ToList();
+            // Select перетворює кожну задачу в рядок майбутньої таблиці:
+            // скільки коштує робота, скільки вже оплачено і який залишок до сплати.
             var taskDetails = clientTasks.Select(task =>
             {
                 var cost = CalculateTaskCost(task);
@@ -221,7 +251,11 @@ namespace ClientsApp.Controllers
 
             var totalCost = taskDetails.Sum(t => t.TaskCost);
             var totalPayments = taskDetails.Sum(t => t.Payments);
+            // У борг включаємо лише позитивний залишок,
+            // щоб переплати не зменшували борг інших задач у загальному підсумку.
             var totalDebt = taskDetails.Sum(t => t.BalanceDue > 0 ? t.BalanceDue : 0);
+            // Відбираємо задачі з нульовою вартістю, щоб підсвітити роботи,
+            // де ще не внесено години/ставки і неможливо коректно виставити рахунок.
             var tasksWithoutInvoice = taskDetails
                 .Where(t => t.TaskCost == 0)
                 .Select(t => t.TaskTitle)
@@ -244,23 +278,30 @@ namespace ClientsApp.Controllers
 
             foreach (var executor in executors)
             {
+                // Для кожного виконавця збираємо його записи часу,
+                // щоб окремо порахувати персональне навантаження і ефективність.
                 var tasksForExecutor = executorTasks.Where(et => et.ExecutorId == executor.ExecutorId).ToList();
                 if (!tasksForExecutor.Any())
                 {
                     continue;
                 }
 
+                // Sum агрегує фактичні години та скориговані години по всіх задачах виконавця.
                 var totalActual = tasksForExecutor.Sum(et => et.ActualTime);
                 var totalAdjusted = tasksForExecutor.Sum(et => et.AdjustedTime);
 
                 if (totalActual == 0 && totalAdjusted == 0)
                 {
+                    // Пропускаємо виконавців без жодного часу в статистиці,
+                    // щоб таблиця містила лише релевантні дані.
                     continue;
                 }
 
                 decimal? ratio = null;
                 if (totalActual > 0)
                 {
+                    // Коефіцієнт показує співвідношення скоригованого часу до фактичного:
+                    // значення >1 означає збільшення трудомісткості після коригування.
                     ratio = totalAdjusted / totalActual;
                 }
 
@@ -274,6 +315,8 @@ namespace ClientsApp.Controllers
             }
 
             return performance
+                // Спочатку виводимо виконавців з найвищим коефіцієнтом,
+                // а за однакового значення — сортуємо за ПІБ для стабільного порядку в таблиці.
                 .OrderByDescending(p => p.Ratio ?? decimal.MinValue)
                 .ThenBy(p => p.ExecutorName)
                 .ToList();
@@ -291,6 +334,8 @@ namespace ClientsApp.Controllers
 
                 if (balance > 0)
                 {
+                    // У звіт боргів додаємо лише задачі з позитивним залишком:
+                    // саме вони формують дебіторську заборгованість компанії.
                     debts.Add(new DebtStatisticsItemViewModel
                     {
                         ClientName = task.Client?.Name ?? "Невідомий клієнт",
@@ -301,17 +346,22 @@ namespace ClientsApp.Controllers
             }
 
             debts = debts
+                // Сортування за сумою боргу показує найкритичніші задачі першими,
+                // а додаткове сортування за клієнтом/назвою стабілізує порядок у документі.
                 .OrderByDescending(d => d.BalanceDue)
                 .ThenBy(d => d.ClientName)
                 .ThenBy(d => d.TaskTitle)
                 .ToList();
 
+            // Загальний борг — підсумок усіх рядків таблиці заборгованостей.
             totalDebt = debts.Sum(d => d.BalanceDue);
             return debts;
         }
 
         private static decimal CalculateTaskCost(ClientTask task)
         {
+            // Вартість задачі = сума по всіх залучених виконавцях:
+            // скориговані години * погодинна ставка виконавця.
             return task.ExecutorTasks.Sum(et => et.AdjustedTime * (et.Executor?.HourlyRate ?? 0));
         }
 
@@ -355,10 +405,14 @@ namespace ClientsApp.Controllers
 
                 if (!debts.Any())
                 {
+                    // Якщо боргів немає, фіксуємо це окремим рядком у звіті,
+                    // щоб документ однозначно підтверджував нульову заборгованість.
                     body.Append(CreateParagraph("Заборгованості відсутні."));
                 }
                 else
                 {
+                    // У звіті відображаємо деталізацію по кожній задачі
+                    // та фінальний підсумок боргу по всіх клієнтах.
                     body.Append(CreateParagraph("Детальна інформація:"));
                     body.Append(CreateDebtTable(debts));
                     body.Append(CreateParagraph($"Загальна сума заборгованості: {totalDebt.ToString("F2", _culture)} грн"));
