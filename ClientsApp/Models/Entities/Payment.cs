@@ -1,8 +1,11 @@
+// Сутність Payment відповідає таблиці/даним предметної області.
+// DataAnnotations нижче керують валідацією форми й мапінгом полів у БД.
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ClientsApp.Models.Entities
 {
+// Payment: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class Payment
     {
         public int PaymentId { get; set; }

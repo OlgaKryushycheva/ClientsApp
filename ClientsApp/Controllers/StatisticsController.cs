@@ -1,3 +1,5 @@
+// Контролер StatisticsController обробляє HTTP-запити цього розділу UI.
+// Дії нижче читають параметри запиту, викликають сервіси й повертають View/Redirect/JSON.
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,7 +18,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ClientsApp.Controllers
 {
+// Атрибут обмежує доступ: дія виконається лише для користувача з потрібною роллю/автентифікацією.
     [Authorize]
+// StatisticsController: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class StatisticsController : Controller
     {
         private readonly IClientService _clientService;
@@ -40,8 +44,11 @@ namespace ClientsApp.Controllers
             _executorService = executorService;
         }
 
+// Метод Index реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
+// Параметри методу: int? selectedClientIdForTask, int? selectedTaskId, int? selectedClientIdForClient.
         public async Task<IActionResult> Index(int? selectedClientIdForTask, int? selectedTaskId, int? selectedClientIdForClient)
         {
+// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
             var clients = (await _clientService.GetAllAsync()).OrderBy(c => c.Name).ToList();
             var tasks = (await _clientTaskService.GetAllAsync()).ToList();
             var payments = (await _paymentService.GetAllAsync()).ToList();
@@ -61,11 +68,13 @@ namespace ClientsApp.Controllers
                 TotalDebt = totalDebt
             };
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (selectedClientIdForTask.HasValue && selectedTaskId.HasValue)
             {
                 model.TaskStatistics = BuildTaskStatistics(selectedClientIdForTask.Value, selectedTaskId.Value, tasks, payments);
             }
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (selectedClientIdForClient.HasValue)
             {
                 model.ClientStatistics = BuildClientStatistics(selectedClientIdForClient.Value, clients, tasks, payments);
@@ -74,14 +83,19 @@ namespace ClientsApp.Controllers
             return View(model);
         }
 
+// HTTP POST приймає дані форми та запускає операцію створення/оновлення/видалення.
         [HttpPost]
+// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
+// Метод GenerateTaskReport реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
+// Параметри методу: int clientId, int taskId.
         public async Task<IActionResult> GenerateTaskReport(int clientId, int taskId)
         {
             var tasks = (await _clientTaskService.GetAllAsync()).ToList();
             var payments = (await _paymentService.GetAllAsync()).ToList();
             var statistics = BuildTaskStatistics(clientId, taskId, tasks, payments);
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (statistics is null)
             {
                 return NotFound();
@@ -92,8 +106,11 @@ namespace ClientsApp.Controllers
             return File(fileBytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
         }
 
+// HTTP POST приймає дані форми та запускає операцію створення/оновлення/видалення.
         [HttpPost]
+// Anti-forgery токен блокує CSRF: сторонній сайт не зможе відправити форму від імені користувача.
         [ValidateAntiForgeryToken]
+// Метод GenerateDebtReport реалізує конкретний крок сценарію, що видно з його назви та тіла нижче.
         public async Task<IActionResult> GenerateDebtReport()
         {
             var tasks = (await _clientTaskService.GetAllAsync()).ToList();
@@ -114,6 +131,7 @@ namespace ClientsApp.Controllers
                     Text = c.Name,
                     Selected = selectedId.HasValue && c.ClientId == selectedId.Value
                 })
+// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 .OrderBy(i => i.Text)
                 .ToList();
 
@@ -129,6 +147,7 @@ namespace ClientsApp.Controllers
 
         private IEnumerable<SelectListItem> BuildTaskSelectList(IEnumerable<ClientTask> tasks, int? clientId, int? selectedTaskId)
         {
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (!clientId.HasValue)
             {
                 return new List<SelectListItem>
@@ -143,7 +162,9 @@ namespace ClientsApp.Controllers
             }
 
             var taskItems = tasks
+// Фільтр Where залишає лише записи, що відповідають умові, тому у View не потрапляють зайві дані.
                 .Where(t => t.ClientId == clientId.Value)
+// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 .OrderBy(t => t.TaskTitle)
                 .Select(t => new SelectListItem
                 {
@@ -153,6 +174,7 @@ namespace ClientsApp.Controllers
                 })
                 .ToList();
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (!taskItems.Any())
             {
                 taskItems.Add(new SelectListItem
@@ -178,12 +200,14 @@ namespace ClientsApp.Controllers
         private TaskStatisticsViewModel? BuildTaskStatistics(int clientId, int taskId, IEnumerable<ClientTask> tasks, IEnumerable<Payment> payments)
         {
             var task = tasks.FirstOrDefault(t => t.ClientTaskId == taskId && t.ClientId == clientId);
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (task is null)
             {
                 return null;
             }
 
             var taskCost = CalculateTaskCost(task);
+// Фільтр Where залишає лише записи, що відповідають умові, тому у View не потрапляють зайві дані.
             var totalPayments = payments.Where(p => p.ClientTaskId == task.ClientTaskId).Sum(p => p.Amount);
 
             return new TaskStatisticsViewModel
@@ -200,15 +224,18 @@ namespace ClientsApp.Controllers
         private ClientStatisticsViewModel? BuildClientStatistics(int clientId, IEnumerable<Client> clients, IEnumerable<ClientTask> tasks, IEnumerable<Payment> payments)
         {
             var client = clients.FirstOrDefault(c => c.ClientId == clientId);
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (client is null)
             {
                 return null;
             }
 
+// Фільтр Where залишає лише записи, що відповідають умові, тому у View не потрапляють зайві дані.
             var clientTasks = tasks.Where(t => t.ClientId == clientId).ToList();
             var taskDetails = clientTasks.Select(task =>
             {
                 var cost = CalculateTaskCost(task);
+// Фільтр Where залишає лише записи, що відповідають умові, тому у View не потрапляють зайві дані.
                 var paymentsSum = payments.Where(p => p.ClientTaskId == task.ClientTaskId).Sum(p => p.Amount);
                 return new ClientTaskCostViewModel
                 {
@@ -223,6 +250,7 @@ namespace ClientsApp.Controllers
             var totalPayments = taskDetails.Sum(t => t.Payments);
             var totalDebt = taskDetails.Sum(t => t.BalanceDue > 0 ? t.BalanceDue : 0);
             var tasksWithoutInvoice = taskDetails
+// Фільтр Where залишає лише записи, що відповідають умові, тому у View не потрапляють зайві дані.
                 .Where(t => t.TaskCost == 0)
                 .Select(t => t.TaskTitle)
                 .ToList();
@@ -244,7 +272,9 @@ namespace ClientsApp.Controllers
 
             foreach (var executor in executors)
             {
+// Фільтр Where залишає лише записи, що відповідають умові, тому у View не потрапляють зайві дані.
                 var tasksForExecutor = executorTasks.Where(et => et.ExecutorId == executor.ExecutorId).ToList();
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
                 if (!tasksForExecutor.Any())
                 {
                     continue;
@@ -253,12 +283,14 @@ namespace ClientsApp.Controllers
                 var totalActual = tasksForExecutor.Sum(et => et.ActualTime);
                 var totalAdjusted = tasksForExecutor.Sum(et => et.AdjustedTime);
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
                 if (totalActual == 0 && totalAdjusted == 0)
                 {
                     continue;
                 }
 
                 decimal? ratio = null;
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
                 if (totalActual > 0)
                 {
                     ratio = totalAdjusted / totalActual;
@@ -274,6 +306,7 @@ namespace ClientsApp.Controllers
             }
 
             return performance
+// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 .OrderByDescending(p => p.Ratio ?? decimal.MinValue)
                 .ThenBy(p => p.ExecutorName)
                 .ToList();
@@ -286,9 +319,11 @@ namespace ClientsApp.Controllers
             foreach (var task in tasks)
             {
                 var cost = CalculateTaskCost(task);
+// Фільтр Where залишає лише записи, що відповідають умові, тому у View не потрапляють зайві дані.
                 var paid = payments.Where(p => p.ClientTaskId == task.ClientTaskId).Sum(p => p.Amount);
                 var balance = cost - paid;
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
                 if (balance > 0)
                 {
                     debts.Add(new DebtStatisticsItemViewModel
@@ -301,6 +336,7 @@ namespace ClientsApp.Controllers
             }
 
             debts = debts
+// Це сортування формує передбачуваний порядок рядків у таблиці на сторінці.
                 .OrderByDescending(d => d.BalanceDue)
                 .ThenBy(d => d.ClientName)
                 .ThenBy(d => d.TaskTitle)
@@ -353,6 +389,7 @@ namespace ClientsApp.Controllers
                 body.Append(CreateParagraph($"Дата формування: {DateTime.Now:dd.MM.yyyy HH:mm}"));
                 body.Append(new Paragraph(new Run(new Text(string.Empty))));
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
                 if (!debts.Any())
                 {
                     body.Append(CreateParagraph("Заборгованості відсутні."));
@@ -374,6 +411,7 @@ namespace ClientsApp.Controllers
         {
             var run = new Run();
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (isTitle)
             {
                 run.RunProperties = new RunProperties
@@ -386,6 +424,7 @@ namespace ClientsApp.Controllers
             run.Append(new Text(text ?? string.Empty) { Space = SpaceProcessingModeValues.Preserve });
             var paragraph = new Paragraph(run);
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (isTitle)
             {
                 paragraph.ParagraphProperties = new ParagraphProperties

@@ -1,7 +1,10 @@
+// ViewModel ClientStatisticsViewModel описує дані, які конкретна сторінка отримує або відправляє.
+// Модель містить лише ті властивості, які реально використовуються у формі/представленні.
 using System.Collections.Generic;
 
 namespace ClientsApp.Models.ViewModels.Statistics
 {
+// ClientStatisticsViewModel: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class ClientStatisticsViewModel
     {
         public string ClientName { get; set; } = string.Empty;

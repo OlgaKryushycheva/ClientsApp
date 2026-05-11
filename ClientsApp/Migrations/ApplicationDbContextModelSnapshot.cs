@@ -1,3 +1,5 @@
+// Файл ApplicationDbContextModelSnapshot.cs створений EF Core для фіксації схеми БД у конкретній міграції.
+// Ці класи описують, які SQL-зміни треба застосувати під час оновлення структури таблиць.
 using System;
 using ClientsApp.Models;
 using Microsoft.EntityFrameworkCore;

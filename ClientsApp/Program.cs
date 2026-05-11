@@ -1,3 +1,5 @@
+// Точка входу веб-застосунку: реєструє залежності, автентифікацію, маршрути й запуск HTTP-конвеєра.
+// Також тут виконується міграція БД та початкове створення ролей/користувача-менеджера.
 using AutoMapper;
 using ClientsApp.BLL;
 using ClientsApp.BLL.Interfaces;
@@ -66,6 +68,7 @@ using (var scope = app.Services.CreateScope())
     await SeedFirstManagerAsync(scope.ServiceProvider, builder.Configuration, logger);
 }
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -92,6 +95,7 @@ static async Task SeedFirstManagerAsync(IServiceProvider serviceProvider, IConfi
     var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
     var managers = await userManager.GetUsersInRoleAsync("Manager");
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
     if (managers.Count > 0)
     {
         return;
@@ -100,6 +104,7 @@ static async Task SeedFirstManagerAsync(IServiceProvider serviceProvider, IConfi
     var seedManagerEmail = configuration["SeedAdmin:Email"];
     var seedManagerPassword = configuration["SeedAdmin:Password"];
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
     if (string.IsNullOrWhiteSpace(seedManagerEmail) || string.IsNullOrWhiteSpace(seedManagerPassword))
     {
         logger.LogWarning("No users with Manager role were found, but SeedAdmin credentials are missing in configuration. Set SeedAdmin:Email and SeedAdmin:Password.");
@@ -107,6 +112,7 @@ static async Task SeedFirstManagerAsync(IServiceProvider serviceProvider, IConfi
     }
 
     var existingUser = await userManager.FindByEmailAsync(seedManagerEmail);
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
     if (existingUser is null)
     {
         existingUser = new ApplicationUser
@@ -116,6 +122,7 @@ static async Task SeedFirstManagerAsync(IServiceProvider serviceProvider, IConfi
         };
 
         var createResult = await userManager.CreateAsync(existingUser, seedManagerPassword);
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
         if (!createResult.Succeeded)
         {
             logger.LogWarning("Failed to create seed manager user {Email}: {Errors}",
@@ -125,9 +132,11 @@ static async Task SeedFirstManagerAsync(IServiceProvider serviceProvider, IConfi
         }
     }
 
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
     if (!await userManager.IsInRoleAsync(existingUser, "Manager"))
     {
         var addRoleResult = await userManager.AddToRoleAsync(existingUser, "Manager");
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
         if (!addRoleResult.Succeeded)
         {
             logger.LogWarning("Failed to assign Manager role to user {Email}: {Errors}",
@@ -147,9 +156,11 @@ static async Task SeedRolesAsync(IServiceProvider serviceProvider, ILogger logge
 
     foreach (var role in roles)
     {
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
         if (!await roleManager.RoleExistsAsync(role))
         {
             var result = await roleManager.CreateAsync(new IdentityRole(role));
+// Умова нижче відсікає невалідний або небезпечний шлях виконання перед зміною даних.
             if (!result.Succeeded)
             {
                 logger.LogWarning("Failed to create role {Role}: {Errors}", role,

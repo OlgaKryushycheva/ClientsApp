@@ -1,8 +1,11 @@
+// Сутність ExecutorTask відповідає таблиці/даним предметної області.
+// DataAnnotations нижче керують валідацією форми й мапінгом полів у БД.
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClientsApp.Models.Entities
 {
+// ExecutorTask: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class ExecutorTask
     {
         public int ExecutorTaskId { get; set; }
@@ -31,4 +34,3 @@ namespace ClientsApp.Models.Entities
         public decimal TaskCost => AdjustedTime * (Executor?.HourlyRate ?? 0);
     }
 }
-

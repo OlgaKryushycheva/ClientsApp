@@ -1,9 +1,12 @@
+// Файл ApplicationDbContext.cs містить допоміжний тип застосунку.
+// Коментарі нижче пояснюють призначення ключових методів і правил валідації.
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ClientsApp.Models.Entities;
 
 namespace ClientsApp.Models
 {
+// ApplicationDbContext: основний тип у цьому файлі, який визначає структуру даних або контракт поведінки.
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
