@@ -1423,7 +1423,6 @@ a {
     max-height: 180px;
     padding: 0.55rem 0.65rem;
     margin-left: auto;
-
     border-color: rgba(47,95,155,.1);
     background: linear-gradient(180deg,#fbfdff,#f4f9ff);
 }
@@ -1471,4 +1470,76 @@ a {
 
     .stats-download-btn svg {
         margin-right: 0.15rem;
+    }
+
+/* ===== Custom button palette ===== */
+
+.btn-primary {
+    background-color: #2f5f9b !important;
+    border-color: #2f5f9b !important;
+    color: #ffffff !important;
+}
+
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: #264d7f !important;
+        border-color: #264d7f !important;
+        color: #ffffff !important;
+    }
+
+/* Delete buttons */
+.btn-danger {
+    background-color: #c96a6a !important;
+    border-color: #c96a6a !important;
+    color: #ffffff !important;
+}
+
+    .btn-danger:hover,
+    .btn-danger:focus,
+    .btn-danger:active {
+        background-color: #b85b5b !important;
+        border-color: #b85b5b !important;
+    }
+
+/* Add buttons */
+.btn-success {
+    background-color: #3f7f5f !important;
+    border-color: #3f7f5f !important;
+    color: #ffffff !important;
+}
+
+    .btn-success:hover,
+    .btn-success:focus,
+    .btn-success:active {
+        background-color: #356b50 !important;
+        border-color: #356b50 !important;
+    }
+
+/* Outline buttons */
+.btn-outline-primary {
+    border-color: #2f5f9b !important;
+    color: #2f5f9b !important;
+}
+
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-primary:active {
+        background-color: #2f5f9b !important;
+        border-color: #2f5f9b !important;
+        color: #ffffff !important;
+    }
+
+.btn-outline-secondary {
+    border-color: #7a8594 !important;
+    color: #5f6b7a !important;
+    background-color: #ffffff !important;
+}
+
+    .btn-outline-secondary:hover,
+    .btn-outline-secondary:focus,
+    .btn-outline-secondary:active {
+        background-color: #eef2f7 !important;
+        border-color: #6d7886 !important;
+        color: #4d5866 !important;
     }
