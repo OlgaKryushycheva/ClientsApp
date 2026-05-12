@@ -1292,3 +1292,11 @@ a {
 .stats-rating-table-wrap { overflow-x: hidden; }
 .stats-chart-card { min-height: 220px; max-height: 220px; padding: 0.65rem 0.75rem; border-color: rgba(47,95,155,.1); background: linear-gradient(180deg,#fbfdff,#f4f9ff); }
 @media (max-width: 991.98px) { .stats-chart-card { max-height: none; min-height: 220px; } }
+
+.stats-rating-table > tbody > tr > td { padding-top: 0.56rem; padding-bottom: 0.56rem; }
+.stats-rating-table > tbody > tr + tr { border-top: 1px solid rgba(47,95,155,.06); }
+.stats-rating-num { font-weight: 500; letter-spacing: 0.01em; }
+.stats-download-form { margin-left: auto; display: flex; align-items: center; }
+.stats-download-btn { min-height: 34px; padding: 0.34rem 0.65rem; border-color: rgba(90,119,156,.38); color: #49688d; background-color: rgba(255,255,255,.7); }
+.stats-download-btn:hover, .stats-download-btn:focus { background-color: rgba(231,241,255,.75); border-color: rgba(73,104,141,.45); color: #3a5a80; }
+.stats-download-btn svg { margin-right: 0.15rem; }
